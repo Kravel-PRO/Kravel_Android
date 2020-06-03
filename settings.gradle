@@ -1,0 +1,2 @@
+rootProject.name='Kravel_Android'
+include ':app'
