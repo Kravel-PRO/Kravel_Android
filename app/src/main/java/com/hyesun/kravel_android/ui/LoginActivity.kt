@@ -2,8 +2,12 @@ package com.hyesun.kravel_android.ui
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Intent
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.view.animation.AnimationSet
 import androidx.core.animation.doOnEnd
@@ -22,16 +26,25 @@ class LoginActivity : AppCompatActivity() {
 
     //초기 설정
     private fun init(){
+
         btn_login.setOnClickListener {
             showCheck = true
             afterAnimation()
         }
-        cl_login_title_space.setOnClickListener {
+
+        btn_signup.setOnClickListener {
+            val intent = Intent(this,SignUpActivity::class.java)
+            startActivity(intent)
+        }
+
+        img_login_btn_back.setOnClickListener {
             if(showCheck) {
                 beforeAnimation()
                 showCheck = false
             }
         }
+
+        textChange()
     }
 
     //애니메이션 효과 -> after
@@ -67,6 +80,57 @@ class LoginActivity : AppCompatActivity() {
             cl_login_edt_space.visibility = View.GONE
             cl_login_title_space.visibility = View.GONE
             cl_login_btn_space.visibility = View.VISIBLE
+        }
+    }
+
+    //텍스트 변화
+    private fun textChange(){
+        //email text change
+        edt_login_email.addTextChangedListener(object: TextWatcher{
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                emailTextChangeBackground()
+                loginBtnEnable()
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                emailTextChangeBackground()
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+        })
+
+        //pw text change
+        edt_login_pw.addTextChangedListener(object: TextWatcher{
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                pwTextChangeBackground()
+                loginBtnEnable()
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                pwTextChangeBackground()
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+        })
+    }
+
+    private fun emailTextChangeBackground(){
+        if(!edt_login_email.text.isNullOrBlank()) edt_login_email.setBackgroundResource(R.drawable.signup_edit_style_true)
+        else edt_login_email.setBackgroundResource(R.drawable.grey_round_background)
+    }
+
+    private fun pwTextChangeBackground(){
+        if(!edt_login_pw.text.isNullOrBlank()) edt_login_pw.setBackgroundResource(R.drawable.signup_edit_style_true)
+        else edt_login_pw.setBackgroundResource(R.drawable.grey_round_background)
+    }
+
+    private fun loginBtnEnable(){
+        if(!edt_login_email.text.isNullOrBlank() and !edt_login_pw.text.isNullOrBlank()){
+            btn_login_other_view.isEnabled = true
+            btn_login_other_view.setTextColor(Color.WHITE)
+        }else{
+            btn_login_other_view.isEnabled = false
+            btn_login_other_view.setTextColor(resources.getColor(R.color.colorDarkGrey))
         }
     }
 }

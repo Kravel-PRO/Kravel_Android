@@ -69,16 +69,27 @@
             android:id="@+id/txt_login_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:lineSpacingExtra="15sp"
             android:text="오늘도\nKravel과 함께\n여행을 떠나볼까요?"
             android:textColor="@color/colorWhite"
             android:textSize="22sp"
             android:textStyle="bold"
-            android:layout_marginLeft="16dp"
-            android:lineSpacingExtra="15sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.6" />
+
+        <ImageView
+            android:id="@+id/img_login_btn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/txt_login_title"
+            app:layout_constraintStart_toStartOf="@+id/txt_login_title"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.2"
+            app:srcCompat="@drawable/btn_back" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -178,12 +189,14 @@
             tools:layout_editor_absoluteX="16dp">
 
             <Button
+                android:id="@+id/btn_login_other_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="로그인하기"
                 android:textColor="@color/colorDarkGrey"
                 android:background="@drawable/selector_btn_enable_background"
                 android:enabled="false"
+                android:elevation="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
