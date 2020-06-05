@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.hyesun.kravel_android.ui.FinishSignUpActivity">
+    
+    
+    <ImageView
+        android:id="@+id/img_signupf_logo"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:src="@color/colorGender"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+
+    <LinearLayout
+        android:id="@+id/ll_signup_finish"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+
+        app:layout_constraintTop_toBottomOf="@id/img_signupf_logo"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="환영합니다!"
+            android:textColor="#121212"
+            android:textSize="22sp"
+            android:layout_gravity="center_horizontal"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="K-culture과 함께 색다른 여행을 떠나는 서비스,"
+            android:textColor="#121212"
+            android:textSize="14sp"
+            android:layout_marginTop="12dp"
+            android:layout_gravity="center_horizontal"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Kravel입니다."
+            android:textColor="#121212"
+            android:textSize="14sp"
+            android:layout_gravity="center_horizontal"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="내가 좋아하는 아이돌이 다녀간 곳부터"
+            android:textColor="#121212"
+            android:textSize="14sp"
+            android:layout_gravity="center_horizontal"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="요즘 인기많은 드라마 촬영지까지!"
+            android:textColor="#121212"
+            android:textSize="14sp"
+            android:layout_gravity="center_horizontal"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="멋진 인증샷과 함께 소중한 추억을"
+            android:textColor="#121212"
+            android:textSize="14sp"
+            android:layout_gravity="center_horizontal"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="만들어 보아요!"
+            android:textColor="#121212"
+            android:textSize="14sp"
+            android:layout_gravity="center_horizontal"/>
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/btn_signup_finish"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_marginLeft="36dp"
+        android:layout_marginRight="36dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ll_signup_finish"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:background="@drawable/signup_btn_style_true"
+        android:text="여행 떠나기"
+        android:textSize="15sp"
+        android:textColor="@color/colorWhite"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

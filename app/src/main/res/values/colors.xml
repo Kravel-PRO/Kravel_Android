@@ -3,9 +3,14 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
-    <color name="colorWhite">#ffffff</color>
     <color name="colorCoral">#ff6359</color>
     <color name="colorDarkGrey">#b9b9b9</color>
     <color name="colorBlack">#121212</color>
     <color name="colorWhiteGrey">#eeeeee</color>
+    <color name="colorPoint">#ff6359</color>
+    <color name="colorSignUpEditText">#272727</color>
+    <color name="colorSignUpEditTextWarning">#fa372b</color>
+    <color name="colorWhite">#ffffff</color>
+    <color name="colorGender">#b9b9b9</color>
+
 </resources>

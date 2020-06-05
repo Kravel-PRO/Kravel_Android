@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.hyesun.kravel_android.ui.SignUpActivity">
+
+
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+
+    <ImageView
+        android:id="@+id/img_signup_back"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_arrow_back_black_24dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="16dp" />
+
+    <TextView
+        android:id="@+id/tv_signup_title1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Kravel과 함께"
+        style="@style/SignUpTitle"
+        android:layout_marginTop="36dp"
+        android:layout_marginLeft="22dp" />
+
+
+    <TextView
+        android:id="@+id/tv_signup_title2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="색다른"
+        style="@style/SignUpTitle"
+        android:layout_marginLeft="22dp"/>
+
+    <TextView
+        android:id="@+id/tv_signup_title3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="여행을 떠나볼까요?"
+        style="@style/SignUpTitle"
+        android:layout_marginLeft="22dp"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:layout_marginTop="44dp"
+        android:orientation="vertical"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_signup_title3">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tv_signup_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/SignUpTextView"
+            android:text="이메일계정"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+            
+            <TextView
+                android:id="@+id/tv_signup_email_warning"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="이메일 형식이 옳지 않습니다."
+                style="@style/SignUpWarning"
+                android:visibility="gone"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        
+        <EditText
+            android:id="@+id/edit_signup_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/signup_edit_style"
+            android:textSize="15sp"
+            android:fontFamily="@font/notosans_cjk_kr_regular"
+            android:inputType="textEmailAddress"
+            android:hint="이메일을 입력해주세요."
+            />
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp">
+
+            <TextView
+                android:id="@+id/tv_signup_pw"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/SignUpTextView"
+                android:text="비밀번호"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <TextView
+                android:id="@+id/tv_signup_pw_warning"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="6자리 이상 입력해주세요."
+                style="@style/SignUpWarning"
+                android:visibility="gone"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <EditText
+            android:id="@+id/edit_signup_pw"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/signup_edit_style"
+            android:textSize="15sp"
+            android:fontFamily="@font/notosans_cjk_kr_regular"
+            android:inputType="textPassword"
+            android:hint="6자리 이상으로 입력해주세요."
+            />
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp">
+
+            <TextView
+                android:id="@+id/tv_signup_pwck"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/SignUpTextView"
+                android:text="비밀번호 확인"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <TextView
+                android:id="@+id/tv_signup_pwck_warning"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="비밀번호가 같지 않습니다."
+                style="@style/SignUpWarning"
+                android:visibility="gone"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <EditText
+            android:id="@+id/edit_signup_pwck"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/signup_edit_style"
+            android:textSize="15sp"
+            android:fontFamily="@font/notosans_cjk_kr_regular"
+            android:inputType="textPassword"
+            android:hint="다시 한번 비밀번호를 입력해주세요."
+            />
+
+        <TextView
+            android:id="@+id/tv_signup_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/SignUpTextView"
+            android:layout_marginTop="24dp"
+            android:text="닉네임"/>
+
+        <EditText
+            android:id="@+id/edit_signup_nickname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/notosans_cjk_kr_regular"
+            android:background="@drawable/signup_edit_style"
+            android:textSize="15sp"
+            android:hint="사용할 닉네임을 7자 이하로 적어주세요."
+            />
+        
+        
+        <TextView
+            android:id="@+id/tv_signup_gender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="성별"
+            android:layout_marginTop="24dp"
+            style="@style/SignUpTextView"/>
+
+        <RadioGroup
+            android:id="@+id/radio_signup_gender"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+          <RadioButton
+              android:id="@+id/radio_signup_man"
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:background="@drawable/signup_radio_style"
+              android:text="남자"
+              android:textColor="@color/colorGender"
+              android:layout_weight="1"/>
+
+            <RadioButton
+                android:id="@+id/radio_signup_woman"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/signup_radio_style"
+                android:text="여자"
+                android:textColor="@color/colorGender"
+                android:layout_marginLeft="12dp"
+                android:layout_weight="1"/>
+        </RadioGroup>
+        
+    </LinearLayout>
+        
+        <Button
+            android:id="@+id/btn_signup"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginLeft="36dp"
+            android:layout_marginRight="36dp"
+            android:layout_marginTop="36dp"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/signup_btn_style"
+            android:text="회원가입하기"
+            android:layout_gravity="center_horizontal"
+            style="@style/SignUpBtnText"
+            />
+
+    </LinearLayout>
+
+</ScrollView>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
