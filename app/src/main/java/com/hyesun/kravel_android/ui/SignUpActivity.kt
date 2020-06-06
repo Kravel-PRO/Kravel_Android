@@ -200,7 +200,7 @@ class SignUpActivity : AppCompatActivity() {
         }
         else
         {
-            btn_signup.setBackgroundResource(R.drawable.signup_edit_style)
+            btn_signup.setBackgroundResource(R.drawable.signup_btn_style)
             btn_signup.setTextColor(ContextCompat.getColor(applicationContext, R.color.colorGender))
             checkBtn = false
         }
