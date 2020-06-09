@@ -47,24 +47,48 @@ class SignUpActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) =
-                if(!android.util.Patterns.EMAIL_ADDRESS.matcher(s).matches() || s?.length ==0  )
+
+                if(s.toString()=="")
                 {
-                    edit_signup_email.setBackgroundResource(R.drawable.signup_edit_style_warning)
-                    edit_signup_email.setTextColor(ContextCompat.getColor(applicationContext, R.color.colorSignUpEditTextWarning))
-                    tv_signup_email_warning.visibility = View.VISIBLE
+                    edit_signup_email.setBackgroundResource(R.drawable.signup_edit_style)
+                    tv_signup_email_warning.visibility = View.GONE
                     checkemail = false
                     checkedBtn()
                 }
-                else
-                {
-                    edit_signup_email.setBackgroundResource(R.drawable.signup_edit_style_true)
-                    edit_signup_email.setTextColor(ContextCompat.getColor(applicationContext, R.color.colorSignUpEditText))
-                    tv_signup_email_warning.visibility = View.GONE
-                    email = edit_signup_email.toString()
-                    checkemail = true
-                    checkedBtn()
+                else {
+                    if(!android.util.Patterns.EMAIL_ADDRESS.matcher(s).matches()) {
 
+
+                        edit_signup_email.setBackgroundResource(R.drawable.signup_edit_style_warning)
+                        edit_signup_email.setTextColor(
+                            ContextCompat.getColor(
+                                applicationContext,
+                                R.color.colorSignUpEditTextWarning
+                            )
+                        )
+                        tv_signup_email_warning.visibility = View.VISIBLE
+
+                        checkemail = false
+                        checkedBtn()
+                    }
+                    else
+                    {
+                        edit_signup_email.setBackgroundResource(R.drawable.signup_edit_style_true)
+                        edit_signup_email.setTextColor(
+                            ContextCompat.getColor(
+                                applicationContext,
+                                R.color.colorSignUpEditText
+                            )
+                        )
+                        tv_signup_email_warning.visibility = View.GONE
+                        email = edit_signup_email.toString()
+                        checkemail = true
+                        checkedBtn()
+
+                    }
                 }
+
+
         })
 
         edit_signup_pw.addTextChangedListener(object : TextWatcher{
@@ -79,9 +103,23 @@ class SignUpActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if(s.toString().length <6|| s.isNullOrEmpty() )
                 {
-                    edit_signup_pw.setBackgroundResource(R.drawable.signup_edit_style_warning)
-                    edit_signup_pw.setTextColor(ContextCompat.getColor(applicationContext, R.color.colorSignUpEditTextWarning))
-                    tv_signup_pw_warning.visibility = View.VISIBLE
+                    if(s.toString() == "")
+                    {
+                        edit_signup_pw.setBackgroundResource(R.drawable.signup_edit_style)
+                        edit_signup_pw.setTextColor(ContextCompat.getColor(applicationContext, R.color.colorDarkGrey))
+                        tv_signup_pw_warning.visibility = View.GONE
+                    }
+                    else {
+                        edit_signup_pw.setBackgroundResource(R.drawable.signup_edit_style_warning)
+                        edit_signup_pw.setTextColor(
+                            ContextCompat.getColor(
+                                applicationContext,
+                                R.color.colorSignUpEditTextWarning
+                            )
+                        )
+
+                        tv_signup_pw_warning.visibility = View.VISIBLE
+                    }
                     checkpw = false
                     checkedBtn()
                 }
@@ -91,6 +129,29 @@ class SignUpActivity : AppCompatActivity() {
                     tv_signup_pw_warning.visibility = View.GONE
                     pw = edit_signup_pw.toString()
                     checkpw = true
+                    checkedBtn()
+                }
+
+                if(s.toString().equals(edit_signup_pwck.text.toString()))
+                {
+                    edit_signup_pwck.setBackgroundResource(R.drawable.signup_edit_style_true)
+                    edit_signup_pwck.setTextColor(ContextCompat.getColor(applicationContext, R.color.colorSignUpEditText))
+                    tv_signup_pwck_warning.visibility = View.GONE
+                    checkpwck = true
+                    checkedBtn()
+                }
+                else
+                {
+                    edit_signup_pwck.setBackgroundResource(R.drawable.signup_edit_style_warning)
+                    edit_signup_pwck.setTextColor(
+                        ContextCompat.getColor(
+                            applicationContext,
+                            R.color.colorSignUpEditTextWarning
+                        )
+                    )
+                    tv_signup_pwck_warning.visibility = View.VISIBLE
+
+                    checkpwck = false
                     checkedBtn()
                 }
             }
@@ -109,9 +170,24 @@ class SignUpActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if(!(edit_signup_pw.text.toString().equals(edit_signup_pwck.text.toString()))|| s.isNullOrEmpty() )
                 {
-                    edit_signup_pwck.setBackgroundResource(R.drawable.signup_edit_style_warning)
-                    edit_signup_pwck.setTextColor(ContextCompat.getColor(applicationContext, R.color.colorSignUpEditTextWarning))
-                    tv_signup_pwck_warning.visibility = View.VISIBLE
+                    if(s.toString() == "")
+                    {
+                        edit_signup_pwck.setBackgroundResource(R.drawable.signup_edit_style)
+                        edit_signup_pwck.setTextColor(ContextCompat.getColor(applicationContext, R.color.colorDarkGrey))
+                        tv_signup_pwck_warning.visibility = View.GONE
+
+
+                    }
+                    else {
+                        edit_signup_pwck.setBackgroundResource(R.drawable.signup_edit_style_warning)
+                        edit_signup_pwck.setTextColor(
+                            ContextCompat.getColor(
+                                applicationContext,
+                                R.color.colorSignUpEditTextWarning
+                            )
+                        )
+                        tv_signup_pwck_warning.visibility = View.VISIBLE
+                    }
                     checkpwck = false
                     checkedBtn()
                 }
@@ -138,20 +214,39 @@ class SignUpActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if(s!!.length>7 || s.isEmpty())
+
+                if(s.toString()=="")
                 {
-                    edit_signup_nickname.setBackgroundResource(R.drawable.signup_edit_style_warning)
-                    edit_signup_nickname.setTextColor(ContextCompat.getColor(applicationContext, R.color.colorSignUpEditTextWarning))
+                    edit_signup_nickname.setBackgroundResource(R.drawable.signup_edit_style)
                     checknickname = false
                     checkedBtn()
+
                 }
-                else
-                {
-                    edit_signup_nickname.setBackgroundResource(R.drawable.signup_edit_style_true)
-                    edit_signup_nickname.setTextColor(ContextCompat.getColor(applicationContext, R.color.colorSignUpEditText))
-                    nickname = edit_signup_nickname.toString()
-                    checknickname = true
-                    checkedBtn()
+                else {
+                    if (s!!.length > 7) {
+
+                        edit_signup_nickname.setBackgroundResource(R.drawable.signup_edit_style_warning)
+                        edit_signup_nickname.setTextColor(
+                            ContextCompat.getColor(
+                                applicationContext,
+                                R.color.colorSignUpEditTextWarning
+                            )
+                        )
+                        checknickname = false
+                        checkedBtn()
+
+                    } else {
+                        edit_signup_nickname.setBackgroundResource(R.drawable.signup_edit_style_true)
+                        edit_signup_nickname.setTextColor(
+                            ContextCompat.getColor(
+                                applicationContext,
+                                R.color.colorSignUpEditText
+                            )
+                        )
+                        nickname = edit_signup_nickname.toString()
+                        checknickname = true
+                        checkedBtn()
+                    }
                 }
             }
 
