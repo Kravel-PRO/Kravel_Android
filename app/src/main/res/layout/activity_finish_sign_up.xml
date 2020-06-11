@@ -39,6 +39,8 @@
             android:text="환영합니다!"
             android:textColor="#121212"
             android:textSize="22sp"
+            android:fontFamily="@font/notosans_cjk_kr_bold"
+            android:includeFontPadding="false"
             app:layout_constraintBottom_toTopOf="@id/ll_signup_text"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -62,6 +64,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="12dp"
+                android:fontFamily="@font/notosans_cjk_kr_regular"
+                android:includeFontPadding="false"
                 android:text="K-culture과 함께 색다른 여행을 떠나는 서비스,"
                 android:textColor="#121212"
                 android:textSize="14sp" />
@@ -72,6 +76,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:text="Kravel입니다."
+                android:fontFamily="@font/notosans_cjk_kr_regular"
+                android:includeFontPadding="false"
                 android:textColor="#121212"
                 android:textSize="14sp" />
 
@@ -81,6 +87,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:text="내가 좋아하는 아이돌이 다녀간 곳부터"
+                android:fontFamily="@font/notosans_cjk_kr_regular"
+                android:includeFontPadding="false"
                 android:textColor="#121212"
                 android:textSize="14sp" />
 
@@ -90,6 +98,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:text="요즘 인기많은 드라마 촬영지까지!"
+                android:fontFamily="@font/notosans_cjk_kr_regular"
+                android:includeFontPadding="false"
                 android:textColor="#121212"
                 android:textSize="14sp" />
 
@@ -99,6 +109,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:text="멋진 인증샷과 함께 소중한 추억을"
+                android:fontFamily="@font/notosans_cjk_kr_regular"
+                android:includeFontPadding="false"
                 android:textColor="#121212"
                 android:textSize="14sp" />
 
@@ -108,6 +120,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:text="만들어 보아요!"
+                android:fontFamily="@font/notosans_cjk_kr_regular"
+                android:includeFontPadding="false"
                 android:textColor="#121212"
                 android:textSize="14sp" />
         </LinearLayout>
@@ -129,6 +143,8 @@
         android:background="@drawable/signup_btn_style_true"
         android:text="여행 떠나기"
         android:textSize="15sp"
+        android:fontFamily="@font/notosans_cjk_kr_bold"
+        android:includeFontPadding="false"
         android:textColor="@color/colorWhite"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
