@@ -27,7 +27,7 @@
         android:id="@+id/img_signup_back"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:src="@drawable/ic_arrow_back_black_24dp"
+        android:src="@drawable/btn_back"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="16dp" />
 
@@ -100,6 +100,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/signup_edit_style"
             android:textSize="15sp"
+            android:includeFontPadding="false"
             android:fontFamily="@font/notosans_cjk_kr_regular"
             android:inputType="textEmailAddress"
             android:hint="이메일을 입력해주세요."
@@ -138,8 +139,9 @@
             android:layout_height="wrap_content"
             android:background="@drawable/signup_edit_style"
             android:textSize="15sp"
-            android:fontFamily="@font/notosans_cjk_kr_regular"
             android:inputType="textPassword"
+            android:includeFontPadding="false"
+            android:fontFamily="@font/notosans_cjk_kr_regular"
             android:hint="6자리 이상으로 입력해주세요."
             />
 
@@ -177,7 +179,6 @@
             android:layout_height="wrap_content"
             android:background="@drawable/signup_edit_style"
             android:textSize="15sp"
-            android:fontFamily="@font/notosans_cjk_kr_regular"
             android:inputType="textPassword"
             android:hint="다시 한번 비밀번호를 입력해주세요."
             />
@@ -194,9 +195,10 @@
             android:id="@+id/edit_signup_nickname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/notosans_cjk_kr_regular"
             android:background="@drawable/signup_edit_style"
             android:textSize="15sp"
+            android:includeFontPadding="false"
+            android:fontFamily="@font/notosans_cjk_kr_regular"
             android:hint="사용할 닉네임을 7자 이하로 적어주세요."
             />
         
@@ -221,6 +223,13 @@
               android:layout_height="wrap_content"
               android:background="@drawable/signup_radio_style"
               android:text="남자"
+              android:paddingTop="14dp"
+              android:button="@null"
+              android:textAlignment="center"
+              android:includeFontPadding="false"
+              android:fontFamily="@font/notosans_cjk_kr_regular"
+              android:layout_gravity="center_horizontal"
+              android:drawableTop="@drawable/signup_radio_male"
               android:textColor="@color/colorGender"
               android:layout_weight="1"/>
 
@@ -230,6 +239,13 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/signup_radio_style"
                 android:text="여자"
+                android:textAlignment="center"
+                android:layout_gravity="center_horizontal"
+                android:paddingTop="14dp"
+                android:drawableTop="@drawable/signup_radio_female"
+                android:button="@null"
+                android:includeFontPadding="false"
+                android:fontFamily="@font/notosans_cjk_kr_regular"
                 android:textColor="@color/colorGender"
                 android:layout_marginLeft="12dp"
                 android:layout_weight="1"/>

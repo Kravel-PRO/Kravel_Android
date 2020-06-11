@@ -11,19 +11,22 @@
     <style name="SignUpTitle"> <!--회원가입 제목 글꼴 스타일-->
         <item name="android:textSize">22sp</item>
         <item name="android:fontFamily">@font/notosans_cjk_kr_bold</item>
+        <item name="android:includeFontPadding">false</item>
         <item name="android:textColor">#121212</item>
     </style>
 
     <style name="SignUpTextView"> <!--회원가입 TextView 글꼴 스타일-->
         <item name="android:textSize">15sp</item>
-        <item name="android:textColor">#121212</item>
+        <item name="android:includeFontPadding">false</item>
         <item name="android:fontFamily">@font/notosans_cjk_kr_regular</item>
+        <item name="android:textColor">#121212</item>
         <item name="android:layout_marginBottom">8dp</item>
     </style>
 
     <style name="SignUpWarning"> <!--회원가입 경고 글꼴 스타일-->
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">#fd0909</item>
+        <item name="android:includeFontPadding">false</item>
         <item name="android:fontFamily">@font/notosans_cjk_kr_regular</item>
         <item name="android:layout_marginBottom">8dp</item>
     </style>
@@ -31,6 +34,8 @@
     <style name="SignUpBtnText"> <!--회원가입 버튼 글꼴 스타일-->
         <item name="android:textSize">15sp</item>
         <item name="android:textColor">#b9b9b9</item>
+        <item name="android:fontFamily">@font/notosans_cjk_kr_bold</item>
+        <item name="android:includeFontPadding">false</item>
         <item name="android:layout_gravity">center_horizontal</item>
     </style>
 
