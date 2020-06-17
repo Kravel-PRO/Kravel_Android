@@ -52,7 +52,7 @@
             <com.google.android.material.tabs.TabItem
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="드라마/영화별"
+                android:text="드라마/영화별"/>
         </com.google.android.material.tabs.TabLayout>
 
         <androidx.viewpager.widget.ViewPager
