@@ -1,5 +1,6 @@
 package com.hyesun.kravel_android.network
 
+import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -10,4 +11,8 @@ object RequestToServer {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
     //val service: NetworkService = retrofit.create(NetworkService::class.java)
+}
+
+val requestModule = module {
+    single { RequestToServer }
 }
