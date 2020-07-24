@@ -1,15 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageView
+        android:id="@+id/img_celeb_profile"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/colorWhite"
         app:layout_constraintDimensionRatio="1:1"
-        android:background="@color/colorDarkGrey"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/txt_celeb_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="가수 이름"
+        android:textColor="@color/colorBlack"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/img_celeb_profile"
+        app:layout_constraintStart_toStartOf="@+id/img_celeb_profile"
+        app:layout_constraintTop_toBottomOf="@+id/img_celeb_profile" />
+
+    <TextView
+        android:id="@+id/txt_drama_year"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2020"
+        android:textColor="@color/colorSignUpEditText"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/txt_celeb_name"
+        app:layout_constraintStart_toStartOf="@+id/txt_celeb_name"
+        app:layout_constraintTop_toBottomOf="@+id/txt_celeb_name"
+        android:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
