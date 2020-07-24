@@ -1,9 +1,10 @@
-package com.hyesun.kravel_android.ui
+package com.hyesun.kravel_android.ui.signup
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.hyesun.kravel_android.R
+import com.hyesun.kravel_android.ui.main.MainActivity
 import kotlinx.android.synthetic.main.activity_finish_sign_up.*
 
 class FinishSignUpActivity : AppCompatActivity() {

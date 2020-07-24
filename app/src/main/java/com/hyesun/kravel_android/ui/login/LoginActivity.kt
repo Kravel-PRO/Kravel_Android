@@ -1,4 +1,4 @@
-package com.hyesun.kravel_android.ui
+package com.hyesun.kravel_android.ui.login
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
@@ -9,9 +9,12 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.view.animation.AnimationSet
 import androidx.core.animation.doOnEnd
 import com.hyesun.kravel_android.R
+import com.hyesun.kravel_android.common.setOnDebounceClickListener
+import com.hyesun.kravel_android.ui.main.MainActivity
+import com.hyesun.kravel_android.ui.signup.SignUpActivity
+import com.hyesun.kravel_android.util.startActivity
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
@@ -33,7 +36,8 @@ class LoginActivity : AppCompatActivity() {
         }
 
         btn_signup.setOnClickListener {
-            val intent = Intent(this,SignUpActivity::class.java)
+            val intent = Intent(this,
+                SignUpActivity::class.java)
             startActivity(intent)
         }
 
@@ -42,6 +46,10 @@ class LoginActivity : AppCompatActivity() {
                 beforeAnimation()
                 showCheck = false
             }
+        }
+
+        btn_login_other_view.setOnDebounceClickListener {
+            startActivity(MainActivity::class,true)
         }
 
         textChange()

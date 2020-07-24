@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.hyesun.kravel_android.ui.SignUpActivity">
+    tools:context="com.hyesun.kravel_android.ui.signup.SignUpActivity">
 
 
 <ScrollView
@@ -253,7 +253,7 @@
         
     </LinearLayout>
         
-        <Button
+        <TextView
             android:id="@+id/btn_signup"
             android:layout_width="match_parent"
             android:layout_height="52dp"
@@ -263,6 +263,7 @@
             android:layout_marginBottom="24dp"
             android:background="@drawable/signup_btn_style"
             android:text="회원가입하기"
+            android:gravity="center"
             android:layout_gravity="center_horizontal"
             style="@style/SignUpBtnText"
             />

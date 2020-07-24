@@ -1,23 +1,14 @@
-package com.hyesun.kravel_android.ui
+package com.hyesun.kravel_android.ui.signup
 
-import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
-import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.ContactsContract
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
-import android.widget.EditText
-import android.widget.RadioButton
 import android.widget.RadioGroup
 import androidx.core.content.ContextCompat
 import com.hyesun.kravel_android.R
-import com.hyesun.kravel_android.R.color.colorSignUpEditTextWarning
-import com.hyesun.kravel_android.R.drawable.signup_btn_style_true
 import kotlinx.android.synthetic.main.activity_sign_up.*
 
 class SignUpActivity : AppCompatActivity() {
