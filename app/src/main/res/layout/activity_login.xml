@@ -21,13 +21,14 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.96">
 
-            <Button
+            <TextView
                 android:id="@+id/btn_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/white_fill_round_background"
                 android:elevation="0dp"
                 android:text="로그인 하기"
+                android:gravity="center"
                 android:paddingVertical="16dp"
                 android:textColor="@color/colorCoral"
                 android:textSize="15sp"
@@ -37,7 +38,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_chainStyle="packed" />
 
-            <Button
+            <TextView
                 android:id="@+id/btn_signup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -48,6 +49,7 @@
                 android:paddingVertical="16dp"
                 android:textColor="@color/colorWhite"
                 android:textSize="15sp"
+                android:gravity="center"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -88,7 +90,7 @@
             app:layout_constraintStart_toStartOf="@+id/txt_login_title"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.2"
-            app:srcCompat="@drawable/btn_back" />
+            app:srcCompat="@drawable/btn_close" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -188,7 +190,7 @@
             app:layout_constraintVertical_weight="1"
             tools:layout_editor_absoluteX="16dp">
 
-            <Button
+            <TextView
                 android:id="@+id/btn_login_other_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -197,6 +199,7 @@
                 android:background="@drawable/selector_btn_enable_background"
                 android:enabled="false"
                 android:elevation="0dp"
+                android:gravity="center"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
