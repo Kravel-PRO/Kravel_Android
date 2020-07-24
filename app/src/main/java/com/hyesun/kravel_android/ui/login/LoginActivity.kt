@@ -11,7 +11,10 @@ import android.text.TextWatcher
 import android.view.View
 import androidx.core.animation.doOnEnd
 import com.hyesun.kravel_android.R
+import com.hyesun.kravel_android.common.setOnDebounceClickListener
+import com.hyesun.kravel_android.ui.main.MainActivity
 import com.hyesun.kravel_android.ui.signup.SignUpActivity
+import com.hyesun.kravel_android.util.startActivity
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
@@ -43,6 +46,10 @@ class LoginActivity : AppCompatActivity() {
                 beforeAnimation()
                 showCheck = false
             }
+        }
+
+        btn_login_other_view.setOnDebounceClickListener {
+            startActivity(MainActivity::class,true)
         }
 
         textChange()
