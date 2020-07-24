@@ -1,12 +1,10 @@
-package com.hyesun.kravel_android.ui
+package com.hyesun.kravel_android.ui.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
 import androidx.viewpager.widget.ViewPager
 import com.hyesun.kravel_android.R
-import com.hyesun.kravel_android.adapter.MainViewPagerAdapter
+import com.hyesun.kravel_android.ui.adapter.MainViewPagerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {

@@ -1,12 +1,12 @@
-package com.hyesun.kravel_android.adapter
+package com.hyesun.kravel_android.ui.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import com.hyesun.kravel_android.ui.fragment.HomeFragment
-import com.hyesun.kravel_android.ui.fragment.MapFragment
-import com.hyesun.kravel_android.ui.fragment.SearchFragment
-import com.hyesun.kravel_android.ui.fragment.UserFragment
+import com.hyesun.kravel_android.ui.home.HomeFragment
+import com.hyesun.kravel_android.ui.map.MapFragment
+import com.hyesun.kravel_android.ui.search.SearchFragment
+import com.hyesun.kravel_android.ui.mypage.UserFragment
 
 class MainViewPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm,
     BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT

@@ -1,4 +1,4 @@
-package com.hyesun.kravel_android.ui.fragment
+package com.hyesun.kravel_android.ui.search
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

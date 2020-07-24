@@ -11,17 +11,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.SetLanguageActivity"></activity>
-        <activity android:name=".ui.LoginActivity">
+        <activity android:name=".ui.signup.SetLanguageActivity"></activity>
+        <activity android:name=".ui.login.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.FinishSignUpActivity" />
-        <activity android:name=".ui.SignUpActivity"></activity>
-        <activity android:name=".ui.MainActivity"></activity>
+        <activity android:name=".ui.signup.FinishSignUpActivity" />
+        <activity android:name=".ui.signup.SignUpActivity"></activity>
+        <activity android:name=".ui.main.MainActivity"></activity>
     </application>
 
 </manifest>

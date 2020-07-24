@@ -1,4 +1,4 @@
-package com.hyesun.kravel_android.ui
+package com.hyesun.kravel_android.ui.signup
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
