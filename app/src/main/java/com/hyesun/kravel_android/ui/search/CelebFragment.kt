@@ -6,12 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.hyesun.kravel_android.R
+import com.hyesun.kravel_android.common.HorizontalItemDecorator
+import com.hyesun.kravel_android.common.VerticalItemDecorator
+import com.hyesun.kravel_android.data.response.CelebResponse
+import com.hyesun.kravel_android.ui.adapter.CelebRecyclerview
+import kotlinx.android.synthetic.main.fragment_celeb.*
+import timber.log.Timber
 
 class CelebFragment : Fragment() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    private val celebAdapter : CelebRecyclerview by lazy { CelebRecyclerview(false) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -21,4 +25,28 @@ class CelebFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_celeb, container, false)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        initRecycler()
+    }
+
+    private fun initRecycler(){
+
+        rv_celeb_list.apply {
+            adapter = celebAdapter
+            addItemDecoration(HorizontalItemDecorator(24))
+            addItemDecoration(VerticalItemDecorator(36))
+        }
+
+        celebAdapter.initData(
+            listOf(
+                CelebResponse("https://www.instagram.com/p/B20TsJegiq4/media/?size=l","지창욱",null),
+                CelebResponse("https://www.instagram.com/p/B20TsJegiq4/media/?size=l","지창욱",null),
+                CelebResponse("https://www.instagram.com/p/B20TsJegiq4/media/?size=l","지창욱",null),
+                CelebResponse("https://www.instagram.com/p/B20TsJegiq4/media/?size=l","지창욱",null),
+                CelebResponse("https://www.instagram.com/p/B20TsJegiq4/media/?size=l","지창욱",null)
+            )
+        )
+    }
 }
