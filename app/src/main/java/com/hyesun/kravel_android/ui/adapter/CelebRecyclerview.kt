@@ -1,5 +1,6 @@
 package com.hyesun.kravel_android.ui.adapter
 
+import android.content.Intent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -9,7 +10,9 @@ import com.bumptech.glide.request.RequestOptions
 import com.hyesun.kravel_android.KravelApplication
 import com.hyesun.kravel_android.R
 import com.hyesun.kravel_android.common.GlideApp
+import com.hyesun.kravel_android.common.setOnDebounceClickListener
 import com.hyesun.kravel_android.data.response.CelebResponse
+import com.hyesun.kravel_android.ui.search.SearchDetailActivity
 import com.hyesun.kravel_android.util.inflate
 
 class CelebRecyclerview(private val drama: Boolean) : RecyclerView.Adapter<CelebRecyclerview.ViewHolder>() {
@@ -37,6 +40,12 @@ class CelebRecyclerview(private val drama: Boolean) : RecyclerView.Adapter<Celeb
         private val txtYear : TextView = itemView.findViewById(R.id.txt_drama_year)
 
         fun bind(item: CelebResponse){
+            itemView.setOnDebounceClickListener {
+                Intent(KravelApplication.GlobalApp,SearchDetailActivity::class.java).apply {
+                    putExtra("id","1")
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }.run { KravelApplication.GlobalApp.startActivity(this) }
+            }
             GlideApp.with(itemView).load(item.img).apply(RequestOptions.circleCropTransform()).into(img)
             txtName.text = item.name
             if(drama) {
