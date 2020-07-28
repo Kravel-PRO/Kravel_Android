@@ -7,10 +7,17 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.tabs.TabLayout
 import com.hyesun.kravel_android.R
+import com.hyesun.kravel_android.common.setOnDebounceClickListener
+import com.hyesun.kravel_android.data.common.SearchWord
 import com.hyesun.kravel_android.ui.adapter.SearchViewPagerAdapter
+import com.hyesun.kravel_android.ui.adapter.SearchWordRecyclerview
+import com.hyesun.kravel_android.util.setGone
+import com.hyesun.kravel_android.util.setVisible
 import kotlinx.android.synthetic.main.fragment_search.*
 
 class SearchFragment : Fragment() {
+
+    private val wordAdapter : SearchWordRecyclerview by lazy { SearchWordRecyclerview() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -24,6 +31,8 @@ class SearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initViewPager()
+        initSearchView()
+        initRecycler()
     }
 
     private fun initViewPager() {
@@ -43,5 +52,24 @@ class SearchFragment : Fragment() {
 
             override fun onTabSelected(tab: TabLayout.Tab?) { tab?.select() }
         })
+    }
+
+    private fun initRecycler(){
+        rv_search_recent.apply {
+            adapter = wordAdapter
+        }
+        wordAdapter.initData(
+           listOf(
+               SearchWord("아이유"),
+               SearchWord("호텔델루나")
+           )
+        )
+    }
+
+    private fun initSearchView(){
+        edt_search_word.setOnClickListener {
+            cl_search_tab.setGone()
+            cl_search_recent.setVisible()
+        }
     }
 }
