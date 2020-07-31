@@ -12,4 +12,4 @@
 /captures
 .externalNativeBuild
 .cxx
-/app/values/api_information.xml
+api_information.xml
