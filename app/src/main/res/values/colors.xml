@@ -5,12 +5,15 @@
     <color name="colorAccent">#b9b9b9</color>
     <color name="colorCoral">#ff6359</color>
     <color name="colorDarkGrey">#b9b9b9</color>
-    <color name="colorBlack">#121212</color>
+    <color name="colorBlack">#272727</color>
     <color name="colorWhiteGrey">#eeeeee</color>
+    <color name="colorOpacityWhiteGrey">#66EEEEEE</color>
     <color name="colorPoint">#ff6359</color>
     <color name="colorSignUpEditText">#272727</color>
     <color name="colorSignUpEditTextWarning">#fa372b</color>
     <color name="colorWhite">#ffffff</color>
     <color name="colorGender">#b9b9b9</color>
+    <color name="colorMiddleGrey">#ededed</color>
+
 
 </resources>
