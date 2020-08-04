@@ -1,7 +1,10 @@
 package com.hyesun.kravel_android.ui.map
 
+import android.Manifest
 import android.app.Activity
-import android.location.Location
+import android.content.Context
+import android.content.pm.PackageManager
+import android.location.*
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -10,16 +13,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import com.hyesun.kravel_android.R
 import com.skt.Tmap.TMapGpsManager
 import com.skt.Tmap.TMapView
 import kotlinx.android.synthetic.main.fragment_map.*
 import org.koin.core.context.GlobalContext
 import timber.log.Timber
+import java.io.IOException
+import java.util.*
 
 
 class MapFragment : Fragment(), TMapGpsManager.onLocationChangedCallback {
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -33,7 +38,7 @@ class MapFragment : Fragment(), TMapGpsManager.onLocationChangedCallback {
         initMap()
 
         togglebtn_gps.setOnClickListener {
-            initGPS()
+
         }
     }
     private fun initMap() {
