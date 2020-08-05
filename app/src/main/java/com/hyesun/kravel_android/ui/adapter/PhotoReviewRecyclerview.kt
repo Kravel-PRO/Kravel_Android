@@ -1,5 +1,6 @@
 package com.hyesun.kravel_android.ui.adapter
 
+<<<<<<< HEAD
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
