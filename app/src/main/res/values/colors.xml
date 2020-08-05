@@ -14,6 +14,7 @@
     <color name="colorWhite">#ffffff</color>
     <color name="colorGender">#b9b9b9</color>
     <color name="colorMiddleGrey">#ededed</color>
+    <color name="colorOpacityBlack">#D9272727</color>
 
 
 </resources>
