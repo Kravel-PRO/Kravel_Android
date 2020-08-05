@@ -11,6 +11,7 @@ import com.hyesun.kravel_android.common.VerticalItemDecorator
 import com.hyesun.kravel_android.data.mock.PopularPlaceData
 import com.hyesun.kravel_android.data.response.CelebResponse
 import com.hyesun.kravel_android.data.response.DetailPlaceResponse
+import com.hyesun.kravel_android.data.response.PhotoResponse
 import com.hyesun.kravel_android.ui.adapter.CelebRecyclerview
 import com.hyesun.kravel_android.ui.adapter.NearRecyclerview
 import com.hyesun.kravel_android.ui.adapter.PhotoReviewRecyclerview
@@ -81,7 +82,22 @@ class HomeFragment : Fragment() {
 
     }
     private fun initPhotoRecycler() {
+        rv_home_photo_review.apply {
+            adapter = photoAdapter
+            addItemDecoration(VerticalItemDecorator(4))
+            addItemDecoration(HorizontalItemDecorator(4))
+        }
 
+        photoAdapter.initData(
+            listOf( PhotoResponse("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg"),
+                PhotoResponse("https://image.chosun.com/sitedata/image/202006/09/2020060902224_0.jpg"),
+                PhotoResponse("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg"),
+                PhotoResponse("https://image.chosun.com/sitedata/image/202006/09/2020060902224_0.jpg"),
+                PhotoResponse("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg"),
+                PhotoResponse("https://image.chosun.com/sitedata/image/202006/09/2020060902224_0.jpg"),
+                PhotoResponse("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg")
+            )
+        )
     }
 
 

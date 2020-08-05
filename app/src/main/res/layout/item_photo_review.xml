@@ -12,7 +12,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:scaleType="centerCrop"/>
 
-    <View
+   <View
         android:id="@+id/view_img_background"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -20,5 +20,19 @@
         android:background="@color/colorOpacityBlack"
         app:layout_constraintTop_toTopOf="@+id/img_photo_review"
         app:layout_constraintBottom_toBottomOf="@id/img_photo_review" />
+
+    <TextView
+        android:id="@+id/txt_photo_more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="더 보기"
+        android:textSize="15sp"
+        android:visibility="gone"
+        android:fontFamily="@font/notosans_cjk_kr_regular"
+        android:textColor="@color/colorWhite"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
