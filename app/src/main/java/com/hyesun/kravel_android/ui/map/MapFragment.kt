@@ -15,8 +15,14 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.hyesun.kravel_android.R
+import com.hyesun.kravel_android.common.HorizontalItemDecorator
+import com.hyesun.kravel_android.data.mock.NearPlaceData
+import com.hyesun.kravel_android.data.response.DetailPlaceResponse
+import com.hyesun.kravel_android.ui.adapter.MapPlaceRecyclerview
+import com.hyesun.kravel_android.ui.adapter.PopularRecyclerview
 import com.skt.Tmap.TMapGpsManager
 import com.skt.Tmap.TMapView
+import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_map.*
 import org.koin.core.context.GlobalContext
 import timber.log.Timber
@@ -25,6 +31,7 @@ import java.util.*
 
 
 class MapFragment : Fragment(), TMapGpsManager.onLocationChangedCallback {
+    private val nearAdapter : MapPlaceRecyclerview by lazy { MapPlaceRecyclerview() }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -36,10 +43,28 @@ class MapFragment : Fragment(), TMapGpsManager.onLocationChangedCallback {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         initMap()
+        initRecycler()
 
         togglebtn_gps.setOnClickListener {
 
         }
+    }
+    private fun initRecycler() {
+        rv_map_near_place.apply {
+            adapter = nearAdapter
+            addItemDecoration(HorizontalItemDecorator(16))
+        }
+
+        nearAdapter.initData(
+            listOf(
+                NearPlaceData("호텔델루나", arrayListOf("#아이유","#여진구"),"https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호텔델루나 주소"),
+                NearPlaceData("호텔델루나", arrayListOf("#아이유","#여진구"),"https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호텔델루나 주소"),
+                NearPlaceData("호텔델루나", arrayListOf("#아이유","#여진구"),"https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호텔델루나 주소"),
+                NearPlaceData("호텔델루나", arrayListOf("#아이유","#여진구"),"https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호텔델루나 주소"),
+                NearPlaceData("호텔델루나", arrayListOf("#아이유","#여진구"),"https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호텔델루나 주소")
+
+            )
+        )
     }
     private fun initMap() {
         val tmap = view?.findViewById<LinearLayout>(R.id.map)
