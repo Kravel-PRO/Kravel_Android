@@ -27,7 +27,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.9" />
+            app:layout_constraintVertical_bias="0.82" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -47,11 +47,12 @@
             android:layout_height="wrap_content"
             android:background="@drawable/selector_radio_round_background"
             android:button="@android:color/transparent"
-            android:fontFamily="@font/notosans_cjk_kr_regular"
+            android:fontFamily="@font/notosans_cjk_kr_bold"
             android:gravity="center"
             android:text="안녕"
             android:layout_marginVertical="10dp"
-            android:paddingVertical="5dp"
+            android:paddingTop="18dp"
+            android:paddingBottom="19dp"
             android:textColor="@color/colorSignUpEditText"
             android:textSize="15sp" />
 
@@ -61,11 +62,12 @@
             android:layout_height="wrap_content"
             android:background="@drawable/selector_radio_round_background"
             android:button="@android:color/transparent"
-            android:fontFamily="@font/notosans_cjk_kr_regular"
+            android:fontFamily="@font/notosans_cjk_kr_bold"
             android:gravity="center"
             android:text="你好吗"
+            android:paddingTop="18dp"
+            android:paddingBottom="17dp"
             android:layout_marginVertical="10dp"
-            android:paddingVertical="5dp"
             android:textColor="@color/colorSignUpEditText"
             android:textSize="15sp" />
 
@@ -75,11 +77,12 @@
             android:layout_height="wrap_content"
             android:background="@drawable/selector_radio_round_background"
             android:button="@android:color/transparent"
-            android:fontFamily="@font/notosans_cjk_kr_regular"
+            android:fontFamily="@font/notosans_cjk_kr_bold"
             android:gravity="center"
             android:text="Hello"
             android:layout_marginVertical="10dp"
-            android:paddingVertical="5dp"
+            android:paddingTop="18dp"
+            android:paddingBottom="17dp"
             android:textColor="@color/colorSignUpEditText"
             android:textSize="15sp" />
     </RadioGroup>
@@ -99,11 +102,16 @@
             android:background="@drawable/selector_btn_enable_background"
             android:elevation="0dp"
             android:enabled="false"
+            android:fontFamily="@font/notosans_cjk_kr_bold"
+            android:paddingTop="17dp"
+            android:paddingBottom="16dp"
             android:text="Start Kravel"
+            android:textAllCaps="false"
             android:textColor="@color/colorDarkGrey"
+            android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.8" />
+            app:layout_constraintVertical_bias="0.82" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
