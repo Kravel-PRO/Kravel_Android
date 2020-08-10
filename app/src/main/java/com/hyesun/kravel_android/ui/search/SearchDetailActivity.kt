@@ -47,6 +47,8 @@ class SearchDetailActivity : AppCompatActivity() {
 
         rv_search_detail_photo_review.apply{
             adapter = photoAdapter
+            addItemDecoration(HorizontalItemDecorator(4))
+            addItemDecoration(VerticalItemDecorator(4))
         }
 
         photoAdapter.initData(
