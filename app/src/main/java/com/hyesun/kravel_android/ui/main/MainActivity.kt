@@ -5,10 +5,8 @@ import android.os.Bundle
 import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
-import androidx.viewpager.widget.ViewPager
 import com.hyesun.kravel_android.R
 import com.hyesun.kravel_android.common.setOnDebounceClickListener
-import com.hyesun.kravel_android.ui.adapter.MainViewPagerAdapter
 import com.hyesun.kravel_android.ui.home.HomeFragment
 import com.hyesun.kravel_android.ui.map.MapFragment
 import com.hyesun.kravel_android.ui.mypage.UserFragment
