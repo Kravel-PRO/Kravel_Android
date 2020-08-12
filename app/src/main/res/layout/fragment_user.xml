@@ -228,7 +228,7 @@
                 android:layout_height="0dp"
                 android:paddingHorizontal="16dp"
                 app:layout_constraintTop_toBottomOf="@id/cl_user_update_pw"
-                app:layout_constraintBottom_toTopOf="@id/cl_user_tip">
+                app:layout_constraintBottom_toTopOf="@id/cl_user_report">
 
                 <ImageView
                     android:id="@+id/img_user_set_lang"
@@ -271,7 +271,7 @@
                 app:layout_constraintTop_toBottomOf="@id/cl_user_set_lang"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_user_tip"
+                android:id="@+id/cl_user_report"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:paddingHorizontal="16dp"
@@ -279,7 +279,7 @@
                 app:layout_constraintBottom_toTopOf="@id/cl_user_logout">
 
                 <ImageView
-                    android:id="@+id/img_user_tip"
+                    android:id="@+id/img_user_report"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_report"
@@ -288,7 +288,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/txt_user_tip"
+                    android:id="@+id/txt_user_report"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="제보하기"
@@ -296,12 +296,12 @@
                     android:textSize="15sp"
                     app:layout_constraintHorizontal_bias="0.1"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/img_user_tip_go"
-                    app:layout_constraintStart_toEndOf="@+id/img_user_tip"
+                    app:layout_constraintEnd_toStartOf="@+id/img_user_report_go"
+                    app:layout_constraintStart_toEndOf="@+id/img_user_report"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
-                    android:id="@+id/img_user_tip_go"
+                    android:id="@+id/img_user_report_go"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:src="@drawable/btn_more"
@@ -316,14 +316,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/colorMiddleGrey"
-                app:layout_constraintTop_toBottomOf="@id/cl_user_tip"/>
+                app:layout_constraintTop_toBottomOf="@id/cl_user_report"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_user_logout"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:paddingHorizontal="16dp"
-                app:layout_constraintTop_toBottomOf="@id/cl_user_tip"
+                app:layout_constraintTop_toBottomOf="@id/cl_user_report"
                 app:layout_constraintBottom_toBottomOf="parent">
 
                 <ImageView

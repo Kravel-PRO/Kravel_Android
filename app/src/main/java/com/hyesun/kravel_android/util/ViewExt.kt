@@ -21,7 +21,7 @@ fun View.setRound(curveRadius: Float) {
     outlineProvider = object : ViewOutlineProvider() {
 
         override fun getOutline(view: View?, outline: Outline?) {
-            outline?.setRoundRect(5.dpToPx(), 5.dpToPx(), view!!.width, view.height, curveRadius)
+            outline?.setRoundRect(1.dpToPx(), 1.dpToPx(), view!!.width, view.height, curveRadius)
         }
     }
     clipToOutline = true

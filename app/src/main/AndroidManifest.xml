@@ -15,7 +15,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.mypage.UpdatePwActivity"></activity>
+        <activity android:name=".ui.mypage.ReportActivity"></activity>
+        <activity android:name=".ui.mypage.UpdatePwActivity" />
         <activity android:name=".ui.mypage.UpdateInfoActivity" />
         <activity android:name=".ui.search.SearchDetailActivity" />
         <activity android:name=".ui.signup.SetLanguageActivity" />
