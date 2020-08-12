@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.hyesun.kravel_android.R
 import com.hyesun.kravel_android.common.setOnDebounceClickListener
+import com.hyesun.kravel_android.ui.signup.SetLanguageActivity
+import com.hyesun.kravel_android.util.startActivity
 import kotlinx.android.synthetic.main.dialog_logout.view.*
 import kotlinx.android.synthetic.main.fragment_user.*
 
@@ -31,6 +33,22 @@ class UserFragment : Fragment() {
     }
 
     private fun initSetting(){
+        cl_user_update_info.setOnDebounceClickListener {
+            startActivity(UpdateInfoActivity::class)
+        }
+
+        cl_user_update_pw.setOnDebounceClickListener {
+            startActivity(UpdatePwActivity::class)
+        }
+
+        cl_user_set_lang.setOnDebounceClickListener {
+            startActivity(SetLanguageActivity::class)
+        }
+
+        cl_user_report.setOnDebounceClickListener {
+            startActivity(ReportActivity::class)
+        }
+
         cl_user_logout.setOnDebounceClickListener {
             initDialog()
         }
