@@ -43,11 +43,16 @@ class MapFragment : Fragment(), TMapGpsManager.onLocationChangedCallback {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         initMap()
-        initRecycler()
+     //   initRecycler()
 
+        initBottomSheet()
         togglebtn_gps.setOnClickListener {
 
         }
+    }
+    private fun initBottomSheet () {
+        val bottomSheetDialogFragment = MapInfoFragment()
+        fragmentManager?.let { bottomSheetDialogFragment.show(it, bottomSheetDialogFragment.tag) }
     }
     private fun initRecycler() {
         rv_map_near_place.apply {
