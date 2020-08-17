@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
+
     <application
         android:name=".KravelApplication"
         android:allowBackup="true"
@@ -15,7 +16,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.mypage.ReportActivity"></activity>
+        <activity android:name=".ui.map.PlaceDetailActivity"></activity>
+        <activity android:name=".ui.mypage.ReportActivity" />
         <activity android:name=".ui.mypage.UpdatePwActivity" />
         <activity android:name=".ui.mypage.UpdateInfoActivity" />
         <activity android:name=".ui.search.SearchDetailActivity" />
