@@ -5,12 +5,16 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.view.KeyEvent
+import android.view.View
 import android.widget.ImageView
 import com.hyesun.kravel_android.R
 import com.hyesun.kravel_android.common.GlideApp
 import com.hyesun.kravel_android.common.setOnDebounceClickListener
 import com.hyesun.kravel_android.util.*
 import kotlinx.android.synthetic.main.activity_report.*
+import timber.log.Timber
 
 class ReportActivity : AppCompatActivity() {
 
@@ -22,6 +26,7 @@ class ReportActivity : AppCompatActivity() {
 
         initChangeEditText()
         initUploadImg()
+        initCreateTag()
     }
 
     private fun initChangeEditText(){
@@ -45,6 +50,16 @@ class ReportActivity : AppCompatActivity() {
                 else edt_report_place_tag.setBackgroundResource(R.drawable.signup_edit_style)
             }
         )
+    }
+
+    private fun initCreateTag(){
+//        edt_report_place_tag.setOnKeyListener { v, keyCode, event ->
+//            if ((event.action == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+//                //edt_report_place_tag.text = Editable.Factory.getInstance().newEditable("#${edt_report_place_tag.text}")
+//                Timber.e("snffldkdkdk")
+//            }
+//            true
+//        }
     }
 
     private fun initUploadImg(){
