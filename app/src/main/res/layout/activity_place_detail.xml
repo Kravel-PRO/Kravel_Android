@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context="com.hyesun.kravel_android.ui.map.PlaceDetailActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+          <androidx.constraintlayout.widget.Guideline
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:id="@+id/guideline1"
+              app:layout_constraintGuide_begin="16dp"
+              android:orientation="vertical"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/guideline2"
+                app:layout_constraintGuide_end="16dp"
+                android:orientation="vertical"/>
+
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="256dp"
+                android:id="@+id/img_map_detail_place"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:scaleType="centerCrop"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/img_map_detail_arrow"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="@id/guideline1"
+                android:src="@drawable/ic_baseline_arrow_downward_24"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="호텔 세느장"
+                android:textSize="22sp"
+                android:id="@+id/txt_map_detail_title"
+                android:fontFamily="@font/notosans_cjk_kr_bold"
+                android:textColor="@color/colorBlack"
+                app:layout_constraintTop_toBottomOf="@id/img_map_detail_place"
+                app:layout_constraintLeft_toLeftOf="@id/guideline1"
+                android:layout_marginTop="16dp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/rv_map_detail_hashtag"
+                android:layout_marginTop="16dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:orientation="horizontal"
+                tools:listitem="@layout/item_hashtag"
+                app:layout_constraintTop_toBottomOf="@id/txt_map_detail_title"
+                app:layout_constraintLeft_toLeftOf="@id/guideline1"
+                app:layout_constraintRight_toRightOf="@id/guideline2"/>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_map_detail_address"
+                app:layout_constraintTop_toBottomOf="@id/rv_map_detail_hashtag"
+                app:layout_constraintLeft_toLeftOf="@id/guideline1"
+                android:textSize="12sp"
+                android:fontFamily="@font/notosans_cjk_kr_regular"
+                android:textColor="#777777"
+                tools:text="주소 입니다."
+                android:layout_marginTop="12dp"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:id="@+id/cl_map_detail_scrap"
+                android:layout_marginTop="18dp"
+                android:background="@drawable/bottom_grey_round_background"
+                app:layout_constraintTop_toBottomOf="@id/txt_map_detail_address"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_photo"
+                    android:id="@+id/img_map_detail_photo"
+                    app:layout_constraintRight_toLeftOf="@id/view_map_detail_half"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"/>
+
+
+                <View
+                    android:id="@+id/view_map_detail_half"
+                    android:layout_width="2dp"
+                    android:layout_height="0dp"
+                    android:background="@color/colorDarkGrey"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHeight_percent="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <ImageView
+                    android:id="@+id/img_map_detail_scrap"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_scrap"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintLeft_toRightOf="@id/view_map_detail_half"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:id="@+id/view_line"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#1A272727"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@id/cl_map_detail_scrap"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"/>
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/cl_map_detail_photo_review"
+                android:padding="16dp"
+                app:layout_constraintTop_toBottomOf="@id/view_line"
+                app:layout_constraintLeft_toLeftOf="@id/guideline1"
+                app:layout_constraintRight_toRightOf="@id/guideline2">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txt_map_detail_photo_review"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:text="포토리뷰"
+                    android:textSize="15sp"
+                    android:textColor="@color/colorBlack"
+                    android:fontFamily="@font/notosans_cjk_kr_bold"
+                    android:includeFontPadding="false"
+                    />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_map_detail_photo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="12dp"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_map_detail_photo_review"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    app:spanCount="3"
+                    tools:listitem="@layout/item_photo_review"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <View
+                android:id="@+id/view_line2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#1A272727"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@id/cl_map_detail_photo_review"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/cl_bottom_map"
+                android:padding="16dp"
+                app:layout_constraintTop_toBottomOf="@id/view_line2"
+                app:layout_constraintLeft_toLeftOf="@id/guideline1"
+                app:layout_constraintRight_toRightOf="@id/guideline2">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txt_map_detail_map"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:text="위치"
+                    android:textSize="15sp"
+                    android:textColor="@color/colorBlack"
+                    android:fontFamily="@font/notosans_cjk_kr_bold"
+                    android:includeFontPadding="false"
+                    />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="178dp"
+                    android:layout_marginTop="12dp"
+                    android:orientation="vertical"
+                    android:id="@+id/ll_map_detail_map"
+                    app:layout_constraintTop_toBottomOf="@id/txt_map_detail_map"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text = "서울 종로구 ~~~"
+                    android:id="@+id/txt_map_detail_address2"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="24dp"
+                    app:layout_constraintTop_toBottomOf="@id/ll_map_detail_map"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:fontFamily="@font/notosans_cjk_kr_regular"
+                    android:textSize="12sp"
+                    android:textColor="#777777"
+                    android:includeFontPadding="false"/>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

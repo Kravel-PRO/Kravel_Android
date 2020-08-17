@@ -85,6 +85,9 @@ dependencies {
 
     //lottie
     implementation 'com.airbnb.android:lottie:3.4.1'
+    //googlegps
+    implementation 'com.google.android.gms:play-services:11.8.0'
+
 }
 
 configurations.all {
