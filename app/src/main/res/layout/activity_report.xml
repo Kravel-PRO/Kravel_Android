@@ -119,9 +119,20 @@
                 android:textColor="@color/colorBlack"
                 android:textColorHint="@color/colorDarkGrey"
                 android:textSize="15sp"
+                android:paddingRight="30dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/txt_report_place_area_title"
                 tools:layout_editor_absoluteX="0dp" />
+
+            <ImageView
+                android:id="@+id/img_report_search_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/btn_search"
+                android:layout_marginRight="16dp"
+                app:layout_constraintBottom_toBottomOf="@+id/edt_report_place_area"
+                app:layout_constraintEnd_toEndOf="@+id/edt_report_place_area"
+                app:layout_constraintTop_toTopOf="@+id/edt_report_place_area" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -153,10 +164,12 @@
                 android:textColor="@color/colorBlack"
                 android:textColorHint="@color/colorDarkGrey"
                 android:textSize="15sp"
+                android:inputType="text"
+                android:imeOptions="actionDone"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txt_report_place_tag_title" />
+                app:layout_constraintTop_toBottomOf="@+id/txt_report_place_tag_title"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -188,6 +201,30 @@
                 app:layout_constraintTop_toBottomOf="@id/txt_report_place_photo_title"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:background="@drawable/grey_round_fill_background">
+
+                <ImageView
+                    android:id="@+id/img_report_camera_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_camera_grey"
+                    app:layout_constraintBottom_toTopOf="@+id/txt_report_photo_explain"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed"/>
+
+                <TextView
+                    android:id="@+id/txt_report_photo_explain"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="사진을 업로드 해주세요."
+                    android:layout_marginTop="12dp"
+                    android:textColor="@color/colorOpacity15Black"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/img_report_camera_icon"
+                    app:layout_constraintStart_toStartOf="@+id/img_report_camera_icon"
+                    app:layout_constraintTop_toBottomOf="@+id/img_report_camera_icon" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

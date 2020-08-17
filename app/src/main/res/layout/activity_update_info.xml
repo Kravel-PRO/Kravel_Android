@@ -71,8 +71,7 @@
             android:id="@+id/edt_update_info_nickname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/signup_edit_style_true"
-            android:text="dd"
+            android:background="@drawable/signup_edit_style"
             android:textColor="@color/colorBlack"
             android:textSize="15sp"
             android:layout_marginTop="8dp"
@@ -111,7 +110,7 @@
                 android:paddingTop="18dp"
                 android:paddingBottom="16dp"
                 android:drawableTop="@drawable/signup_radio_male"
-                android:textColor="@color/colorGender"
+                android:textColor="@color/colorDarkGrey"
                 android:layout_weight="1"/>
 
             <RadioButton
@@ -128,7 +127,7 @@
                 android:drawableTop="@drawable/signup_radio_female"
                 android:button="@null"
                 android:fontFamily="@font/notosans_cjk_kr_regular"
-                android:textColor="@color/colorGender"
+                android:textColor="@color/colorDarkGrey"
                 android:layout_weight="1"/>
 
         </RadioGroup>
@@ -154,7 +153,8 @@
             android:paddingTop="17dp"
             android:paddingBottom="16dp"
             android:text="수정 완료"
-            android:textColor="@color/colorWhite"
+            android:enabled="false"
+            android:textColor="@color/colorDarkGrey"
             android:textSize="15sp"
             android:layout_marginHorizontal="20dp"
             app:layout_constraintBottom_toBottomOf="parent" />
