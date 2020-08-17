@@ -2,20 +2,27 @@ package com.hyesun.kravel_android.ui.map
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.marginLeft
+import androidx.core.view.marginRight
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.hyesun.kravel_android.R
 import com.hyesun.kravel_android.common.GlideApp
 import com.hyesun.kravel_android.common.HorizontalItemDecorator
 import com.hyesun.kravel_android.common.VerticalItemDecorator
+import com.hyesun.kravel_android.data.mock.HashTagData
 import com.hyesun.kravel_android.data.response.PhotoResponse
+import com.hyesun.kravel_android.ui.adapter.HashTagRecyclerView
 import com.hyesun.kravel_android.ui.adapter.PhotoReviewRecyclerview
 import com.hyesun.kravel_android.util.dpToPx
 import com.hyesun.kravel_android.util.setRound
@@ -29,6 +36,7 @@ import kotlinx.android.synthetic.main.fragment_map_info.*
 class MapInfoFragment(val markerItem: TMapMarkerItem) : BottomSheetDialogFragment() {
 
     private val photoAdapter : PhotoReviewRecyclerview by lazy { PhotoReviewRecyclerview() }
+    private val hashtagAdapter : HashTagRecyclerView by lazy { HashTagRecyclerView() }
     @SuppressLint("RestrictedApi")
     override fun setupDialog(dialog: Dialog, style: Int) {
         super.setupDialog(dialog, style)
@@ -49,8 +57,8 @@ class MapInfoFragment(val markerItem: TMapMarkerItem) : BottomSheetDialogFragmen
         initPlaceInfo()
         initPhotoRecycler()
         initMap()
-    }
 
+    }
     private fun initPlaceInfo() {
 
         GlideApp.with(img_bottom_place).load("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg").into(img_bottom_place)
@@ -58,8 +66,17 @@ class MapInfoFragment(val markerItem: TMapMarkerItem) : BottomSheetDialogFragmen
         img_bottom_place.setRound(10.dpToPx().toFloat())
         txt_bottom_title.text = markerItem.name
 
+        rv_map_hashtag.apply {
+            adapter = hashtagAdapter
+            addItemDecoration(HorizontalItemDecorator(4))
+        }
 
-
+        hashtagAdapter.initData(
+            listOf( HashTagData("호텔델루나"),
+                HashTagData("아이유"),
+                HashTagData("여진구")
+                )
+        )
     }
     private fun initMap() {
         val tmap = view?.findViewById<FrameLayout>(R.id.ll_bottom_map)
@@ -74,7 +91,7 @@ class MapInfoFragment(val markerItem: TMapMarkerItem) : BottomSheetDialogFragmen
         tmapView.setIconVisibility(false)
         tmap?.addView(tmapView)
 
-        tmapView.setCenterPoint(markerItem.longitude,markerItem.latitude)
+        tmapView.setCenterPoint(markerItem.latitude,markerItem.longitude)
         tmapView.addMarkerItem("test",markerItem)
 
     }

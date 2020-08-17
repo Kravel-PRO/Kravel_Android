@@ -1,29 +1,33 @@
 package com.hyesun.kravel_android.ui.map
 
+import android.content.pm.PackageManager
 import android.graphics.BitmapFactory.decodeResource
 import android.graphics.PointF
 import android.location.Location
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.hyesun.kravel_android.KravelApplication
 import com.hyesun.kravel_android.R
 import com.hyesun.kravel_android.common.HorizontalItemDecorator
+import com.hyesun.kravel_android.data.mock.HashTagData
 import com.hyesun.kravel_android.data.mock.NearPlaceData
 import com.hyesun.kravel_android.ui.adapter.MapPlaceRecyclerview
 import com.skt.Tmap.*
 import kotlinx.android.synthetic.main.fragment_map.*
 import timber.log.Timber
-import java.util.ArrayList
-import kotlinx.android.synthetic.main.fragment_map_info.*
+import java.util.*
 
 
-class MapFragment : Fragment(), TMapGpsManager.onLocationChangedCallback {
+class MapFragment : Fragment() {
+
+    lateinit var tmapView : TMapView
     private val nearAdapter: MapPlaceRecyclerview by lazy { MapPlaceRecyclerview() }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,7 +43,6 @@ class MapFragment : Fragment(), TMapGpsManager.onLocationChangedCallback {
         initRecycler()
 
         togglebtn_gps.setOnClickListener {
-
         }
     }
 
@@ -57,32 +60,31 @@ class MapFragment : Fragment(), TMapGpsManager.onLocationChangedCallback {
         nearAdapter.initData(
             listOf(
                 NearPlaceData(
-                    "호텔델루나",
-                    arrayListOf("#아이유", "#여진구"),
+                    "호텔델루나", listOf(HashTagData("아이유"),HashTagData("여진구")),
                     "https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg",
                     "호텔델루나 주소"
                 ),
                 NearPlaceData(
                     "호텔델루나",
-                    arrayListOf("#아이유", "#여진구"),
+                    listOf(HashTagData("아이유"),HashTagData("여진구")),
                     "https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg",
                     "호텔델루나 주소"
                 ),
                 NearPlaceData(
                     "호텔델루나",
-                    arrayListOf("#아이유", "#여진구"),
+                    listOf(HashTagData("아이유"),HashTagData("여진구")),
                     "https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg",
                     "호텔델루나 주소"
                 ),
                 NearPlaceData(
                     "호텔델루나",
-                    arrayListOf("#아이유", "#여진구"),
+                    listOf(HashTagData("아이유"),HashTagData("여진구")),
                     "https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg",
                     "호텔델루나 주소"
                 ),
                 NearPlaceData(
                     "호텔델루나",
-                    arrayListOf("#아이유", "#여진구"),
+                    listOf(HashTagData("아이유"),HashTagData("여진구")),
                     "https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg",
                     "호텔델루나 주소"
                 )
@@ -93,7 +95,7 @@ class MapFragment : Fragment(), TMapGpsManager.onLocationChangedCallback {
 
     private fun initMap() {
         val tmap = view?.findViewById<LinearLayout>(R.id.map)
-        val tmapView = TMapView(context)
+        tmapView = TMapView(context)
         tmapView.setSKTMapApiKey(getString(R.string.tmap_api_key))
         tmapView.setCompassMode(true)
         tmapView.setIconVisibility(true)
@@ -111,7 +113,7 @@ class MapFragment : Fragment(), TMapGpsManager.onLocationChangedCallback {
         tItem.name = "SKT 타워"
         tItem.visible = TMapMarkerItem.VISIBLE
 
-        val bitmap = decodeResource(context?.resources, R.drawable.bottom_place_tag_background)
+        val bitmap = decodeResource(context?.resources, R.drawable.place_tag_background)
         tItem.run {
             this.icon = bitmap
             // 핀모양으로 된 마커를 사용할 경우 마커 중심을 하단 핀 끝으로 설정.
@@ -150,17 +152,15 @@ class MapFragment : Fragment(), TMapGpsManager.onLocationChangedCallback {
     }
 
     private fun initGPS() {
-        val tmapgps: TMapGpsManager = TMapGpsManager(context)
-        tmapgps.provider = TMapGpsManager.GPS_PROVIDER
-        tmapgps.minTime = 1000
-        tmapgps.OpenGps()
-        Timber.d("${tmapgps.location}")
+         if ( Build.VERSION.SDK_INT >= 23 &&
+                        ContextCompat.checkSelfPermission(KravelApplication.GlobalApp, android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED )
+         {
+            ActivityCompat.requestPermissions( requireActivity(),arrayOf ( android.Manifest.permission.ACCESS_FINE_LOCATION ),
+                    0 )
+             return
+         }
+
+        //Timber.d("${tmapgps.location.toString()}")
     }
-
-    override fun onLocationChange(p0: Location?) {
-        TODO("Not yet implemented")
-    }
-
-
 }
 
