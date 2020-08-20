@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.hyesun.kravel_android.ui.mypage.ReportActivity">
+    tools:context="com.kravelteam.kravel_android.ui.mypage.ReportActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_report_toolbar"
