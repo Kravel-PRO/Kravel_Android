@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.hyesun.kravel_android">
+    package="com.kravelteam.kravel_android">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -9,23 +9,23 @@
 
 
     <application
-        android:name=".KravelApplication"
+        android:name="com.kravelteam.kravel_android.KravelApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.map.PlaceDetailActivity"></activity>
-        <activity android:name=".ui.mypage.ReportActivity" />
-        <activity android:name=".ui.mypage.UpdatePwActivity" />
-        <activity android:name=".ui.mypage.UpdateInfoActivity" />
-        <activity android:name=".ui.search.SearchDetailActivity" />
-        <activity android:name=".ui.signup.SetLanguageActivity" />
-        <activity android:name=".ui.login.LoginActivity" />
-        <activity android:name=".ui.signup.FinishSignUpActivity" />
-        <activity android:name=".ui.signup.SignUpActivity" />
-        <activity android:name=".ui.main.MainActivity">
+        <activity android:name="com.kravelteam.kravel_android.ui.map.PlaceDetailActivity"></activity>
+        <activity android:name="com.kravelteam.kravel_android.ui.mypage.ReportActivity" />
+        <activity android:name="com.kravelteam.kravel_android.ui.mypage.UpdatePwActivity" />
+        <activity android:name="com.kravelteam.kravel_android.ui.mypage.UpdateInfoActivity" />
+        <activity android:name="com.kravelteam.kravel_android.ui.search.SearchDetailActivity" />
+        <activity android:name="com.kravelteam.kravel_android.ui.signup.SetLanguageActivity" />
+        <activity android:name="com.kravelteam.kravel_android.ui.login.LoginActivity" />
+        <activity android:name="com.kravelteam.kravel_android.ui.signup.FinishSignUpActivity" />
+        <activity android:name="com.kravelteam.kravel_android.ui.signup.SignUpActivity" />
+        <activity android:name="com.kravelteam.kravel_android.ui.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
