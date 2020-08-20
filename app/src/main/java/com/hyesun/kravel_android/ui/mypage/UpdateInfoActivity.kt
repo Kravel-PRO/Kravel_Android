@@ -13,12 +13,12 @@ class UpdateInfoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_update_info)
 
-        initSelectRadioBtn()
+        initCheckRadioBtn()
         initChangeEditText()
         initEnableBtn()
     }
 
-    private fun initSelectRadioBtn(){
+    private fun initCheckRadioBtn(){
         rb_update_info_man.setOnCheckedChangeListener { _, isChecked ->
             if(isChecked) {
                 rb_update_info_man.setTextColor(resources.getColor(R.color.colorCoral))
