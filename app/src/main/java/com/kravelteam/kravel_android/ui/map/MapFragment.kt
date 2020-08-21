@@ -1,57 +1,33 @@
 package com.kravelteam.kravel_android.ui.map
 
-import android.Manifest
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.graphics.BitmapFactory.decodeResource
-import android.graphics.PointF
-import android.location.Location
-import android.location.LocationListener
 import android.location.LocationManager
-import android.os.Build
 import android.os.Bundle
-import android.os.Looper
 import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.Toast
-import androidx.annotation.UiThread
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
-import com.airbnb.lottie.model.Marker
-import com.google.android.gms.location.*
-import com.kravelteam.kravel_android.KravelApplication
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.HorizontalItemDecorator
 import com.kravelteam.kravel_android.data.mock.HashTagData
 import com.kravelteam.kravel_android.data.mock.NearPlaceData
 import com.kravelteam.kravel_android.ui.adapter.MapPlaceRecyclerview
 import com.naver.maps.geometry.LatLng
-import com.naver.maps.map.MapView
-import com.naver.maps.map.NaverMap
-import com.naver.maps.map.NaverMapSdk
+import com.naver.maps.map.*
+import com.naver.maps.map.util.FusedLocationSource
 import kotlinx.android.synthetic.main.fragment_map.*
-import org.koin.core.context.GlobalContext
-import org.koin.dsl.koinApplication
-import timber.log.Timber
-import java.util.*
 
 
-class MapFragment : Fragment(){
+class MapFragment : Fragment(),OnMapReadyCallback{
+    private lateinit var locationSource : FusedLocationSource
     private lateinit var mapView : MapView
-    private var mFusedLocationProviderClient: FusedLocationProviderClient? = null
-    private val INTERVAL: Long = 2000
-    private val FASTEST_INTERVAL: Long = 1000
-    lateinit var mLastLocation: Location
-    internal lateinit var mLocationRequest: LocationRequest
-    private val REQUEST_PERMISSION_LOCATION = 10
+    private var trackingmode : Boolean = false
+    private lateinit var naverMap : NaverMap
+
     private val nearAdapter: MapPlaceRecyclerview by lazy { MapPlaceRecyclerview() }
-    private var checkGPS : Boolean = false
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -64,8 +40,9 @@ class MapFragment : Fragment(){
         super.onActivityCreated(savedInstanceState)
         mapView =requireActivity().findViewById(R.id.mapView)
         mapView.onCreate(savedInstanceState)
+        mapView.getMapAsync (this)
 
-        mLocationRequest = LocationRequest()
+        locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
         val locationManager = requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
         if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             buildAlterMessageNoGPS()
@@ -74,18 +51,6 @@ class MapFragment : Fragment(){
         initRecycler()
         initMap()
 
-        togglebtn_gps.setOnClickListener {
-            if(!checkGPS) {
-                checkGPS = true
-                if(checkPermissionForLocation(KravelApplication.GlobalApp)) {
-                    startLocationUpdates()
-                }
-            } else {
-//                tmapView.setSightVisible(false)
-//                tmapView.setCompassMode(false)
-                checkGPS = false
-            }
-        }
     }
 
 //    private fun initBottomSheet(markerItem: TMapMarkerItem) {
@@ -152,133 +117,27 @@ class MapFragment : Fragment(){
         val alert: AlertDialog = builder.create()
         alert.show()
     }
-    private val mLocationCallback = object : LocationCallback() {
-        override fun onLocationResult(locationResult: LocationResult) {
-            // do work here
-            locationResult.lastLocation
-            onLocationChanged(locationResult.lastLocation)
-        }
-
-    }
-    fun onLocationChanged(location: Location) {
-        // New location has now been determined
-
-        mLastLocation = location
-        val lat = location.latitude
-        val lng = location.longitude
-//        tmapView.setLocationPoint(lat!!,lng!!)
-//        if(checkGPS) {
-//            tmapView.setTrackingMode(true)
-//            tmapView.setSightVisible(true)
-//            tmapView.setCompassMode(true)
-//            tmapView.setLocationPoint(lat!!,lng!!)
-//            tmapView.setCenterPoint(lat!!,lng!!)
-//        }
-        Timber.e("lat : $lat, lng : $lng")
-
-        // You can now create a LatLng Object for use with maps
-    }
     private fun initMap() {
-
-        if(checkPermissionForLocation(KravelApplication.GlobalApp)) {
-            startLocationUpdates()
-        }
 
         val marker = com.naver.maps.map.overlay.Marker()
         marker.position = LatLng(37.496502, 126.956100)
 
-//        val bitmap = decodeResource(context?.resources, R.drawable.place_tag_background)
-//        tItem.run {
-//            this.icon = bitmap
-//            // 핀모양으로 된 마커를 사용할 경우 마커 중심을 하단 핀 끝으로 설정.
-//            setPosition(0.5F, 1.0F)
-//        }         // 마커의 중심점을 하단, 중앙으로 설정
-//
-//        tmapView.addMarkerItem("test", tItem)
-//        tmapView.setOnClickListenerCallBack(object : TMapView.OnClickListenerCallback {
-//            override fun onPressEvent(
-//                markerlist: ArrayList<TMapMarkerItem>?,
-//                arraylist1: ArrayList<TMapPOIItem>?,
-//                tMapPoint: TMapPoint?,
-//                pointF: PointF?
-//            ): Boolean {
-//                if (markerlist!!.isNotEmpty()) {
-//                    val placeName = markerlist!!.get(0).name
-//                    val placePoint = markerlist!!.get(0).tMapPoint
-//                    Timber.e("name ${placeName}")
-//                    Timber.e("point ${placePoint.toString()}")
-//                    initBottomSheet(markerlist.get(0))
-//                }
-//                return false
-//
-//            }
-//
-//            override fun onPressUpEvent(
-//                p0: ArrayList<TMapMarkerItem>?,
-//                p1: ArrayList<TMapPOIItem>?,
-//                p2: TMapPoint?,
-//                p3: PointF?
-//            ): Boolean {
-//                return false
-//            }
-//
-//        })
     }
 
-    private fun startLocationUpdates() {
-        // Create the location request to start receiving updates
 
-        mLocationRequest!!.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        mLocationRequest!!.setInterval(INTERVAL)
-        mLocationRequest!!.setFastestInterval(FASTEST_INTERVAL)
-
-        // Create LocationSettingsRequest object using location request
-        val builder = LocationSettingsRequest.Builder()
-        builder.addLocationRequest(mLocationRequest!!)
-        val locationSettingsRequest = builder.build()
-
-        val settingsClient = LocationServices.getSettingsClient(requireActivity())
-        settingsClient.checkLocationSettings(locationSettingsRequest)
-
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity())
-        // new Google API SDK v11 uses getFusedLocationProviderClient(this)
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-            && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return
-        }
-        mFusedLocationProviderClient!!.requestLocationUpdates(mLocationRequest, mLocationCallback,
-            Looper.myLooper())
-    }
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        if (requestCode == REQUEST_PERMISSION_LOCATION) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                startLocationUpdates()
-            } else {
-               // Permission 거절됨
-            }
-        }
+       if(locationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
+           if(!locationSource.isActivated) {
+               naverMap.locationTrackingMode = LocationTrackingMode.None
+           }
+           return
+       }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
-    private fun checkPermissionForLocation(context: Context) : Boolean {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
-            if (context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) ==
-                PackageManager.PERMISSION_GRANTED) {
-                true
-            } else {
-                // Show the permission request
-                ActivityCompat.requestPermissions(requireActivity(), arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
-                    REQUEST_PERMISSION_LOCATION)
-                false
-            }
-        } else {
-            true
-        }
-    }
-
     override fun onStart() {
         super.onStart()
         mapView.onStart()
@@ -312,6 +171,33 @@ class MapFragment : Fragment(){
     override fun onLowMemory() {
         super.onLowMemory()
         mapView.onLowMemory()
+    }
+
+    companion object {
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
+    }
+
+    override fun onMapReady(p0: NaverMap) {
+        mapView.getMapAsync {
+            naverMap = it
+            naverMap = p0
+            naverMap.locationSource = locationSource
+            naverMap.locationTrackingMode = LocationTrackingMode.NoFollow
+        }
+
+        togglebtn_gps.setOnClickListener {
+            if(!trackingmode) {
+                trackingmode = true
+                mapView.getMapAsync {
+                    it.locationTrackingMode = LocationTrackingMode.Face
+                }
+            } else {
+                trackingmode = false
+                mapView.getMapAsync {
+                    it.locationTrackingMode = LocationTrackingMode.NoFollow
+                }
+            }
+        }
     }
 
 }
