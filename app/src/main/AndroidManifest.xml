@@ -16,6 +16,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <meta-data
+            android:name="com.naver.maps.map.CLIENT_ID"
+            android:value="@string/naver_map_api_key"/>
         <activity android:name="com.kravelteam.kravel_android.ui.map.PlaceDetailActivity"></activity>
         <activity android:name="com.kravelteam.kravel_android.ui.mypage.ReportActivity" />
         <activity android:name="com.kravelteam.kravel_android.ui.mypage.UpdatePwActivity" />

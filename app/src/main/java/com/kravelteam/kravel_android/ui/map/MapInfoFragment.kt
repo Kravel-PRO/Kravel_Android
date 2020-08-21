@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.fragment_home.rv_home_photo_review
 import kotlinx.android.synthetic.main.fragment_map_info.*
 
 
-class MapInfoFragment(val markerItem: TMapMarkerItem) : BottomSheetDialogFragment() {
+class MapInfoFragment() : BottomSheetDialogFragment() {
 
     private val photoAdapter : PhotoReviewRecyclerview by lazy { PhotoReviewRecyclerview() }
     private val hashtagAdapter : HashTagRecyclerView by lazy { HashTagRecyclerView() }
@@ -45,47 +45,49 @@ class MapInfoFragment(val markerItem: TMapMarkerItem) : BottomSheetDialogFragmen
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        initPlaceInfo()
+        // initPlaceInfo()
         initPhotoRecycler()
-        initMap()
+        //initMap()
 
     }
-    private fun initPlaceInfo() {
-
-        GlideApp.with(img_bottom_place).load("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg").into(img_bottom_place)
-        // Round값 물어보기
-        img_bottom_place.setRound(10.dpToPx().toFloat())
-        txt_bottom_title.text = markerItem.name
-
-        rv_map_hashtag.apply {
-            adapter = hashtagAdapter
-            addItemDecoration(HorizontalItemDecorator(4))
-        }
-
-        hashtagAdapter.initData(
-            listOf( HashTagData("호텔델루나"),
-                HashTagData("아이유"),
-                HashTagData("여진구")
-                )
-        )
-    }
-    private fun initMap() {
-        val tmap = view?.findViewById<FrameLayout>(R.id.ll_bottom_map)
-        val tmapView = TMapView(context)
-        tmapView.setSKTMapApiKey(getString(R.string.tmap_api_key))
-        tmapView.setCompassMode(true)
-        tmapView.zoomLevel = 15
-        tmapView.setLanguage(TMapView.LANGUAGE_KOREAN)
-        tmapView.mapType = TMapView.MAPTYPE_STANDARD
-        tmapView.setTrackingMode(false)
-        tmapView.setSightVisible(false)
-        tmapView.setIconVisibility(false)
-        tmap?.addView(tmapView)
-
-        tmapView.setCenterPoint(markerItem.latitude,markerItem.longitude)
-        tmapView.addMarkerItem("test",markerItem)
-
-    }
+//    private fun initPlaceInfo() {
+//        val tmapData : TMapData = TMapData()
+//        GlideApp.with(img_bottom_place).load("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg").into(img_bottom_place)
+//        // Round값 물어보기
+//        img_bottom_place.setRound(10.dpToPx().toFloat())
+//        txt_bottom_title.text = markerItem.name
+//        txt_bottom_map_address1.text = tmapData.convertGpsToAddress(markerItem.latitude, markerItem.longitude)
+//        txt_bottom_map_address2.text = tmapData.convertGpsToAddress(markerItem.latitude, markerItem.longitude)
+//
+//        rv_map_hashtag.apply {
+//            adapter = hashtagAdapter
+//            addItemDecoration(HorizontalItemDecorator(4))
+//        }
+//
+//        hashtagAdapter.initData(
+//            listOf( HashTagData("호텔델루나"),
+//                HashTagData("아이유"),
+//                HashTagData("여진구")
+//                )
+//        )
+//    }
+//    private fun initMap() {
+//        val tmap = view?.findViewById<FrameLayout>(R.id.ll_bottom_map)
+//        val tmapView = TMapView(context)
+//        tmapView.setSKTMapApiKey(getString(R.string.tmap_api_key))
+//        tmapView.setCompassMode(true)
+//        tmapView.zoomLevel = 15
+//        tmapView.setLanguage(TMapView.LANGUAGE_KOREAN)
+//        tmapView.mapType = TMapView.MAPTYPE_STANDARD
+//        tmapView.setTrackingMode(false)
+//        tmapView.setSightVisible(false)
+//        tmapView.setIconVisibility(false)
+//        tmap?.addView(tmapView)
+//
+//        tmapView.setCenterPoint(markerItem.latitude,markerItem.longitude)
+//        tmapView.addMarkerItem("test",markerItem)
+//
+//    }
     private fun initPhotoRecycler() {
         rv_home_photo_review.apply {
             adapter = photoAdapter
