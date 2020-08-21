@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.hyesun.kravel_android.ui.signup.SetLanguageActivity"
+    tools:context="com.kravelteam.kravel_android.ui.signup.SetLanguageActivity"
     android:paddingHorizontal="36dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -53,7 +53,7 @@
             android:layout_marginVertical="10dp"
             android:paddingTop="18dp"
             android:paddingBottom="19dp"
-            android:textColor="@color/colorSignUpEditText"
+            android:textColor="@color/colorDarkGrey"
             android:textSize="15sp" />
 
         <RadioButton
@@ -68,7 +68,7 @@
             android:paddingTop="18dp"
             android:paddingBottom="17dp"
             android:layout_marginVertical="10dp"
-            android:textColor="@color/colorSignUpEditText"
+            android:textColor="@color/colorDarkGrey"
             android:textSize="15sp" />
 
         <RadioButton
@@ -83,7 +83,7 @@
             android:layout_marginVertical="10dp"
             android:paddingTop="18dp"
             android:paddingBottom="17dp"
-            android:textColor="@color/colorSignUpEditText"
+            android:textColor="@color/colorDarkGrey"
             android:textSize="15sp" />
     </RadioGroup>
 
@@ -95,15 +95,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rg_set_language">
 
-        <Button
+        <TextView
             android:id="@+id/btn_set_language_start"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/selector_btn_enable_background"
-            android:elevation="0dp"
             android:enabled="false"
             android:fontFamily="@font/notosans_cjk_kr_bold"
             android:paddingTop="17dp"
+            android:gravity="center"
             android:paddingBottom="16dp"
             android:text="Start Kravel"
             android:textAllCaps="false"

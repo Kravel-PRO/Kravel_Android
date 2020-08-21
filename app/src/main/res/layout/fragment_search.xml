@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.hyesun.kravel_android.ui.search.SearchFragment">
+    tools:context="com.kravelteam.kravel_android.ui.search.SearchFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_search_main"

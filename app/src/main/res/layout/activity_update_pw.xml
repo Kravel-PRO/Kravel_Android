@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.hyesun.kravel_android.ui.mypage.UpdatePwActivity">
+    tools:context="com.kravelteam.kravel_android.ui.mypage.UpdatePwActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_update_pw_toolbar"
@@ -53,8 +53,7 @@
         android:paddingVertical="24dp"
         app:layout_constraintTop_toBottomOf="@id/cl_update_pw_toolbar"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_weight="8.89"
-        android:visibility="invisible">
+        app:layout_constraintVertical_weight="8.89">
 
         <TextView
             android:id="@+id/txt_update_pw_explan"
@@ -105,7 +104,8 @@
         android:paddingVertical="24dp"
         app:layout_constraintTop_toBottomOf="@id/cl_update_pw_toolbar"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_weight="8.89">
+        app:layout_constraintVertical_weight="8.89"
+        android:visibility="invisible">
 
         <TextView
             android:id="@+id/txt_update_pw_change"
@@ -137,9 +137,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="변경할 비밀번호를 입력해주세요."
+            android:text="비밀번호 확인"
             android:textColor="@color/colorBlack"
             android:textSize="15sp"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edt_update_pw_change" />
 
         <EditText
