@@ -187,42 +187,42 @@ class MapFragment : Fragment(){
         val marker = com.naver.maps.map.overlay.Marker()
         marker.position = LatLng(37.496502, 126.956100)
 
-        val bitmap = decodeResource(context?.resources, R.drawable.place_tag_background)
-        tItem.run {
-            this.icon = bitmap
-            // 핀모양으로 된 마커를 사용할 경우 마커 중심을 하단 핀 끝으로 설정.
-            setPosition(0.5F, 1.0F)
-        }         // 마커의 중심점을 하단, 중앙으로 설정
-
-        tmapView.addMarkerItem("test", tItem)
-        tmapView.setOnClickListenerCallBack(object : TMapView.OnClickListenerCallback {
-            override fun onPressEvent(
-                markerlist: ArrayList<TMapMarkerItem>?,
-                arraylist1: ArrayList<TMapPOIItem>?,
-                tMapPoint: TMapPoint?,
-                pointF: PointF?
-            ): Boolean {
-                if (markerlist!!.isNotEmpty()) {
-                    val placeName = markerlist!!.get(0).name
-                    val placePoint = markerlist!!.get(0).tMapPoint
-                    Timber.e("name ${placeName}")
-                    Timber.e("point ${placePoint.toString()}")
-                    initBottomSheet(markerlist.get(0))
-                }
-                return false
-
-            }
-
-            override fun onPressUpEvent(
-                p0: ArrayList<TMapMarkerItem>?,
-                p1: ArrayList<TMapPOIItem>?,
-                p2: TMapPoint?,
-                p3: PointF?
-            ): Boolean {
-                return false
-            }
-
-        })
+//        val bitmap = decodeResource(context?.resources, R.drawable.place_tag_background)
+//        tItem.run {
+//            this.icon = bitmap
+//            // 핀모양으로 된 마커를 사용할 경우 마커 중심을 하단 핀 끝으로 설정.
+//            setPosition(0.5F, 1.0F)
+//        }         // 마커의 중심점을 하단, 중앙으로 설정
+//
+//        tmapView.addMarkerItem("test", tItem)
+//        tmapView.setOnClickListenerCallBack(object : TMapView.OnClickListenerCallback {
+//            override fun onPressEvent(
+//                markerlist: ArrayList<TMapMarkerItem>?,
+//                arraylist1: ArrayList<TMapPOIItem>?,
+//                tMapPoint: TMapPoint?,
+//                pointF: PointF?
+//            ): Boolean {
+//                if (markerlist!!.isNotEmpty()) {
+//                    val placeName = markerlist!!.get(0).name
+//                    val placePoint = markerlist!!.get(0).tMapPoint
+//                    Timber.e("name ${placeName}")
+//                    Timber.e("point ${placePoint.toString()}")
+//                    initBottomSheet(markerlist.get(0))
+//                }
+//                return false
+//
+//            }
+//
+//            override fun onPressUpEvent(
+//                p0: ArrayList<TMapMarkerItem>?,
+//                p1: ArrayList<TMapPOIItem>?,
+//                p2: TMapPoint?,
+//                p3: PointF?
+//            ): Boolean {
+//                return false
+//            }
+//
+//        })
     }
 
     private fun startLocationUpdates() {
