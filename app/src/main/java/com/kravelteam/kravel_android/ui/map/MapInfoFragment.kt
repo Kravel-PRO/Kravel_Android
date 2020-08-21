@@ -18,8 +18,6 @@ import com.kravelteam.kravel_android.ui.adapter.HashTagRecyclerView
 import com.kravelteam.kravel_android.ui.adapter.PhotoReviewRecyclerview
 import com.kravelteam.kravel_android.util.dpToPx
 import com.kravelteam.kravel_android.util.setRound
-import com.skt.Tmap.TMapMarkerItem
-import com.skt.Tmap.TMapView
 import kotlinx.android.synthetic.main.fragment_home.rv_home_photo_review
 import kotlinx.android.synthetic.main.fragment_map_info.*
 
