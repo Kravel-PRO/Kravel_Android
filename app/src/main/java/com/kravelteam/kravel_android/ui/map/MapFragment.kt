@@ -17,11 +17,14 @@ import com.kravelteam.kravel_android.data.mock.NearPlaceData
 import com.kravelteam.kravel_android.ui.adapter.MapPlaceRecyclerview
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
+import com.naver.maps.map.overlay.LocationOverlay
 import com.naver.maps.map.util.FusedLocationSource
 import kotlinx.android.synthetic.main.fragment_map.*
+import kotlinx.android.synthetic.main.fragment_user.*
 
 
 class MapFragment : Fragment(),OnMapReadyCallback{
+    private lateinit var locationOverlay: LocationOverlay
     private lateinit var locationSource : FusedLocationSource
     private lateinit var mapView : MapView
     private var trackingmode : Boolean = false
@@ -32,6 +35,7 @@ class MapFragment : Fragment(),OnMapReadyCallback{
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_map, container, false)
     }
@@ -41,8 +45,12 @@ class MapFragment : Fragment(),OnMapReadyCallback{
         mapView =requireActivity().findViewById(R.id.mapView)
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync (this)
+        mapView.isFocusableInTouchMode = true
+        mapView.requestFocus()
+
 
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
+
         val locationManager = requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
         if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             buildAlterMessageNoGPS()
@@ -118,7 +126,6 @@ class MapFragment : Fragment(),OnMapReadyCallback{
         alert.show()
     }
     private fun initMap() {
-
         val marker = com.naver.maps.map.overlay.Marker()
         marker.position = LatLng(37.496502, 126.956100)
 
@@ -179,23 +186,43 @@ class MapFragment : Fragment(),OnMapReadyCallback{
 
     override fun onMapReady(p0: NaverMap) {
         mapView.getMapAsync {
-            naverMap = it
-            naverMap = p0
-            naverMap.locationSource = locationSource
+            this.naverMap = p0
+//            it.locationSource = locationSource
+//            locationOverlay = it.locationOverlay
+//            locationOverlay.isVisible = true
+//            it.locationTrackingMode = LocationTrackingMode.NoFollow
+        }
+
+        naverMap.locationSource = locationSource
+        if(trackingmode) {
+            naverMap.locationTrackingMode = LocationTrackingMode.Face
+        } else {
             naverMap.locationTrackingMode = LocationTrackingMode.NoFollow
         }
+        locationOverlay = naverMap.locationOverlay
+        locationOverlay.isVisible = true
+
+
+        naverMap.addOnLocationChangeListener {location ->
+            naverMap.moveCamera(CameraUpdate.scrollTo(LatLng(location!!)))
+            locationOverlay.isVisible = true
+            if(trackingmode) {
+                naverMap.locationTrackingMode = LocationTrackingMode.Face
+            } else {
+                naverMap.locationTrackingMode = LocationTrackingMode.NoFollow
+            }
+        }
+
+
 
         togglebtn_gps.setOnClickListener {
             if(!trackingmode) {
                 trackingmode = true
-                mapView.getMapAsync {
-                    it.locationTrackingMode = LocationTrackingMode.Face
-                }
+                naverMap.locationTrackingMode = LocationTrackingMode.Face
+
             } else {
                 trackingmode = false
-                mapView.getMapAsync {
-                    it.locationTrackingMode = LocationTrackingMode.NoFollow
-                }
+                naverMap.locationTrackingMode = LocationTrackingMode.NoFollow
             }
         }
     }
