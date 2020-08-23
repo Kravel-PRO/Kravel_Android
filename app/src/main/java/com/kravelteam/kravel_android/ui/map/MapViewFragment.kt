@@ -3,12 +3,14 @@ package com.kravelteam.kravel_android.ui.map
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.location.LocationManager
 import android.os.Bundle
 import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.HorizontalItemDecorator
@@ -17,13 +19,15 @@ import com.kravelteam.kravel_android.data.mock.NearPlaceData
 import com.kravelteam.kravel_android.ui.adapter.MapPlaceRecyclerview
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
+import com.naver.maps.map.LocationTrackingMode.*
 import com.naver.maps.map.overlay.LocationOverlay
 import com.naver.maps.map.util.FusedLocationSource
 import kotlinx.android.synthetic.main.fragment_map.*
 import kotlinx.android.synthetic.main.fragment_user.*
+import timber.log.Timber
 
 
-class MapFragment : Fragment(),OnMapReadyCallback{
+class MapViewFragment : Fragment(),OnMapReadyCallback{
     private lateinit var locationOverlay: LocationOverlay
     private lateinit var locationSource : FusedLocationSource
     private lateinit var mapView : MapView
@@ -39,15 +43,17 @@ class MapFragment : Fragment(),OnMapReadyCallback{
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_map, container, false)
     }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        mapView =requireActivity().findViewById(R.id.mapView)
-        mapView.onCreate(savedInstanceState)
-        mapView.getMapAsync (this)
-        mapView.isFocusableInTouchMode = true
-        mapView.requestFocus()
 
+
+        val fm = childFragmentManager
+        val mapFragment = fm.findFragmentById(R.id.map) as MapFragment?
+            ?: MapFragment.newInstance().also {
+                fm.beginTransaction().add(R.id.map, it).commit()
+            }
+
+        mapFragment.getMapAsync(this)
 
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
 
@@ -58,6 +64,18 @@ class MapFragment : Fragment(),OnMapReadyCallback{
 
         initRecycler()
         initMap()
+        togglebtn_gps.setOnClickListener {
+            if(!trackingmode) {
+                trackingmode = true
+                naverMap.locationTrackingMode = Follow
+
+            } else {
+                trackingmode = false
+                naverMap.locationTrackingMode = NoFollow
+            }
+        }
+
+
 
     }
 
@@ -139,93 +157,34 @@ class MapFragment : Fragment(),OnMapReadyCallback{
     ) {
        if(locationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
            if(!locationSource.isActivated) {
-               naverMap.locationTrackingMode = LocationTrackingMode.None
+               naverMap.locationTrackingMode = None
            }
            return
        }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
-    override fun onStart() {
-        super.onStart()
-        mapView.onStart()
-    }
 
-    override fun onResume() {
-        super.onResume()
-        mapView.onResume()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        mapView.onPause()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        mapView.onSaveInstanceState(outState)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        mapView.onStop()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mapView.onDestroy()
-    }
-
-    override fun onLowMemory() {
-        super.onLowMemory()
-        mapView.onLowMemory()
-    }
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
     }
 
-    override fun onMapReady(p0: NaverMap) {
-        mapView.getMapAsync {
-            this.naverMap = p0
-//            it.locationSource = locationSource
-//            locationOverlay = it.locationOverlay
-//            locationOverlay.isVisible = true
-//            it.locationTrackingMode = LocationTrackingMode.NoFollow
-        }
-
+    override fun onMapReady(naverMap: NaverMap) {
+        this.naverMap = naverMap
         naverMap.locationSource = locationSource
-        if(trackingmode) {
-            naverMap.locationTrackingMode = LocationTrackingMode.Face
-        } else {
-            naverMap.locationTrackingMode = LocationTrackingMode.NoFollow
-        }
-        locationOverlay = naverMap.locationOverlay
+        naverMap.locationTrackingMode = Follow
+        val locationOverlay = naverMap.locationOverlay
         locationOverlay.isVisible = true
 
-
-        naverMap.addOnLocationChangeListener {location ->
-            naverMap.moveCamera(CameraUpdate.scrollTo(LatLng(location!!)))
-            locationOverlay.isVisible = true
-            if(trackingmode) {
-                naverMap.locationTrackingMode = LocationTrackingMode.Face
-            } else {
-                naverMap.locationTrackingMode = LocationTrackingMode.NoFollow
-            }
-        }
-
-
-
-        togglebtn_gps.setOnClickListener {
-            if(!trackingmode) {
-                trackingmode = true
-                naverMap.locationTrackingMode = LocationTrackingMode.Face
-
-            } else {
+        naverMap.addOnCameraChangeListener{reason,animated ->
+            if(reason == CameraUpdate.REASON_GESTURE) {
+                togglebtn_gps.isChecked = false
                 trackingmode = false
-                naverMap.locationTrackingMode = LocationTrackingMode.NoFollow
             }
         }
+
     }
 
 }
+
 

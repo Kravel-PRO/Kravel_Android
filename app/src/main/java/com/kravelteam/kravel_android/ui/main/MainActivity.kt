@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.ui.home.HomeFragment
-import com.kravelteam.kravel_android.ui.map.MapFragment
+import com.kravelteam.kravel_android.ui.map.MapViewFragment
 import com.kravelteam.kravel_android.ui.mypage.UserFragment
 import com.kravelteam.kravel_android.ui.search.SearchFragment
 import kotlinx.android.synthetic.main.activity_main.*
@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
         listOf(
             Menus(cl_main_home, img_main_home, HomeFragment()),
             Menus(cl_main_search, img_main_search, SearchFragment()),
-            Menus(cl_main_map, img_main_map, MapFragment()),
+            Menus(cl_main_map, img_main_map, MapViewFragment()),
             Menus(cl_main_my_page,img_main_my_page,UserFragment())
         )
     }
@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         val list = listOf(
             Menus(cl_main_home, img_main_home, HomeFragment()),
             Menus(cl_main_search, img_main_search, SearchFragment()),
-            Menus(cl_main_map, img_main_map, MapFragment()),
+            Menus(cl_main_map, img_main_map, MapViewFragment()),
             Menus(cl_main_my_page,img_main_my_page,UserFragment())
         )
 
