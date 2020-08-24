@@ -5,6 +5,7 @@ import android.os.Bundle
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.HorizontalItemDecorator
 import com.kravelteam.kravel_android.common.VerticalItemDecorator
+import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.mock.NewPhotoReview
 import com.kravelteam.kravel_android.data.mock.PopularPlaceData
 import com.kravelteam.kravel_android.ui.adapter.CelebRecyclerview
@@ -19,7 +20,7 @@ class PhotoReviewActivity : AppCompatActivity() {
         setContentView(R.layout.activity_photo_review)
         initPhotoReivew()
 
-        img_photo_review_back.setOnClickListener {
+        img_photo_review_back.setOnDebounceClickListener {
             finish()
         }
     }
