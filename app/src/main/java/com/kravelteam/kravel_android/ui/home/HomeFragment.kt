@@ -1,5 +1,6 @@
 package com.kravelteam.kravel_android.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -37,10 +38,16 @@ class HomeFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        init()
         initPopularRecycler()
         initPhotoRecycler()
         initNearRecycler()
 
+    }
+    private fun init() {
+        txt_home_near_place_more.setOnClickListener {
+            startActivity(Intent(context, NearPlaceActivity::class.java))
+        }
     }
     private fun initNearRecycler() {
         rv_near_place.apply {
