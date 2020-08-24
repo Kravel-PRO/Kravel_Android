@@ -44,9 +44,9 @@ class NearPlaceRecyclerview() : RecyclerView.Adapter<NearPlaceRecyclerview.ViewH
             img.setRound(5.dpToPx().toFloat())
             txtPlace.text = item.place
             var str : String =""
-            for(i in 0..item.tag.size) {
+            for(i in 0..item.tag.size-1) {
                 str.plus( "#" + item.tag.get(i))
-                if(i!=0 && i!=item.tag.size) {
+                if(i!=0 && i!=item.tag.size-1) {
                     str.plus(" ")
                 }
             }

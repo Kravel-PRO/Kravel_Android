@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.VerticalItemDecorator
+import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.mock.NewPhotoReview
 import com.kravelteam.kravel_android.ui.adapter.NearPlaceRecyclerview
 import com.kravelteam.kravel_android.ui.adapter.NewPhotoReviewRecyclerview
@@ -16,7 +17,7 @@ class NearPlaceActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_near_place)
         initRecycler()
-        img_near_place_back.setOnClickListener {
+        img_near_place_back.setOnDebounceClickListener {
             finish()
         }
     }

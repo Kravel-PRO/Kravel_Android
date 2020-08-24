@@ -14,6 +14,7 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.HorizontalItemDecorator
+import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.mock.HashTagData
 import com.kravelteam.kravel_android.data.mock.NearPlaceData
 import com.kravelteam.kravel_android.ui.adapter.MapPlaceRecyclerview
@@ -64,7 +65,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
 
         initRecycler()
         initMap()
-        togglebtn_gps.setOnClickListener {
+        togglebtn_gps.setOnDebounceClickListener {
             if(!trackingmode) {
                 trackingmode = true
                 naverMap.locationTrackingMode = Follow
