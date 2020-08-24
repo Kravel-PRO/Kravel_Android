@@ -12,31 +12,33 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.home.NearPlaceActivity"></activity>
-        <activity android:name=".ui.home.PhotoReviewActivity" />
-        <meta-data
-            android:name="com.naver.maps.map.CLIENT_ID"
-            android:value="@string/naver_map_api_key" />
-
-        <activity android:name=".ui.map.PlaceDetailActivity" />
-        <activity android:name=".ui.mypage.ReportActivity" />
-        <activity android:name=".ui.mypage.UpdatePwActivity" />
-        <activity android:name=".ui.mypage.UpdateInfoActivity" />
-        <activity android:name=".ui.search.SearchDetailActivity" />
-        <activity android:name=".ui.signup.SetLanguageActivity" />
-        <activity android:name=".ui.login.LoginActivity" />
-        <activity android:name=".ui.signup.FinishSignUpActivity" />
-        <activity android:name=".ui.signup.SignUpActivity" />
-        <activity android:name=".ui.main.MainActivity">
+        <activity android:name="com.kravelteam.kravel_android.ui.map.PlaceDetailActivity"/>
+        <activity android:name="com.kravelteam.kravel_android.ui.mypage.ReportActivity" />
+        <activity android:name="com.kravelteam.kravel_android.ui.mypage.UpdatePwActivity" />
+        <activity android:name="com.kravelteam.kravel_android.ui.mypage.UpdateInfoActivity" />
+        <activity android:name="com.kravelteam.kravel_android.ui.search.SearchDetailActivity" />
+        <activity android:name="com.kravelteam.kravel_android.ui.signup.SetLanguageActivity" />
+        <activity android:name="com.kravelteam.kravel_android.ui.login.LoginActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.home.NearPlaceActivity"></activity>
+        <activity android:name=".ui.home.PhotoReviewActivity" />
+        <meta-data
+            android:name="com.naver.maps.map.CLIENT_ID"
+            android:value="@string/naver_map_api_key" />
+        <activity android:name=".ui.signup.FinishSignUpActivity" />
+        <activity android:name=".ui.signup.SignUpActivity" />
+        <activity android:name=".ui.main.MainActivity"/>
     </application>
 
 </manifest>

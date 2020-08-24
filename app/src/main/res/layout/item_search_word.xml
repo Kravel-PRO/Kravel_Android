@@ -28,6 +28,6 @@
         app:layout_constraintBottom_toBottomOf="@+id/txt_search_word"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/txt_search_word"
-        app:srcCompat="@drawable/btn_close" />
+        app:srcCompat="@drawable/btn_delete" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

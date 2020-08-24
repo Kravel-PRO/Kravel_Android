@@ -16,11 +16,11 @@ import com.kravelteam.kravel_android.data.response.MediaResponse
 import com.kravelteam.kravel_android.ui.search.SearchDetailActivity
 import com.kravelteam.kravel_android.util.inflate
 
-class CelebRecyclerview() : RecyclerView.Adapter<CelebRecyclerview.ViewHolder>() {
+class DramaRecyclerview() : RecyclerView.Adapter<DramaRecyclerview.ViewHolder>() {
 
-    private var data: List<CelebResponse> = emptyList()
+    private var data: List<MediaResponse> = emptyList()
 
-    fun initData(data: List<CelebResponse>){
+    fun initData(data: List<MediaResponse>){
         this.data = data
         notifyDataSetChanged()
     }
@@ -40,17 +40,18 @@ class CelebRecyclerview() : RecyclerView.Adapter<CelebRecyclerview.ViewHolder>()
         private val txtName : TextView = itemView.findViewById(R.id.txt_celeb_name)
         private val txtYear : TextView = itemView.findViewById(R.id.txt_drama_year)
 
-        fun bind(item: CelebResponse){
+        fun bind(item: MediaResponse){
             itemView.setOnDebounceClickListener {
                 Intent(KravelApplication.GlobalApp,SearchDetailActivity::class.java).apply {
-                    putExtra("id",item.celebrityId)
+                    putExtra("id",item.mediaId)
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 }.run { KravelApplication.GlobalApp.startActivity(this) }
             }
             //GlideApp.with(itemView).load(item.imgUrl).apply(RequestOptions.circleCropTransform()).into(img)
-            GlideApp.with(itemView).load("https://www.instagram.com/p/B20TsJegiq4/media/?size=l").apply(RequestOptions.circleCropTransform()).into(img)
-            txtName.text = item.celebrityName
-            txtYear.visibility = View.GONE
+            GlideApp.with(itemView).load("https://image.chosun.com/sitedata/image/202006/09/2020060902224_0.jpg").apply(RequestOptions.circleCropTransform()).into(img)
+            txtName.text = item.mediaName
+            txtYear.visibility = View.VISIBLE
+            txtYear.text = item.openYear
         }
     }
 }

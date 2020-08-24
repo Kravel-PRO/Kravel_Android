@@ -12,14 +12,23 @@ import android.view.View
 import androidx.core.animation.doOnEnd
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
+import com.kravelteam.kravel_android.data.request.LoginRequest
+import com.kravelteam.kravel_android.network.AuthManager
+import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.main.MainActivity
 import com.kravelteam.kravel_android.ui.signup.SignUpActivity
+import com.kravelteam.kravel_android.util.safeEnqueue
 import com.kravelteam.kravel_android.util.startActivity
+import com.kravelteam.kravel_android.util.toast
 import kotlinx.android.synthetic.main.activity_login.*
+import org.koin.android.ext.android.inject
 
 class LoginActivity : AppCompatActivity() {
 
-    var showCheck: Boolean = false
+    private val networkManager : NetworkManager by inject()
+    private val authManager : AuthManager by inject()
+
+    private var showCheck: Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -49,7 +58,28 @@ class LoginActivity : AppCompatActivity() {
         }
 
         btn_login_other_view.setOnDebounceClickListener {
-            startActivity(MainActivity::class,true)
+
+            val loginData = LoginRequest(
+                loginEmail = edt_login_email.text.toString(),
+                loginPw = edt_login_pw.text.toString()
+            )
+
+            networkManager.requestLogin(loginData).safeEnqueue(
+                onSuccess = {
+                    val token = it.token
+                    authManager.apply {
+                        this.token = token
+                        autoLogin = true
+                    }
+                    startActivity(MainActivity::class,true)
+                },
+                onFailure = {
+                    toast("실패")
+                },
+                onError = {
+                    toast("에러")
+                }
+            )
         }
 
         textChange()

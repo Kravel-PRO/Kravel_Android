@@ -1,5 +1,6 @@
 package com.kravelteam.kravel_android.data.request
 
 data class LoginRequest(
-    val id: String
+    val loginEmail: String,
+    val loginPw: String
 )
