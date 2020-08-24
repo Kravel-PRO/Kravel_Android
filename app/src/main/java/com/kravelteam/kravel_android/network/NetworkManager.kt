@@ -31,6 +31,10 @@ class NetworkManager(authManager: AuthManager) {
     fun requestLogin(data : LoginRequest)
             = retrofit.requestLogin(data)
 
+    fun requestCelebList() = retrofit.requestCelebList()
+
+    fun requestMediaList() = retrofit.requestMediaList()
+
     private companion object {
         const val BASE_URL = "http://15.164.47.5:8080"
     }

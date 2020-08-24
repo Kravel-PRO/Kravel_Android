@@ -9,12 +9,19 @@ import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.HorizontalItemDecorator
 import com.kravelteam.kravel_android.common.VerticalItemDecorator
 import com.kravelteam.kravel_android.data.response.CelebResponse
+import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.CelebRecyclerview
+import com.kravelteam.kravel_android.ui.adapter.DramaRecyclerview
+import com.kravelteam.kravel_android.util.safeEnqueue
+import com.kravelteam.kravel_android.util.toast
 import kotlinx.android.synthetic.main.fragment_drama.*
+import org.koin.android.ext.android.inject
+import timber.log.Timber
 
 class DramaFragment : Fragment() {
 
-    private val celebAdapter : CelebRecyclerview by lazy { CelebRecyclerview(true) }
+    private val networkManager : NetworkManager by inject()
+    private lateinit var dramaAdapter : DramaRecyclerview
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,19 +38,33 @@ class DramaFragment : Fragment() {
     }
 
     private fun initRecycler(){
+        dramaAdapter = DramaRecyclerview()
         rv_drama_list.apply {
-            adapter = celebAdapter
+            adapter = dramaAdapter
             addItemDecoration(HorizontalItemDecorator(24))
             addItemDecoration(VerticalItemDecorator(36))
         }
-        celebAdapter.initData(
-            listOf(
-                CelebResponse("https://image.chosun.com/sitedata/image/202006/09/2020060902224_0.jpg","사이코지만 괜찮아",2020),
-                CelebResponse("https://image.chosun.com/sitedata/image/202006/09/2020060902224_0.jpg","사이코지만 괜찮아",2020),
-                CelebResponse("https://image.chosun.com/sitedata/image/202006/09/2020060902224_0.jpg","사이코지만 괜찮아",2020),
-                CelebResponse("https://image.chosun.com/sitedata/image/202006/09/2020060902224_0.jpg","사이코지만 괜찮아",2020),
-                CelebResponse("https://image.chosun.com/sitedata/image/202006/09/2020060902224_0.jpg","사이코지만 괜찮아",2020)
-            )
+
+        networkManager.requestMediaList().safeEnqueue(
+            onSuccess = {
+                Timber.e(it.data.result[0].mediaName)
+                dramaAdapter.initData(it.data.result)
+            },
+            onFailure = {
+                toast("실패")
+            },
+            onError = {
+                Timber.e("$it")
+            }
         )
+//        celebAdapter.initData(
+//            listOf(
+//                CelebResponse("https://image.chosun.com/sitedata/image/202006/09/2020060902224_0.jpg","사이코지만 괜찮아",2020),
+//                CelebResponse("https://image.chosun.com/sitedata/image/202006/09/2020060902224_0.jpg","사이코지만 괜찮아",2020),
+//                CelebResponse("https://image.chosun.com/sitedata/image/202006/09/2020060902224_0.jpg","사이코지만 괜찮아",2020),
+//                CelebResponse("https://image.chosun.com/sitedata/image/202006/09/2020060902224_0.jpg","사이코지만 괜찮아",2020),
+//                CelebResponse("https://image.chosun.com/sitedata/image/202006/09/2020060902224_0.jpg","사이코지만 괜찮아",2020)
+//            )
+//        )
     }
 }

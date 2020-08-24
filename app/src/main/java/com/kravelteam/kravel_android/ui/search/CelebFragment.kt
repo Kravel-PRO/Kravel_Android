@@ -9,12 +9,18 @@ import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.HorizontalItemDecorator
 import com.kravelteam.kravel_android.common.VerticalItemDecorator
 import com.kravelteam.kravel_android.data.response.CelebResponse
+import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.CelebRecyclerview
+import com.kravelteam.kravel_android.util.safeEnqueue
+import com.kravelteam.kravel_android.util.toast
 import kotlinx.android.synthetic.main.fragment_celeb.*
+import org.koin.android.ext.android.inject
+import timber.log.Timber
 
 class CelebFragment : Fragment() {
 
-    private val celebAdapter : CelebRecyclerview by lazy { CelebRecyclerview(false) }
+    private val networkManager : NetworkManager by inject()
+    private lateinit var celebAdapter : CelebRecyclerview
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,6 +37,7 @@ class CelebFragment : Fragment() {
     }
 
     private fun initRecycler(){
+        celebAdapter = CelebRecyclerview()
 
         rv_celeb_list.apply {
             adapter = celebAdapter
@@ -38,14 +45,27 @@ class CelebFragment : Fragment() {
             addItemDecoration(VerticalItemDecorator(36))
         }
 
-        celebAdapter.initData(
-            listOf(
-                CelebResponse("https://www.instagram.com/p/B20TsJegiq4/media/?size=l","지창욱",null),
-                CelebResponse("https://www.instagram.com/p/B20TsJegiq4/media/?size=l","지창욱",null),
-                CelebResponse("https://www.instagram.com/p/B20TsJegiq4/media/?size=l","지창욱",null),
-                CelebResponse("https://www.instagram.com/p/B20TsJegiq4/media/?size=l","지창욱",null),
-                CelebResponse("https://www.instagram.com/p/B20TsJegiq4/media/?size=l","지창욱",null)
-            )
+        networkManager.requestCelebList().safeEnqueue(
+            onSuccess = {
+                Timber.e(it.data.result[0].celebrityName)
+                celebAdapter.initData(it.data.result)
+            },
+            onFailure = {
+                toast("실패")
+            },
+            onError = {
+                Timber.e("$it")
+            }
         )
+
+//        celebAdapter.initData(
+//            listOf(
+//                CelebResponse("https://www.instagram.com/p/B20TsJegiq4/media/?size=l","지창욱",null),
+//                CelebResponse("https://www.instagram.com/p/B20TsJegiq4/media/?size=l","지창욱",null),
+//                CelebResponse("https://www.instagram.com/p/B20TsJegiq4/media/?size=l","지창욱",null),
+//                CelebResponse("https://www.instagram.com/p/B20TsJegiq4/media/?size=l","지창욱",null),
+//                CelebResponse("https://www.instagram.com/p/B20TsJegiq4/media/?size=l","지창욱",null)
+//            )
+//        )
     }
 }

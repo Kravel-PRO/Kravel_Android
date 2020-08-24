@@ -1,11 +1,15 @@
 package com.kravelteam.kravel_android.data.response
 
 data class BaseResponse<T>(
-    val status: Int,
+    val status: Boolean,
     val message: String,
     val timestamp: String,
-    val data: T? = null,
+    val data: BaseResponseData<T>,
     val error: ErrorBody? = null
+)
+
+data class BaseResponseData<T>(
+    val result: T
 )
 
 data class ErrorBody(
