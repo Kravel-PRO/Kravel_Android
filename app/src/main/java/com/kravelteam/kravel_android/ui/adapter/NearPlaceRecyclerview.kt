@@ -43,11 +43,12 @@ class NearPlaceRecyclerview() : RecyclerView.Adapter<NearPlaceRecyclerview.ViewH
             GlideApp.with(itemView).load(item.img).into(img)
             img.setRound(5.dpToPx().toFloat())
             txtPlace.text = item.place
-            var str : String =""
-            for(i in 0..item.tag.size-1) {
-                str.plus( "#" + item.tag.get(i))
-                if(i!=0 && i!=item.tag.size-1) {
-                    str.plus(" ")
+            var str : String = ""
+            for(i in 0 until item.tag.size) {
+                str = str+"#"+item.tag.get(i)
+
+                if(i!=item.tag.size-1) {
+                    str = str+" "
                 }
             }
             txtTag.text = str

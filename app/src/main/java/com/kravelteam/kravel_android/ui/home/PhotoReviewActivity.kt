@@ -34,35 +34,20 @@ class PhotoReviewActivity : AppCompatActivity() {
         photoAdapter.initData(
             listOf(
                 NewPhotoReview("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나",
-                    arrayOf<String>("호텔델루나","여진구","피오")),
+                    arrayListOf<String>("호텔델루나","여진구","피오")
+                ),
                 NewPhotoReview("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나",
-                    arrayOf<String>("호텔델루나","여진구","피오")),
+                    arrayListOf<String>("호텔델루나","여진구","피오")
+                ),
                 NewPhotoReview("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나",
-                    arrayOf<String>("호텔델루나","여진구","피오")),
+                    arrayListOf<String>("호텔델루나","여진구","피오")
+                ),
                 NewPhotoReview("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나",
-                    arrayOf<String>("호텔델루나","여진구","피오")),
+                    arrayListOf<String>("호텔델루나","여진구","피오")
+                ),
                 NewPhotoReview("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나",
-                    arrayOf<String>("호텔델루나","여진구","피오")),
-                NewPhotoReview("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나",
-                    arrayOf<String>("호텔델루나","여진구","피오")),
-                NewPhotoReview("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나",
-                    arrayOf<String>("호텔델루나","여진구","피오")),
-                NewPhotoReview("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나",
-                    arrayOf<String>("호텔델루나","여진구","피오")),
-                NewPhotoReview("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나",
-                    arrayOf<String>("호텔델루나","여진구","피오")),
-                NewPhotoReview("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나",
-                    arrayOf<String>("호텔델루나","여진구","피오")),
-                NewPhotoReview("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나",
-                    arrayOf<String>("호텔델루나","여진구","피오")),
-                NewPhotoReview("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나",
-                    arrayOf<String>("호텔델루나","여진구","피오")),
-                NewPhotoReview("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나",
-                    arrayOf<String>("호텔델루나","여진구","피오")),
-                NewPhotoReview("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나",
-                    arrayOf<String>("호텔델루나","여진구","피오")),
-                NewPhotoReview("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나",
-                    arrayOf<String>("호텔델루나","여진구","피오"))
+                    arrayListOf<String>("호텔델루나","여진구","피오")
+                )
 
             )
         )

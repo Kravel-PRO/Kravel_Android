@@ -11,6 +11,7 @@ import com.kravelteam.kravel_android.data.mock.NewPhotoReview
 import com.kravelteam.kravel_android.data.response.PhotoResponse
 import com.kravelteam.kravel_android.util.*
 import org.w3c.dom.Text
+import timber.log.Timber
 
 class NewPhotoReviewRecyclerview() : RecyclerView.Adapter<NewPhotoReviewRecyclerview.ViewHolder>(){
 
@@ -43,11 +44,13 @@ class NewPhotoReviewRecyclerview() : RecyclerView.Adapter<NewPhotoReviewRecycler
             GlideApp.with(itemView).load(item.img).into(img)
             img.setRound(10.dpToPx().toFloat())
             txtPlace.text = item.place
-            var str : String =""
-            for(i in 0..item.tag.size-1) {
-                str.plus( "#" + item.tag.get(i))
-                if(i!=0 && i!=item.tag.size-1) {
-                    str.plus(" ")
+
+            var str : String = ""
+            for(i in 0 until item.tag.size) {
+                str = str+"#"+item.tag.get(i)
+
+                if(i!=item.tag.size-1) {
+                    str = str+" "
                 }
             }
             txtTag.text = str
