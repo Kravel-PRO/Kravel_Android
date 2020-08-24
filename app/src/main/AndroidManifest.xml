@@ -31,8 +31,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.map.MapActivity"></activity>
-
+        <activity android:name=".ui.home.NearPlaceActivity"></activity>
+        <activity android:name=".ui.home.PhotoReviewActivity" />
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="@string/naver_map_api_key" />

@@ -43,9 +43,9 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_map, container, false)
     }
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         val fm = childFragmentManager
         val mapFragment = fm.findFragmentById(R.id.map) as MapFragment?
@@ -74,9 +74,6 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
                 naverMap.locationTrackingMode = NoFollow
             }
         }
-
-
-
     }
 
 //    private fun initBottomSheet(markerItem: TMapMarkerItem) {
