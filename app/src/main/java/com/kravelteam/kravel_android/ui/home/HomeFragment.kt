@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.HorizontalItemDecorator
 import com.kravelteam.kravel_android.common.VerticalItemDecorator
+import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.mock.PopularPlaceData
 import com.kravelteam.kravel_android.data.response.DetailPlaceResponse
 import com.kravelteam.kravel_android.data.response.PhotoResponse
@@ -45,7 +46,7 @@ class HomeFragment : Fragment() {
 
     }
     private fun init() {
-        txt_home_near_place_more.setOnClickListener {
+        txt_home_near_place_more.setOnDebounceClickListener {
             startActivity(Intent(context, NearPlaceActivity::class.java))
         }
     }

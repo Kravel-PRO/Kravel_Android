@@ -9,8 +9,10 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.kravelteam.kravel_android.KravelApplication
+import com.kravelteam.kravel_android.KravelApplication.Companion.GlobalApp
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.GlideApp
+import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.response.PhotoResponse
 import com.kravelteam.kravel_android.ui.home.PhotoReviewActivity
 import com.kravelteam.kravel_android.util.inflate
@@ -62,9 +64,11 @@ class PhotoReviewRecyclerview() : RecyclerView.Adapter<PhotoReviewRecyclerview.V
             GlideApp.with(itemView).load(item.img).into(img)
             txtMore.setVisible()
             view.setVisible()
-            img.setOnClickListener {
-                val intent = Intent(KravelApplication.GlobalApp,PhotoReviewActivity ::class.java)
-                KravelApplication.GlobalApp.startActivity(intent)
+            img.setOnDebounceClickListener {
+                Intent(GlobalApp, PhotoReviewActivity::class.java).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }.run { GlobalApp.startActivity(this)
+                }
             }
         }
     }
