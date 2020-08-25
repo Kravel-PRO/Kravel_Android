@@ -12,16 +12,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.HorizontalItemDecorator
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.mock.HashTagData
 import com.kravelteam.kravel_android.data.mock.NearPlaceData
 import com.kravelteam.kravel_android.ui.adapter.MapPlaceRecyclerview
+import com.kravelteam.kravel_android.util.setGone
+import com.kravelteam.kravel_android.util.setVisible
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.LocationTrackingMode.*
 import com.naver.maps.map.overlay.LocationOverlay
+import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
 import kotlinx.android.synthetic.main.fragment_map.*
 import kotlinx.android.synthetic.main.fragment_user.*
@@ -29,11 +34,12 @@ import timber.log.Timber
 
 
 class MapViewFragment : Fragment(),OnMapReadyCallback{
-    private lateinit var locationOverlay: LocationOverlay
     private lateinit var locationSource : FusedLocationSource
-    private lateinit var mapView : MapView
     private var trackingmode : Boolean = false
+    private var markerClick : Boolean = false
     private lateinit var naverMap : NaverMap
+    private lateinit var bottomSheetDialogFragment: BottomSheetDialogFragment
+
 
     private val nearAdapter: MapPlaceRecyclerview by lazy { MapPlaceRecyclerview() }
     override fun onCreateView(
@@ -64,7 +70,6 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
         }
 
         initRecycler()
-        initMap()
         togglebtn_gps.setOnDebounceClickListener {
             if(!trackingmode) {
                 trackingmode = true
@@ -77,10 +82,17 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
         }
     }
 
-//    private fun initBottomSheet(markerItem: TMapMarkerItem) {
-//        val bottomSheetDialogFragment = MapInfoFragment(markerItem)
-//        fragmentManager?.let { bottomSheetDialogFragment.show(it, bottomSheetDialogFragment.tag) }
-//    }
+    private fun initBottomSheet(markerItem: LatLng) {
+        bottomSheetDialogFragment = MapInfoFragment(markerItem)
+        fragmentManager?.let { bottomSheetDialogFragment.show(it, bottomSheetDialogFragment.tag) }
+
+        if(!bottomSheetDialogFragment.isHidden) {
+            rv_map_near_place.setVisible()
+        }
+
+
+
+    }
 
     private fun initRecycler() {
         rv_map_near_place.apply {
@@ -141,13 +153,6 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
         val alert: AlertDialog = builder.create()
         alert.show()
     }
-    private fun initMap() {
-        val marker = com.naver.maps.map.overlay.Marker()
-        marker.position = LatLng(37.496502, 126.956100)
-
-    }
-
-
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -174,12 +179,47 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
         val locationOverlay = naverMap.locationOverlay
         locationOverlay.isVisible = true
 
+        val uiSettings = naverMap.uiSettings
+        uiSettings.isZoomControlEnabled = false
+
+
+
         naverMap.addOnCameraChangeListener{reason,animated ->
             if(reason == CameraUpdate.REASON_GESTURE) {
                 togglebtn_gps.isChecked = false
                 trackingmode = false
             }
         }
+
+        val marker = com.naver.maps.map.overlay.Marker()
+        marker.position = LatLng(37.5606311, 126.9936153)
+        marker.map = naverMap
+        marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_default)
+        marker.setOnClickListener { overlay ->
+            if(!markerClick) {
+                marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_focus)
+                rv_map_near_place.setGone()
+                markerClick = true
+            } else {
+                markerClick = false
+                rv_map_near_place.setVisible()
+                fragmentManager?.let { bottomSheetDialogFragment.dismiss() }
+                marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_default)
+            }
+            initBottomSheet(marker.position)
+            true
+        }
+
+        naverMap.setOnMapClickListener { pointF, latLng ->
+            if(markerClick) {
+              markerClick = false
+                rv_map_near_place.setVisible()
+                marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_default)
+                fragmentManager?.let { bottomSheetDialogFragment.dismiss() }
+            }
+        }
+
+
 
     }
 
