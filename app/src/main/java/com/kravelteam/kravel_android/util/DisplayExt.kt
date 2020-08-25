@@ -32,6 +32,16 @@ fun AppCompatActivity.hideKeyboard() {
     inputMethodManager.hideSoftInputFromWindow(this.currentFocus?.windowToken, 0)
 }
 
+fun Fragment.showKeyboard() {
+    val inputMethodManager = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    inputMethodManager.showSoftInput(view, 0)
+}
+
+fun AppCompatActivity.showKeyboard() {
+    val inputMethodManager = this.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    inputMethodManager.showSoftInput(this.currentFocus, 0)
+}
+
 fun ScrollView.isViewVisible(view: View): Boolean {
     val scrollBounds = Rect()
     this.getDrawingRect(scrollBounds)

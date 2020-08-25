@@ -155,7 +155,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <EditText
+            <mabbas007.tagsedittext.TagsEditText
                 android:id="@+id/edt_report_place_tag"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -168,6 +168,8 @@
                 android:imeOptions="actionDone"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="16dp"
+                app:tagsTextColor="@color/colorBlack"
+                app:tagsCloseImageRight="@drawable/btn_delete"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/txt_report_place_tag_title"/>
 
