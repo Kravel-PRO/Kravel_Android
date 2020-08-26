@@ -5,7 +5,10 @@
     android:id="@+id/cl_bottom_seat_place"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/white_top_round_background">
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+    android:background="@drawable/white_top_round_background"
+    app:behavior_hideable = "false"
+    app:behavior_peekHeight="108dp">
 
 
 

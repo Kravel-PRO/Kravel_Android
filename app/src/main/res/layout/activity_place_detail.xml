@@ -45,6 +45,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/img_map_detail_arrow"
+                android:layout_marginTop="20dp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="@id/guideline1"
                 android:src="@drawable/ic_baseline_arrow_downward_24"/>
@@ -147,8 +148,9 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
                 android:id="@+id/cl_map_detail_photo_review"
-                android:padding="16dp"
                 app:layout_constraintTop_toBottomOf="@id/view_line"
                 app:layout_constraintLeft_toLeftOf="@id/guideline1"
                 app:layout_constraintRight_toRightOf="@id/guideline2">
@@ -193,7 +195,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/cl_bottom_map"
-                android:padding="16dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
                 app:layout_constraintTop_toBottomOf="@id/view_line2"
                 app:layout_constraintLeft_toLeftOf="@id/guideline1"
                 app:layout_constraintRight_toRightOf="@id/guideline2">
@@ -212,12 +215,13 @@
                     />
 
 
-                <LinearLayout
+                <fragment
                     android:layout_width="match_parent"
                     android:layout_height="178dp"
                     android:layout_marginTop="12dp"
                     android:orientation="vertical"
-                    android:id="@+id/ll_map_detail_map"
+                    android:id="@+id/place_detail_map"
+                    android:name="com.naver.maps.map.MapFragment"
                     app:layout_constraintTop_toBottomOf="@id/txt_map_detail_map"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"/>
@@ -229,7 +233,7 @@
                     android:id="@+id/txt_map_detail_address2"
                     android:layout_marginTop="12dp"
                     android:layout_marginBottom="24dp"
-                    app:layout_constraintTop_toBottomOf="@id/ll_map_detail_map"
+                    app:layout_constraintTop_toBottomOf="@id/place_detail_map"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     android:fontFamily="@font/notosans_cjk_kr_regular"
