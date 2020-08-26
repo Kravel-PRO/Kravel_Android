@@ -12,6 +12,7 @@ import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.common.SearchWord
 import com.kravelteam.kravel_android.ui.adapter.SearchViewPagerAdapter
 import com.kravelteam.kravel_android.ui.adapter.SearchWordRecyclerview
+import com.kravelteam.kravel_android.util.hideKeyboard
 import com.kravelteam.kravel_android.util.setGone
 import com.kravelteam.kravel_android.util.setVisible
 import com.kravelteam.kravel_android.util.showKeyboard
@@ -83,6 +84,7 @@ class SearchFragment : Fragment() {
 //        }
 
         img_search_back.setOnDebounceClickListener {
+            //hideKeyboard()
             cl_search_tab.setVisible()
             cl_search_recent.setGone()
             img_search_back.setGone()

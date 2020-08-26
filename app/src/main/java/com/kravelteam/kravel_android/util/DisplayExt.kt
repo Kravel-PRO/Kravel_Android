@@ -34,7 +34,7 @@ fun AppCompatActivity.hideKeyboard() {
 
 fun Fragment.showKeyboard() {
     val inputMethodManager = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-    inputMethodManager.showSoftInput(view, 0)
+    inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT,InputMethodManager.HIDE_IMPLICIT_ONLY)
 }
 
 fun AppCompatActivity.showKeyboard() {
