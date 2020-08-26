@@ -10,30 +10,54 @@ import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.kravelteam.kravel_android.KravelApplication
+import com.kravelteam.kravel_android.KravelApplication.Companion.GlobalApp
 import com.kravelteam.kravel_android.R
+import com.kravelteam.kravel_android.common.GlideApp
 import com.kravelteam.kravel_android.common.HorizontalItemDecorator
+import com.kravelteam.kravel_android.common.VerticalItemDecorator
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.mock.HashTagData
 import com.kravelteam.kravel_android.data.mock.NearPlaceData
+import com.kravelteam.kravel_android.data.mock.PlaceInformationData
+import com.kravelteam.kravel_android.data.response.PhotoResponse
+import com.kravelteam.kravel_android.ui.adapter.HashTagRecyclerView
 import com.kravelteam.kravel_android.ui.adapter.MapPlaceRecyclerview
+import com.kravelteam.kravel_android.ui.adapter.PhotoReviewRecyclerview
+import com.kravelteam.kravel_android.util.dpToPx
+import com.kravelteam.kravel_android.util.setGone
+import com.kravelteam.kravel_android.util.setRound
+import com.kravelteam.kravel_android.util.setVisible
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.LocationTrackingMode.*
 import com.naver.maps.map.overlay.LocationOverlay
+import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
+import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_map.*
+import kotlinx.android.synthetic.main.fragment_map_info.*
+import kotlinx.android.synthetic.main.fragment_map_info.rv_home_photo_review
 import kotlinx.android.synthetic.main.fragment_user.*
 import timber.log.Timber
 
 
 class MapViewFragment : Fragment(),OnMapReadyCallback{
-    private lateinit var locationOverlay: LocationOverlay
     private lateinit var locationSource : FusedLocationSource
-    private lateinit var mapView : MapView
+    private lateinit var mapFragment: MapFragment
     private var trackingmode : Boolean = false
+    private var markerClick : Boolean = false
     private lateinit var naverMap : NaverMap
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
+
+    private val photoAdapter : PhotoReviewRecyclerview by lazy { PhotoReviewRecyclerview() } //BottomSheet
+    private val hashtagAdapter : HashTagRecyclerView by lazy { HashTagRecyclerView() } //BottomSheet
 
     private val nearAdapter: MapPlaceRecyclerview by lazy { MapPlaceRecyclerview() }
     override fun onCreateView(
@@ -49,7 +73,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
         super.onViewCreated(view, savedInstanceState)
 
         val fm = childFragmentManager
-        val mapFragment = fm.findFragmentById(R.id.map) as MapFragment?
+        mapFragment = fm.findFragmentById(R.id.map) as MapFragment?
             ?: MapFragment.newInstance().also {
                 fm.beginTransaction().add(R.id.map, it).commit()
             }
@@ -64,7 +88,6 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
         }
 
         initRecycler()
-        initMap()
         togglebtn_gps.setOnDebounceClickListener {
             if(!trackingmode) {
                 trackingmode = true
@@ -77,11 +100,112 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
         }
     }
 
-//    private fun initBottomSheet(markerItem: TMapMarkerItem) {
-//        val bottomSheetDialogFragment = MapInfoFragment(markerItem)
-//        fragmentManager?.let { bottomSheetDialogFragment.show(it, bottomSheetDialogFragment.tag) }
-//    }
+    private fun initBottomSheet(marker: Marker) {
+        val placeInfo : PlaceInformationData = PlaceInformationData(
+            placeName = "호텔델루나",
+            placeAddress = "호텔델루나 주소",
+            placePhotoReview = arrayListOf( PhotoResponse("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg"),
+                PhotoResponse("https://image.chosun.com/sitedata/image/202006/09/2020060902224_0.jpg"),
+                PhotoResponse("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg"),
+                PhotoResponse("https://image.chosun.com/sitedata/image/202006/09/2020060902224_0.jpg"),
+                PhotoResponse("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg"),
+                PhotoResponse("https://image.chosun.com/sitedata/image/202006/09/2020060902224_0.jpg"),
+                PhotoResponse("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg")
+            ),
+            placeTag =  arrayListOf( HashTagData("호텔델루나"),
+                HashTagData("아이유"),
+                HashTagData("여진구")),
+            placeImg = "https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg",
+            marker = marker.position
+        )
 
+
+
+        GlideApp.with(img_bottom_place).load(placeInfo.placeImg).into(img_bottom_place)
+        // Round값 물어보기
+        img_bottom_place.setRound(10.dpToPx().toFloat())
+        txt_bottom_title.text = placeInfo.placeName
+        txt_bottom_map_address1.text =  placeInfo.placeAddress
+        txt_bottom_map_address2.text = placeInfo.placeAddress
+
+        rv_map_hashtag.apply {
+            adapter = hashtagAdapter
+            addItemDecoration(HorizontalItemDecorator(4))
+        }
+
+        hashtagAdapter.initData(placeInfo.placeTag)
+
+        rv_home_photo_review.apply {
+            adapter = photoAdapter
+            addItemDecoration(VerticalItemDecorator(4))
+            addItemDecoration(HorizontalItemDecorator(4))
+        }
+
+        photoAdapter.initData(placeInfo.placePhotoReview)
+
+        initMap(placeInfo.marker)
+
+
+        bottomSheetBehavior = BottomSheetBehavior.from<ConstraintLayout>(cl_bottom_seat_place)
+        cl_bottom_seat_place.visibility = View.VISIBLE
+        //bottomSheetBehavior.peekHeight = (cl_bottom_place_info.height + 56).dpToPx()
+        bottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when(newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        mapFragment.getMapAsync{naverMap ->
+                            rv_map_near_place.setVisible()
+                            marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_default)
+                            cl_bottom_seat_place.setGone()
+                        }
+                    }
+                    BottomSheetBehavior.STATE_EXPANDED -> {
+
+                        Intent(GlobalApp,PlaceDetailActivity::class.java).apply {
+                            putExtra("data",placeInfo)
+                        }.run {
+                            GlobalApp.startActivity(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                        }
+
+
+                    }
+                    BottomSheetBehavior.STATE_DRAGGING -> {
+
+                    }
+                    BottomSheetBehavior.STATE_COLLAPSED -> {
+
+
+
+                    }
+                    BottomSheetBehavior.STATE_HALF_EXPANDED -> {
+
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+            }
+
+        })
+
+    }
+    private fun initMap(markerItemLatLng: LatLng) {
+        val fm = childFragmentManager
+        val map2Fragment = fm.findFragmentById(R.id.mapView) as MapFragment?
+            ?: MapFragment.newInstance().also {
+                fm.beginTransaction().add(R.id.mapView, it).commit()
+            }
+
+        map2Fragment.getMapAsync{naverMap ->
+            val marker = Marker()
+            naverMap.moveCamera(CameraUpdate.scrollTo(markerItemLatLng))
+            marker.position = markerItemLatLng
+            marker.map = naverMap
+            marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_focus)
+
+        }
+
+    }
     private fun initRecycler() {
         rv_map_near_place.apply {
             adapter = nearAdapter
@@ -141,13 +265,6 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
         val alert: AlertDialog = builder.create()
         alert.show()
     }
-    private fun initMap() {
-        val marker = com.naver.maps.map.overlay.Marker()
-        marker.position = LatLng(37.496502, 126.956100)
-
-    }
-
-
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -174,6 +291,11 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
         val locationOverlay = naverMap.locationOverlay
         locationOverlay.isVisible = true
 
+        val uiSettings = naverMap.uiSettings
+        uiSettings.isZoomControlEnabled = false
+
+
+
         naverMap.addOnCameraChangeListener{reason,animated ->
             if(reason == CameraUpdate.REASON_GESTURE) {
                 togglebtn_gps.isChecked = false
@@ -181,6 +303,34 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
             }
         }
 
+        val marker = com.naver.maps.map.overlay.Marker()
+        marker.position = LatLng(37.5606311, 126.9936153)
+        marker.map = naverMap
+        marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_default)
+        marker.setOnClickListener { overlay ->
+            if(!markerClick) {
+                marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_focus)
+                rv_map_near_place.setGone()
+                initBottomSheet(marker)
+                markerClick = true
+            } else {
+                markerClick = false
+                rv_map_near_place.setVisible()
+                cl_bottom_seat_place.setGone()
+                marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_default)
+            }
+
+            true
+        }
+
+        naverMap.setOnMapClickListener { pointF, latLng ->
+            if(markerClick) {
+              markerClick = false
+                rv_map_near_place.setVisible()
+                marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_default)
+                cl_bottom_seat_place.setGone()
+            }
+        }
     }
 
 }

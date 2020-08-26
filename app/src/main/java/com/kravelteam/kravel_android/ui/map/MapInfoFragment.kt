@@ -6,7 +6,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
+import androidx.constraintlayout.widget.ConstraintLayout
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.GlideApp
@@ -18,11 +20,18 @@ import com.kravelteam.kravel_android.ui.adapter.HashTagRecyclerView
 import com.kravelteam.kravel_android.ui.adapter.PhotoReviewRecyclerview
 import com.kravelteam.kravel_android.util.dpToPx
 import com.kravelteam.kravel_android.util.setRound
+import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.CameraUpdate
+import com.naver.maps.map.MapFragment
+import com.naver.maps.map.NaverMap
+import com.naver.maps.map.OnMapReadyCallback
+import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.OverlayImage
 import kotlinx.android.synthetic.main.fragment_home.rv_home_photo_review
 import kotlinx.android.synthetic.main.fragment_map_info.*
 
 
-class MapInfoFragment() : BottomSheetDialogFragment() {
+class MapInfoFragment(val markerItem : LatLng) : BottomSheetDialogFragment(), OnMapReadyCallback {
 
     private val photoAdapter : PhotoReviewRecyclerview by lazy { PhotoReviewRecyclerview() }
     private val hashtagAdapter : HashTagRecyclerView by lazy { HashTagRecyclerView() }
@@ -31,6 +40,7 @@ class MapInfoFragment() : BottomSheetDialogFragment() {
         super.setupDialog(dialog, style)
         val contentView = View.inflate(context, R.layout.fragment_map_info,null)
         dialog?.setContentView(contentView)
+
 
     }
     override fun onCreateView(
@@ -43,49 +53,41 @@ class MapInfoFragment() : BottomSheetDialogFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        // initPlaceInfo()
+        initPlaceInfo()
         initPhotoRecycler()
-        //initMap()
+        initMap()
 
     }
-//    private fun initPlaceInfo() {
-//        val tmapData : TMapData = TMapData()
-//        GlideApp.with(img_bottom_place).load("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg").into(img_bottom_place)
-//        // Round값 물어보기
-//        img_bottom_place.setRound(10.dpToPx().toFloat())
-//        txt_bottom_title.text = markerItem.name
-//        txt_bottom_map_address1.text = tmapData.convertGpsToAddress(markerItem.latitude, markerItem.longitude)
-//        txt_bottom_map_address2.text = tmapData.convertGpsToAddress(markerItem.latitude, markerItem.longitude)
-//
-//        rv_map_hashtag.apply {
-//            adapter = hashtagAdapter
-//            addItemDecoration(HorizontalItemDecorator(4))
-//        }
-//
-//        hashtagAdapter.initData(
-//            listOf( HashTagData("호텔델루나"),
-//                HashTagData("아이유"),
-//                HashTagData("여진구")
-//                )
-//        )
-//    }
-//    private fun initMap() {
-//        val tmap = view?.findViewById<FrameLayout>(R.id.ll_bottom_map)
-//        val tmapView = TMapView(context)
-//        tmapView.setSKTMapApiKey(getString(R.string.tmap_api_key))
-//        tmapView.setCompassMode(true)
-//        tmapView.zoomLevel = 15
-//        tmapView.setLanguage(TMapView.LANGUAGE_KOREAN)
-//        tmapView.mapType = TMapView.MAPTYPE_STANDARD
-//        tmapView.setTrackingMode(false)
-//        tmapView.setSightVisible(false)
-//        tmapView.setIconVisibility(false)
-//        tmap?.addView(tmapView)
-//
-//        tmapView.setCenterPoint(markerItem.latitude,markerItem.longitude)
-//        tmapView.addMarkerItem("test",markerItem)
-//
-//    }
+    private fun initPlaceInfo() {
+        GlideApp.with(img_bottom_place).load("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg").into(img_bottom_place)
+        // Round값 물어보기
+        img_bottom_place.setRound(10.dpToPx().toFloat())
+        txt_bottom_title.text = "호텔델루나"
+        txt_bottom_map_address1.text =  "호텔델루나 주소"
+        txt_bottom_map_address2.text = "호텔델루나 주소"
+
+        rv_map_hashtag.apply {
+            adapter = hashtagAdapter
+            addItemDecoration(HorizontalItemDecorator(4))
+        }
+
+        hashtagAdapter.initData(
+            listOf( HashTagData("호텔델루나"),
+                HashTagData("아이유"),
+                HashTagData("여진구")
+                )
+        )
+    }
+    private fun initMap() {
+        val fm = childFragmentManager
+        val map2Fragment = fm.findFragmentById(R.id.mapView) as MapFragment?
+            ?: MapFragment.newInstance().also {
+                fm.beginTransaction().add(R.id.mapView, it).commit()
+            }
+
+        map2Fragment.getMapAsync(this)
+
+    }
     private fun initPhotoRecycler() {
         rv_home_photo_review.apply {
             adapter = photoAdapter
@@ -103,5 +105,14 @@ class MapInfoFragment() : BottomSheetDialogFragment() {
                 PhotoResponse("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg")
             )
         )
+    }
+
+    override fun onMapReady(naverMap: NaverMap) {
+        val marker = Marker()
+        naverMap.moveCamera(CameraUpdate.scrollTo(markerItem))
+        marker.position = markerItem
+        marker.map = naverMap
+        marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_focus)
+
     }
 }
