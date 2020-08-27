@@ -1,17 +1,22 @@
 package com.kravelteam.kravel_android.ui.search
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.tabs.TabLayout
 import com.kravelteam.kravel_android.R
+import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.common.SearchWord
 import com.kravelteam.kravel_android.ui.adapter.SearchViewPagerAdapter
 import com.kravelteam.kravel_android.ui.adapter.SearchWordRecyclerview
+import com.kravelteam.kravel_android.util.hideKeyboard
 import com.kravelteam.kravel_android.util.setGone
 import com.kravelteam.kravel_android.util.setVisible
+import com.kravelteam.kravel_android.util.showKeyboard
 import kotlinx.android.synthetic.main.fragment_search.*
 
 class SearchFragment : Fragment() {
@@ -65,10 +70,21 @@ class SearchFragment : Fragment() {
         )
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun initSearchView(){
-        edt_search_word.setOnClickListener {
+        edt_search_word.setOnTouchListener { _, _ ->
+            showKeyboard()
             cl_search_tab.setGone()
             cl_search_recent.setVisible()
+            img_search_back.setVisible()
+            true
+        }
+
+        img_search_back.setOnDebounceClickListener {
+            hideKeyboard()
+            cl_search_tab.setVisible()
+            cl_search_recent.setGone()
+            img_search_back.setGone()
         }
     }
 }
