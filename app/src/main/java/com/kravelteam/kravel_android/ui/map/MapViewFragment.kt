@@ -41,9 +41,9 @@ import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.fragment_home.rv_home_photo_review
 import kotlinx.android.synthetic.main.fragment_map.*
 import kotlinx.android.synthetic.main.fragment_map_info.*
-import kotlinx.android.synthetic.main.fragment_map_info.rv_home_photo_review
 import kotlinx.android.synthetic.main.fragment_user.*
 import timber.log.Timber
 
@@ -98,6 +98,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
                 naverMap.locationTrackingMode = NoFollow
             }
         }
+
     }
 
     private fun initBottomSheet(marker: Marker) {
@@ -147,39 +148,30 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
 
 
         bottomSheetBehavior = BottomSheetBehavior.from<ConstraintLayout>(cl_bottom_seat_place)
-        cl_bottom_seat_place.visibility = View.VISIBLE
+        cl_bottom_seat_place.setVisible()
         //bottomSheetBehavior.peekHeight = (cl_bottom_place_info.height + 56).dpToPx()
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         bottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when(newState) {
                     BottomSheetBehavior.STATE_HIDDEN -> {
                         mapFragment.getMapAsync{naverMap ->
                             rv_map_near_place.setVisible()
+                            markerClick = false
                             marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_default)
                             cl_bottom_seat_place.setGone()
                         }
                     }
                     BottomSheetBehavior.STATE_EXPANDED -> {
-
                         Intent(GlobalApp,PlaceDetailActivity::class.java).apply {
                             putExtra("data",placeInfo)
                         }.run {
                             GlobalApp.startActivity(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
                         }
-
-
                     }
                     BottomSheetBehavior.STATE_DRAGGING -> {
-
                     }
-                    BottomSheetBehavior.STATE_COLLAPSED -> {
-
-
-
-                    }
-                    BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-
-                    }
+                    BottomSheetBehavior.STATE_COLLAPSED -> {}
                 }
             }
 

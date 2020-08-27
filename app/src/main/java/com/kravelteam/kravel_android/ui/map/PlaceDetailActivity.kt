@@ -2,6 +2,7 @@ package com.kravelteam.kravel_android.ui.map
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.GlideApp
 import com.kravelteam.kravel_android.common.HorizontalItemDecorator
@@ -11,6 +12,9 @@ import com.kravelteam.kravel_android.data.mock.PlaceInformationData
 import com.kravelteam.kravel_android.data.response.PhotoResponse
 import com.kravelteam.kravel_android.ui.adapter.HashTagRecyclerView
 import com.kravelteam.kravel_android.ui.adapter.PhotoReviewRecyclerview
+import com.kravelteam.kravel_android.util.fadeIn
+import com.kravelteam.kravel_android.util.fadeInWithVisible
+import com.kravelteam.kravel_android.util.fadeOutWithGone
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
@@ -25,10 +29,13 @@ class PlaceDetailActivity : AppCompatActivity() , OnMapReadyCallback {
     private val photoAdapter : PhotoReviewRecyclerview by lazy {PhotoReviewRecyclerview()}
     private lateinit var placeInfo : PlaceInformationData
     private lateinit var naverMap: NaverMap
+    private lateinit var root : View
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_place_detail)
 
+        root = findViewById(R.id.root)
+        root.fadeIn(1000)
         placeInfo = intent.getParcelableExtra("data") as PlaceInformationData
         img_map_detail_arrow.setOnClickListener {
             finish()
