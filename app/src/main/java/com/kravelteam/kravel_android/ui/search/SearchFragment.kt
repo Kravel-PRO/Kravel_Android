@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.tabs.TabLayout
@@ -78,13 +79,9 @@ class SearchFragment : Fragment() {
             img_search_back.setVisible()
             true
         }
-//        edt_search_word.setOnDebounceClickListener {
-//
-//
-//        }
 
         img_search_back.setOnDebounceClickListener {
-            //hideKeyboard()
+            hideKeyboard()
             cl_search_tab.setVisible()
             cl_search_recent.setGone()
             img_search_back.setGone()
