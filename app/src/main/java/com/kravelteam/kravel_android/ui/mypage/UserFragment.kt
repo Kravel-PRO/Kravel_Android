@@ -33,6 +33,9 @@ class UserFragment : Fragment() {
     }
 
     private fun initSetting(){
+        cl_user_photo.setOnDebounceClickListener {
+            startActivity(MyPhotoReviewActivity::class)
+        }
         cl_user_update_info.setOnDebounceClickListener {
             startActivity(UpdateInfoActivity::class)
         }

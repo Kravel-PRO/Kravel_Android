@@ -16,22 +16,23 @@
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
-        android:theme="@style/AppTheme">
-        <activity android:name="com.kravelteam.kravel_android.ui.map.PlaceDetailActivity"/>
-        <activity android:name="com.kravelteam.kravel_android.ui.mypage.ReportActivity" />
-        <activity android:name="com.kravelteam.kravel_android.ui.mypage.UpdatePwActivity" />
-        <activity android:name="com.kravelteam.kravel_android.ui.mypage.UpdateInfoActivity" />
-        <activity android:name="com.kravelteam.kravel_android.ui.search.SearchDetailActivity" />
-        <activity android:name="com.kravelteam.kravel_android.ui.signup.SetLanguageActivity" />
-        <activity android:name="com.kravelteam.kravel_android.ui.login.LoginActivity" >
-
-        </activity>
-        <activity android:name=".ui.home.NearPlaceActivity"></activity>
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".ui.mypage.MyPhotoReviewActivity"></activity>
+        <activity android:name=".ui.map.PlaceDetailActivity" />
+        <activity android:name=".ui.mypage.ReportActivity" />
+        <activity android:name=".ui.mypage.UpdatePwActivity" />
+        <activity android:name=".ui.mypage.UpdateInfoActivity" />
+        <activity android:name=".ui.search.SearchDetailActivity" />
+        <activity android:name=".ui.signup.SetLanguageActivity" />
+        <activity android:name=".ui.login.LoginActivity"></activity>
+        <activity android:name=".ui.home.NearPlaceActivity" />
         <activity android:name=".ui.home.PhotoReviewActivity" />
+
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="@string/naver_map_api_key" />
+
         <activity android:name=".ui.signup.FinishSignUpActivity" />
         <activity android:name=".ui.signup.SignUpActivity" />
         <activity android:name=".ui.main.MainActivity">
