@@ -7,7 +7,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
     android:background="@drawable/white_top_round_background"
-    app:behavior_hideable = "false"
+    app:behavior_hideable = "true"
     app:behavior_peekHeight="108dp">
 
 
