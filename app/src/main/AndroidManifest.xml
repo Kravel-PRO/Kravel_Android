@@ -18,7 +18,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.mypage.ScrapActivity"></activity>
+        <activity android:name=".ui.map.PostReviewActivity"></activity>
+        <activity android:name=".ui.mypage.ScrapActivity" />
         <activity android:name=".ui.mypage.MyPhotoReviewActivity" />
         <activity android:name=".ui.map.PlaceDetailActivity" />
         <activity android:name=".ui.mypage.ReportActivity" />

@@ -11,6 +11,7 @@ import com.google.android.material.tabs.TabLayout
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.common.SearchWord
+import com.kravelteam.kravel_android.ui.adapter.CelebRecyclerview
 import com.kravelteam.kravel_android.ui.adapter.SearchViewPagerAdapter
 import com.kravelteam.kravel_android.ui.adapter.SearchWordRecyclerview
 import com.kravelteam.kravel_android.util.hideKeyboard
@@ -22,6 +23,7 @@ import kotlinx.android.synthetic.main.fragment_search.*
 class SearchFragment : Fragment() {
 
     private val wordAdapter : SearchWordRecyclerview by lazy { SearchWordRecyclerview() }
+    private val searchResultAdapter : CelebRecyclerview by lazy { CelebRecyclerview() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
