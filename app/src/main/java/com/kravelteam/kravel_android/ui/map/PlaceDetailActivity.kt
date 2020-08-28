@@ -1,5 +1,6 @@
 package com.kravelteam.kravel_android.ui.map
 
+import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -11,6 +12,7 @@ import com.kravelteam.kravel_android.data.mock.HashTagData
 import com.kravelteam.kravel_android.data.mock.PlaceInformationData
 import com.kravelteam.kravel_android.data.response.PhotoResponse
 import com.kravelteam.kravel_android.ui.adapter.HashTagRecyclerView
+import com.kravelteam.kravel_android.ui.adapter.MapNearPlaceRecyclerview
 import com.kravelteam.kravel_android.ui.adapter.PhotoReviewRecyclerview
 import com.kravelteam.kravel_android.util.fadeIn
 import com.kravelteam.kravel_android.util.fadeInWithVisible
@@ -27,16 +29,16 @@ import kotlinx.android.synthetic.main.fragment_map_info.*
 class PlaceDetailActivity : AppCompatActivity() , OnMapReadyCallback {
     private val hashtagAdapter : HashTagRecyclerView by lazy { HashTagRecyclerView() }
     private val photoAdapter : PhotoReviewRecyclerview by lazy {PhotoReviewRecyclerview()}
+    private val nearplaceAdapter : MapNearPlaceRecyclerview by lazy { MapNearPlaceRecyclerview() } //BottomSheet
     private lateinit var placeInfo : PlaceInformationData
     private lateinit var naverMap: NaverMap
-    private lateinit var root : View
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_place_detail)
 
-        root = findViewById(R.id.root)
-        root.fadeIn(1000)
+        overridePendingTransition(R.anim.transition_in, R.anim.transition_out)
         placeInfo = intent.getParcelableExtra("data") as PlaceInformationData
+        setResult(Activity.RESULT_OK)
         img_map_detail_arrow.setOnClickListener {
             finish()
         }
@@ -48,9 +50,20 @@ class PlaceDetailActivity : AppCompatActivity() , OnMapReadyCallback {
         txt_map_detail_address2.text = placeInfo.placeAddress
         GlideApp.with(applicationContext).load(placeInfo.placeImg).into(img_map_detail_place)
 
+        txt_map_detail_bus_content.text = placeInfo.placeBus
+        txt_map_detail_subway_content.text = placeInfo.placeSubway
         initMap()
         initHashTag()
         initPhotoRecycler()
+        initNearPlaceRecycler()
+    }
+    private fun initNearPlaceRecycler() {
+        rv_map_detail_near_place.apply {
+            adapter =nearplaceAdapter
+            addItemDecoration(HorizontalItemDecorator(12))
+        }
+
+        nearplaceAdapter.initData(placeInfo.placeNearPlace)
     }
     private fun initMap() {
         val fm = supportFragmentManager

@@ -14,5 +14,9 @@ data class PlaceInformationData(
     var placeAddress : String,
     var placePhotoReview : ArrayList<PhotoResponse>,
     var marker : LatLng,
-    var placeImg : String
+    var placeImg : String,
+    var placeBus : String,
+    var placeSubway : String,
+    var placeNearPlace : ArrayList<MapNearPlaceData>
+
 ) : Parcelable

@@ -1,8 +1,10 @@
 package com.kravelteam.kravel_android.ui.main
 
-import androidx.appcompat.app.AppCompatActivity
+import android.R.attr
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import com.kravelteam.kravel_android.R
@@ -13,6 +15,7 @@ import com.kravelteam.kravel_android.ui.mypage.UserFragment
 import com.kravelteam.kravel_android.ui.search.SearchFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
+
 class MainActivity : AppCompatActivity() {
 
     private val list : List<Menus> by lazy {
@@ -20,7 +23,7 @@ class MainActivity : AppCompatActivity() {
             Menus(cl_main_home, img_main_home, HomeFragment()),
             Menus(cl_main_search, img_main_search, SearchFragment()),
             Menus(cl_main_map, img_main_map, MapViewFragment()),
-            Menus(cl_main_my_page,img_main_my_page,UserFragment())
+            Menus(cl_main_my_page, img_main_my_page, UserFragment())
         )
     }
 
@@ -50,7 +53,7 @@ class MainActivity : AppCompatActivity() {
             Menus(cl_main_home, img_main_home, HomeFragment()),
             Menus(cl_main_search, img_main_search, SearchFragment()),
             Menus(cl_main_map, img_main_map, MapViewFragment()),
-            Menus(cl_main_my_page,img_main_my_page,UserFragment())
+            Menus(cl_main_my_page, img_main_my_page, UserFragment())
         )
 
         list.forEachIndexed { index, menus ->
@@ -62,10 +65,18 @@ class MainActivity : AppCompatActivity() {
             .commitAllowingStateLoss()
     }
 
-    data class Menus (
+    data class Menus(
         val layout: ConstraintLayout,
         val img: ImageView,
         val fragment: Fragment
     )
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        for (fragment in supportFragmentManager.fragments) {
+            fragment.onActivityResult(requestCode, resultCode, data)
+        }
+
+    }
 
 }

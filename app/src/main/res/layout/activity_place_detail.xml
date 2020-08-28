@@ -233,17 +233,119 @@
                     tools:text = "서울 종로구 ~~~"
                     android:id="@+id/txt_map_detail_address2"
                     android:layout_marginTop="12dp"
-                    android:layout_marginBottom="24dp"
                     app:layout_constraintTop_toBottomOf="@id/place_detail_map"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     android:fontFamily="@font/notosans_cjk_kr_regular"
                     android:textSize="12sp"
                     android:textColor="#777777"
                     android:includeFontPadding="false"/>
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="대중교통"
+                    android:textSize="14sp"
+                    android:layout_marginTop="12dp"
+                    android:textColor="@color/colorBlack"
+                    android:fontFamily="@font/notosans_cjk_kr_regular"
+                    app:layout_constraintTop_toBottomOf="@id/txt_map_detail_address2"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:id="@+id/txt_map_detail_public"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txt_map_detail_bus"
+                    android:layout_marginTop="4dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/txt_map_detail_public"
+                    android:text="버스"
+                    android:fontFamily="@font/notosans_cjk_kr_regular"
+                    android:textSize="14sp"
+                    android:textColor="@color/colorDarkGrey"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txt_map_detail_bus_content"
+                    app:layout_constraintTop_toTopOf="@id/txt_map_detail_bus"
+                    app:layout_constraintLeft_toLeftOf="@id/txt_map_detail_subway_content"
+                    app:layout_constraintBottom_toBottomOf="@id/txt_map_detail_bus"
+                    android:fontFamily="@font/notosans_cjk_kr_regular"
+                    android:textSize="14sp"
+                    android:textColor="#99272727"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txt_map_detail_subway"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/txt_map_detail_bus"
+                    android:text="지하철"
+                    android:fontFamily="@font/notosans_cjk_kr_regular"
+                    android:textSize="14sp"
+                    android:textColor="@color/colorDarkGrey"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txt_map_detail_subway_content"
+                    android:layout_marginLeft="12dp"
+                    app:layout_constraintTop_toTopOf="@id/txt_map_detail_subway"
+                    app:layout_constraintBottom_toBottomOf="@id/txt_map_detail_subway"
+                    app:layout_constraintLeft_toRightOf="@id/txt_map_detail_subway"
+                    android:fontFamily="@font/notosans_cjk_kr_regular"
+                    android:textSize="14sp"
+                    android:textColor="#99272727"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:id="@+id/view_line3"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#1A272727"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@id/cl_bottom_map"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/cl_bottom_near_place"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            app:layout_constraintTop_toBottomOf="@id/view_line3"
+            app:layout_constraintLeft_toLeftOf="@id/guideline1"
+            app:layout_constraintRight_toRightOf="@id/guideline2">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_map_detail_near_place"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:text="주변 관광지"
+                android:textSize="15sp"
+                android:textColor="@color/colorBlack"
+                android:fontFamily="@font/notosans_cjk_kr_bold"
+                android:includeFontPadding="false" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/rv_map_detail_near_place"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:orientation="horizontal"
+                tools:listitem="@layout/item_map_rv_near_place"
+                app:layout_constraintTop_toBottomOf="@id/cl_bottom_near_place"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="24dp"/>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
