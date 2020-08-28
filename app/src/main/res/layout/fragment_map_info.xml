@@ -8,6 +8,8 @@
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
     android:background="@drawable/white_top_round_background"
     app:behavior_hideable = "true"
+    app:behavior_fitToContents="false"
+    app:behavior_halfExpandedRatio="0.7"
     app:behavior_peekHeight="108dp">
 
      <com.airbnb.lottie.LottieAnimationView
