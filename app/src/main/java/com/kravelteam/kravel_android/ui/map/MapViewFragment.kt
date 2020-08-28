@@ -1,5 +1,7 @@
 package com.kravelteam.kravel_android.ui.map
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
@@ -9,6 +11,7 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.location.LocationManager
 import android.os.Bundle
+import android.os.Handler
 import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +19,7 @@ import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.kravelteam.kravel_android.KravelApplication
@@ -26,6 +30,7 @@ import com.kravelteam.kravel_android.common.HorizontalItemDecorator
 import com.kravelteam.kravel_android.common.VerticalItemDecorator
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.mock.HashTagData
+import com.kravelteam.kravel_android.data.mock.MapNearPlaceData
 import com.kravelteam.kravel_android.data.mock.NearPlaceData
 import com.kravelteam.kravel_android.data.mock.PlaceInformationData
 import com.kravelteam.kravel_android.data.response.PhotoResponse
@@ -59,6 +64,8 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
     private var markerClick : Boolean = false
     private lateinit var naverMap : NaverMap
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
+    private lateinit var animMapInfo: LottieAnimationView
+    private lateinit var root: View
 
     private val photoAdapter : PhotoReviewRecyclerview by lazy { PhotoReviewRecyclerview() } //BottomSheet
     private val hashtagAdapter : HashTagRecyclerView by lazy { HashTagRecyclerView() } //BottomSheet
@@ -102,7 +109,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
             }
         }
 
-        initAreaWarningDailog()
+        //initAreaWarningDailog()
         initRecycler()
 
     }
@@ -142,7 +149,17 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
                 HashTagData("아이유"),
                 HashTagData("여진구")),
             placeImg = "https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg",
-            marker = marker.position
+            marker = marker.position,
+            placeBus = "2020,1102,1110",
+            placeSubway = "7호선 숭실대입구역",
+            placeNearPlace = arrayListOf(
+                MapNearPlaceData("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","남산"),
+                MapNearPlaceData("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","서울"),
+                MapNearPlaceData("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","경복궁"),
+                MapNearPlaceData("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","지도"),
+                MapNearPlaceData("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","안녕"),
+                MapNearPlaceData("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","남산")
+            )
         )
 
 
@@ -152,7 +169,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
         img_bottom_place.setRound(10.dpToPx().toFloat())
         txt_bottom_title.text = placeInfo.placeName
         txt_bottom_map_address1.text =  placeInfo.placeAddress
-        txt_bottom_map_address2.text = placeInfo.placeAddress
+       // txt_bottom_map_address2.text = placeInfo.placeAddress
 
         rv_map_hashtag.apply {
             adapter = hashtagAdapter
@@ -188,11 +205,19 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
                         }
                     }
                     BottomSheetBehavior.STATE_EXPANDED -> {
-                        Intent(GlobalApp,PlaceDetailActivity::class.java).apply {
-                            putExtra("data",placeInfo)
-                        }.run {
-                            GlobalApp.startActivity(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-                        }
+
+                        initAnimation()
+                        Handler().postDelayed({
+                            Intent(GlobalApp, PlaceDetailActivity::class.java).apply {
+                                putExtra("data", placeInfo)
+                            }.run {
+                                requireActivity().startActivityForResult(
+                                    this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
+                                    REQUEST_MAP_DETAIL_ACTIVITY
+                                )
+                            }
+                        }, 1500)
+
                     }
                     BottomSheetBehavior.STATE_DRAGGING -> {
                     }
@@ -205,6 +230,17 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
 
         })
 
+    }
+    private fun initAnimation() {
+        root = requireView().findViewById(R.id.root)
+        animMapInfo = animMapInfoLottie
+        animMapInfo.apply {
+            setAnimation("loading_small.json")
+            playAnimation()
+            loop(true)
+        }
+        root.setGone()
+        animMapInfoLottie.setVisible()
     }
     private fun initMap(markerItemLatLng: LatLng) {
         val fm = childFragmentManager
@@ -297,9 +333,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
     }
 
 
-    companion object {
-        private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
-    }
+
 
     override fun onMapReady(naverMap: NaverMap) {
         this.naverMap = naverMap
@@ -348,6 +382,20 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
                 cl_bottom_seat_place.setGone()
             }
         }
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        requireActivity()
+        if( requestCode == REQUEST_MAP_DETAIL_ACTIVITY) {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            root.setVisible()
+        }
+    }
+    companion object {
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
+        private const val REQUEST_MAP_DETAIL_ACTIVITY = 1004
     }
 
 }
