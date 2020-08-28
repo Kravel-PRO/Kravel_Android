@@ -3,6 +3,9 @@ package com.kravelteam.kravel_android.ui.map
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.Color.*
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.location.LocationManager
 import android.os.Bundle
@@ -40,6 +43,7 @@ import com.naver.maps.map.overlay.LocationOverlay
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
+import kotlinx.android.synthetic.main.dialog_service_warning.view.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.rv_home_photo_review
 import kotlinx.android.synthetic.main.fragment_map.*
@@ -87,7 +91,6 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
             buildAlterMessageNoGPS()
         }
 
-        initRecycler()
         togglebtn_gps.setOnDebounceClickListener {
             if(!trackingmode) {
                 trackingmode = true
@@ -99,8 +102,30 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
             }
         }
 
+        initAreaWarningDailog()
+        initRecycler()
+
     }
 
+    private fun initAreaWarningDailog() {
+        val dialog = androidx.appcompat.app.AlertDialog.Builder(requireActivity()).create()
+        val view = LayoutInflater.from(GlobalApp).inflate(R.layout.dialog_service_warning, null)
+
+        view.txt_area_warning_content1.text = "서비스가 지원되는 지역이 아니예요"
+        view.txt_area_warning_content2.text ="한국에서 크래블을 즐겨봐요!"
+        view.btn_area_warning_ok.text ="확인"
+        view.cl_area_warning_background.setBackgroundColor(Color.TRANSPARENT)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        view.btn_area_warning_ok setOnDebounceClickListener {
+
+        }
+
+        dialog.apply {
+            setView(view)
+            setCancelable(false)
+            show()
+        }
+    }
     private fun initBottomSheet(marker: Marker) {
         val placeInfo : PlaceInformationData = PlaceInformationData(
             placeName = "호텔델루나",
