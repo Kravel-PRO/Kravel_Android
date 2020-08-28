@@ -90,6 +90,7 @@ dependencies {
     implementation 'com.naver.maps:map-sdk:3.9.0'
 
     implementation 'com.github.mabbas007:TagsEditText:1.0.5'
+    implementation 'com.github.davidmigloz:drag-to-close:1.0.0'
 
 }
 

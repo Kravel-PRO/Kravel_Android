@@ -4,6 +4,10 @@ import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.ScrollView
+import androidx.core.widget.NestedScrollView
+import com.davidmiguel.dragtoclose.DragListener
+import com.davidmiguel.dragtoclose.DragToClose
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.GlideApp
 import com.kravelteam.kravel_android.common.HorizontalItemDecorator
@@ -25,6 +29,7 @@ import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import kotlinx.android.synthetic.main.activity_place_detail.*
 import kotlinx.android.synthetic.main.fragment_map_info.*
+import timber.log.Timber
 
 class PlaceDetailActivity : AppCompatActivity() , OnMapReadyCallback {
     private val hashtagAdapter : HashTagRecyclerView by lazy { HashTagRecyclerView() }
@@ -36,13 +41,48 @@ class PlaceDetailActivity : AppCompatActivity() , OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_place_detail)
 
-        overridePendingTransition(R.anim.transition_in, R.anim.transition_out)
+        //overridePendingTransition(R.anim.transition_in, R.anim.transition_out)
         placeInfo = intent.getParcelableExtra("data") as PlaceInformationData
         setResult(Activity.RESULT_OK)
         img_map_detail_arrow.setOnClickListener {
             finish()
         }
         initSetting()
+
+        sv_place_detail.setOnScrollChangeListener(object : View.OnScrollChangeListener{
+            override fun onScrollChange(
+                v: View?,
+                scrollX: Int,
+                scrollY: Int,
+                oldScrollX: Int,
+                oldScrollY: Int
+            ) {
+                Timber.e("scrollY ::::::::::" + scrollY)
+                Timber.e("oldscrollY:::::::::::::::::"+oldScrollY)
+                if(scrollY == 0 ) {
+                    Timber.e("scroll!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+                    val dragToClose = findViewById<DragToClose>(R.id.drag_to_close)
+                    dragToClose.setDragListener(object : DragListener{
+                        override fun onDragging(dragOffset: Float) {
+                        }
+
+                        override fun onStartDraggingView() {
+                        }
+
+                        override fun onViewCosed() {
+                        }
+
+                    })
+                    sv_place_detail.setOnClickListener {
+                        dragToClose.closeDraggableContainer()
+                    }
+                }
+
+
+            }
+
+        })
+
     }
     private fun initSetting() {
         txt_map_detail_title.text = placeInfo.placeName
