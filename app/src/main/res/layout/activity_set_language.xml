@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.kravelteam.kravel_android.ui.signup.SetLanguageActivity"
-    android:paddingHorizontal="36dp">
+    android:paddingHorizontal="36dp"
+    android:background="@color/colorWhite">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_set_language_top"
