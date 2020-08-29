@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/notosans_cjk_kr_bold"
             android:textSize="16sp"
-            android:text="서비스가 지원되는 지역이 아니예요"
+            android:text="@string/warningServiceWord1"
             android:textColor="#ff6359"
             android:includeFontPadding="false"
             android:layout_marginTop="56dp"
@@ -47,7 +47,8 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             android:textColor="@color/colorBlack"
-            android:text="한국에서 크래블을 즐겨봐요"/>
+            android:text="@string/warningServiceWord2"
+            />
         
         <Button
             android:id="@+id/btn_area_warning_ok"
@@ -56,7 +57,7 @@
             android:background="@drawable/coral_round_background"
             android:layout_marginTop="24dp"
             android:textColor="@color/colorWhite"
-            android:text="확인"
+            android:text="@string/Retry"
             android:textSize="15sp"
             android:layout_marginBottom="16dp"
             android:fontFamily="@font/notosans_cjk_kr_bold"
