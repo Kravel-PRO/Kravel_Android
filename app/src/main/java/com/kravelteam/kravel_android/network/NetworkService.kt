@@ -24,7 +24,7 @@ interface NetworkService {
     @POST("/auth/sign-up")
     fun requestSignUp(
         @Body data: SignUpRequest
-    ) : Call<BaseResponse<SignUpResponse>>
+    ) : Call<BaseResponse<Int>>
 
     /**
      * 셀럽 리스트

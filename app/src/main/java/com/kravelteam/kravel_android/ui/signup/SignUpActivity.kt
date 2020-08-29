@@ -1,5 +1,6 @@
 package com.kravelteam.kravel_android.ui.signup
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,6 +9,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.RadioGroup
 import androidx.core.content.ContextCompat
+import com.kravelteam.kravel_android.KravelApplication.Companion.GlobalApp
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.data.request.SignUpRequest
 import com.kravelteam.kravel_android.network.NetworkManager
@@ -16,6 +18,7 @@ import com.kravelteam.kravel_android.util.toJson
 import com.kravelteam.kravel_android.util.toast
 import kotlinx.android.synthetic.main.activity_sign_up.*
 import org.koin.android.ext.android.inject
+import timber.log.Timber
 
 class SignUpActivity : AppCompatActivity() {
 
@@ -35,6 +38,10 @@ class SignUpActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
+
+        img_signup_back.setOnClickListener {
+            finish()
+        }
 
         edit_signup_email.addTextChangedListener(object : TextWatcher
         {
@@ -81,7 +88,7 @@ class SignUpActivity : AppCompatActivity() {
                             )
                         )
                         tv_signup_email_warning.visibility = View.GONE
-                        email = edit_signup_email.toString()
+                        email = edit_signup_email.text.toString()
                         checkemail = true
                         checkedBtn()
 
@@ -127,7 +134,7 @@ class SignUpActivity : AppCompatActivity() {
                     edit_signup_pw.setBackgroundResource(R.drawable.signup_edit_style_true)
                     edit_signup_pw.setTextColor(ContextCompat.getColor(applicationContext, R.color.colorSignUpEditText))
                     tv_signup_pw_warning.visibility = View.GONE
-                    pw = edit_signup_pw.toString()
+                    pw = edit_signup_pw.text.toString()
                     checkpw = true
                     checkedBtn()
                 }
@@ -142,17 +149,19 @@ class SignUpActivity : AppCompatActivity() {
                 }
                 else
                 {
-                    edit_signup_pwck.setBackgroundResource(R.drawable.signup_edit_style_warning)
-                    edit_signup_pwck.setTextColor(
-                        ContextCompat.getColor(
-                            applicationContext,
-                            R.color.colorSignUpEditTextWarning
+                    if(!edit_signup_pwck.text.toString().isNullOrBlank()) {
+                        edit_signup_pwck.setBackgroundResource(R.drawable.signup_edit_style_warning)
+                        edit_signup_pwck.setTextColor(
+                            ContextCompat.getColor(
+                                applicationContext,
+                                R.color.colorSignUpEditTextWarning
+                            )
                         )
-                    )
-                    tv_signup_pwck_warning.visibility = View.VISIBLE
+                        tv_signup_pwck_warning.visibility = View.VISIBLE
 
-                    checkpwck = false
-                    checkedBtn()
+                        checkpwck = false
+                        checkedBtn()
+                    }
                 }
             }
 
@@ -243,7 +252,7 @@ class SignUpActivity : AppCompatActivity() {
                                 R.color.colorSignUpEditText
                             )
                         )
-                        nickname = edit_signup_nickname.toString()
+                        nickname = edit_signup_nickname.text.toString()
                         checknickname = true
                         checkedBtn()
                     }
@@ -258,14 +267,14 @@ class SignUpActivity : AppCompatActivity() {
 
                     if(checkedId == R.id.radio_signup_man)
                     {
-                        gender ="man"
+                        gender ="MAN"
                         radio_signup_man.setTextColor(ContextCompat.getColor(applicationContext,R.color.colorPoint))
                         radio_signup_woman.setTextColor(ContextCompat.getColor(applicationContext,R.color.colorGender))
                         checkedBtn()
                     }
                     else if(checkedId == R.id.radio_signup_woman)
                     {
-                        gender="woman"
+                        gender="WOMAN"
                         radio_signup_woman.setTextColor(ContextCompat.getColor(applicationContext,R.color.colorPoint))
                         radio_signup_man.setTextColor(ContextCompat.getColor(applicationContext,R.color.colorGender))
                         checkedBtn()
@@ -280,8 +289,11 @@ class SignUpActivity : AppCompatActivity() {
             checkedBtn()
             if(checkBtn) {
                 requestSignUp()
-                val intent = Intent(applicationContext, FinishSignUpActivity::class.java)
-                startActivity(intent)
+                Timber.e("id :::: " + email)
+                Timber.e("pw :::: " + pw)
+                Timber.e("nickname :::" + nickname)
+                Timber.e("gender ::: "+ gender)
+
             }
         }
 
@@ -302,10 +314,13 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
     private fun requestSignUp(){
-        val data = SignUpRequest("nbn0809@naver.com","123456","hyesun","WOMAN","KOR")
+        val data = SignUpRequest(email,pw,nickname,gender,"KOR")
         networkManager.requestSignUp(data).safeEnqueue(
             onSuccess = {
                 toast("성공")
+                Intent(GlobalApp,FinishSignUpActivity::class.java).run {
+                    startActivityForResult(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
+                        REQUEST_FINISH_SIGN_UP) }
             },
             onFailure = {
                 when(it.errorBody().toJson().error?.code){
@@ -318,5 +333,16 @@ class SignUpActivity : AppCompatActivity() {
                 toast("에러")
             }
         )
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(resultCode == Activity.RESULT_OK && requestCode == REQUEST_FINISH_SIGN_UP) {
+            finish()
+        }
+    }
+
+    companion object {
+        private const val REQUEST_FINISH_SIGN_UP = 1000
     }
 }
