@@ -1,6 +1,7 @@
 package com.kravelteam.kravel_android.ui.main
 
 import android.R.attr
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageView
@@ -31,6 +32,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        setResult(Activity.RESULT_OK)
         initSetting()
     }
 

@@ -9,9 +9,9 @@
     
     <ImageView
         android:id="@+id/img_signupf_logo"
-        android:layout_width="180dp"
-        android:layout_height="180dp"
-        android:src="@color/colorGender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_welcome_tiger"
         app:layout_constraintVertical_bias="0.2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
