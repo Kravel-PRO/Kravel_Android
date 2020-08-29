@@ -6,6 +6,7 @@ import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.GlideApp
 import com.kravelteam.kravel_android.common.HorizontalItemDecorator
 import com.kravelteam.kravel_android.common.VerticalItemDecorator
+import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.response.DetailPlaceResponse
 import com.kravelteam.kravel_android.data.response.PhotoResponse
 import com.kravelteam.kravel_android.ui.adapter.PhotoReviewRecyclerview
@@ -26,6 +27,9 @@ class SearchDetailActivity : AppCompatActivity() {
 
     private fun initSetting(){
         GlideApp.with(this).load("https://6.vikiplatform.com/image/a11230e2d98d4a73825a4c10c8c6feb0.jpg?x=b&a=0x0&s=460x268&e=t&f=t&cb=1").into(img_search_detail_title)
+        img_search_detail_back.setOnDebounceClickListener {
+            finish()
+        }
     }
 
     private fun initRecycler(){

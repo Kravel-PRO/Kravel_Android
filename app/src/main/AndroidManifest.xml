@@ -18,7 +18,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.mypage.ScrapActivity"></activity>
+        <activity android:name=".ui.map.PostReviewActivity"></activity>
+        <activity android:name=".ui.mypage.ScrapActivity" />
         <activity android:name=".ui.mypage.MyPhotoReviewActivity" />
         <activity android:name=".ui.map.PlaceDetailActivity" />
         <activity android:name=".ui.mypage.ReportActivity" />
@@ -26,7 +27,13 @@
         <activity android:name=".ui.mypage.UpdateInfoActivity" />
         <activity android:name=".ui.search.SearchDetailActivity" />
         <activity android:name=".ui.signup.SetLanguageActivity" />
-        <activity android:name=".ui.login.LoginActivity" />
+        <activity android:name=".ui.login.LoginActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".ui.home.NearPlaceActivity" />
         <activity android:name=".ui.home.PhotoReviewActivity" />
 
@@ -37,11 +44,7 @@
         <activity android:name=".ui.signup.FinishSignUpActivity" />
         <activity android:name=".ui.signup.SignUpActivity" />
         <activity android:name=".ui.main.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 

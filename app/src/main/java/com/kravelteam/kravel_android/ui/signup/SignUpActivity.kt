@@ -9,7 +9,13 @@ import android.view.View
 import android.widget.RadioGroup
 import androidx.core.content.ContextCompat
 import com.kravelteam.kravel_android.R
+import com.kravelteam.kravel_android.data.request.SignUpRequest
+import com.kravelteam.kravel_android.network.NetworkManager
+import com.kravelteam.kravel_android.util.safeEnqueue
+import com.kravelteam.kravel_android.util.toJson
+import com.kravelteam.kravel_android.util.toast
 import kotlinx.android.synthetic.main.activity_sign_up.*
+import org.koin.android.ext.android.inject
 
 class SignUpActivity : AppCompatActivity() {
 
@@ -23,6 +29,9 @@ class SignUpActivity : AppCompatActivity() {
     var pw : String = ""
     var gender : String =""
     var nickname : String =""
+
+    private val networkManager : NetworkManager by inject()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
@@ -270,6 +279,7 @@ class SignUpActivity : AppCompatActivity() {
         btn_signup.setOnClickListener {
             checkedBtn()
             if(checkBtn) {
+                requestSignUp()
                 val intent = Intent(applicationContext, FinishSignUpActivity::class.java)
                 startActivity(intent)
             }
@@ -290,5 +300,23 @@ class SignUpActivity : AppCompatActivity() {
             btn_signup.setTextColor(ContextCompat.getColor(applicationContext, R.color.colorGender))
             checkBtn = false
         }
+    }
+    private fun requestSignUp(){
+        val data = SignUpRequest("nbn0809@naver.com","123456","hyesun","WOMAN","KOR")
+        networkManager.requestSignUp(data).safeEnqueue(
+            onSuccess = {
+                toast("성공")
+            },
+            onFailure = {
+                when(it.errorBody().toJson().error?.code){
+                    400 -> {
+                        toast("이미 존재하는 이메일입니다")
+                    }
+                }
+            },
+            onError = {
+                toast("에러")
+            }
+        )
     }
 }

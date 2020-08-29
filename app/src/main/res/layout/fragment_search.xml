@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.kravelteam.kravel_android.ui.search.SearchFragment">
+    tools:context="com.kravelteam.kravel_android.ui.search.SearchFragment"
+    android:background="@color/colorWhite">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_search_main"
@@ -156,13 +157,48 @@
                     app:layout_constraintTop_toBottomOf="@id/txt_search_recent_title"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:listitem="@layout/item_search_word" />
+                    tools:listitem="@layout/item_search_word"
+                    android:visibility="gone"/>
+                
+                <View
+                    android:id="@+id/view_search_line"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/colorGrey"
+                    android:layout_marginTop="11dp"
+                    app:layout_constraintTop_toBottomOf="@id/txt_search_recent_title"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_search_recent_result"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="16dp"
+                    android:paddingHorizontal="16dp"
+                    android:background="@color/colorOpacity20WhiteGrey"
+                    app:layout_constraintTop_toBottomOf="@id/view_search_line"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:spanCount="3"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    tools:listitem="@layout/item_celeb_title"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/txt_search_recent_empty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="검색어가 없습니다.\n검색어를 다시 한 번 확인해주세요."
+                    android:textColor="@color/colorDarkGrey"
+                    android:textSize="15sp"
+                    android:gravity="center"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:visibility="gone"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

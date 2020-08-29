@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.kravelteam.kravel_android.ui.search.SearchDetailActivity">
+    tools:context="com.kravelteam.kravel_android.ui.search.SearchDetailActivity"
+    android:background="@color/colorWhite">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -20,6 +21,16 @@
                 android:layout_height="257dp"
                 android:scaleType="centerCrop"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/img_search_detail_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/btn_back_white"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                app:layout_constraintStart_toStartOf="@+id/img_search_detail_title"
+                app:layout_constraintTop_toTopOf="@+id/img_search_detail_title" />
 
             <View
                 android:layout_width="match_parent"
@@ -40,17 +51,6 @@
                 android:textSize="22sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/img_search_detail_title" />
-
-            <TextView
-                android:id="@+id/txt_search_detail_sub"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="가"
-                android:textColor="@color/colorBlack"
-                android:textSize="22sp"
-                app:layout_constraintBottom_toBottomOf="@+id/txt_search_detail_title"
-                app:layout_constraintStart_toEndOf="@+id/txt_search_detail_title"
-                app:layout_constraintTop_toTopOf="@+id/txt_search_detail_title" />
 
             <TextView
                 android:id="@+id/txt_search_detail_sub2"

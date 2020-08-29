@@ -1,10 +1,8 @@
 package com.kravelteam.kravel_android.network
 
 import com.kravelteam.kravel_android.data.request.LoginRequest
-import com.kravelteam.kravel_android.data.response.BaseResponse
-import com.kravelteam.kravel_android.data.response.CelebResponse
-import com.kravelteam.kravel_android.data.response.LoginResponse
-import com.kravelteam.kravel_android.data.response.MediaResponse
+import com.kravelteam.kravel_android.data.request.SignUpRequest
+import com.kravelteam.kravel_android.data.response.*
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -19,6 +17,14 @@ interface NetworkService {
     fun requestLogin(
         @Body data : LoginRequest
     ) : Call<LoginResponse>
+
+    /**
+     * 회원가입
+     */
+    @POST("/auth/sign-up")
+    fun requestSignUp(
+        @Body data: SignUpRequest
+    ) : Call<BaseResponse<SignUpResponse>>
 
     /**
      * 셀럽 리스트

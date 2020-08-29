@@ -2,6 +2,7 @@ package com.kravelteam.kravel_android.network
 
 import com.kravelteam.kravel_android.common.HeaderInterceptor
 import com.kravelteam.kravel_android.data.request.LoginRequest
+import com.kravelteam.kravel_android.data.request.SignUpRequest
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module
@@ -31,12 +32,15 @@ class NetworkManager(authManager: AuthManager) {
     fun requestLogin(data : LoginRequest)
             = retrofit.requestLogin(data)
 
+    fun requestSignUp(data: SignUpRequest)
+            = retrofit.requestSignUp(data)
+
     fun requestCelebList() = retrofit.requestCelebList()
 
     fun requestMediaList() = retrofit.requestMediaList()
 
     private companion object {
-        const val BASE_URL = "http://15.164.47.5:8080"
+        const val BASE_URL = "http://15.164.118.217:8080"
     }
 }
 
