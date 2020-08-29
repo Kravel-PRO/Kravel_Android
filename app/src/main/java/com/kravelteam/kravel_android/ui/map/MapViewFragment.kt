@@ -20,6 +20,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.airbnb.lottie.LottieAnimationView
+import com.bumptech.glide.load.engine.bitmap_recycle.IntegerArrayAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.kravelteam.kravel_android.KravelApplication
@@ -90,6 +91,10 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
             }
 
         mapFragment.getMapAsync(this)
+
+
+        root = requireView().findViewById(R.id.root)
+        bottomSheetBehavior = BottomSheetBehavior.from<ConstraintLayout>(cl_bottom_seat_place)
 
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
 
@@ -189,9 +194,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
         initMap(placeInfo.marker)
 
 
-        bottomSheetBehavior = BottomSheetBehavior.from<ConstraintLayout>(cl_bottom_seat_place)
         cl_bottom_seat_place.setVisible()
-        //bottomSheetBehavior.peekHeight = (cl_bottom_place_info.height + 56).dpToPx()
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         bottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -207,14 +210,16 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
                     BottomSheetBehavior.STATE_EXPANDED -> {
 
                         initAnimation()
+
                         Handler().postDelayed({
                             Intent(GlobalApp, PlaceDetailActivity::class.java).apply {
                                 putExtra("data", placeInfo)
                             }.run {
-                                requireActivity().startActivityForResult(
-                                    this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
-                                    REQUEST_MAP_DETAIL_ACTIVITY
-                                )
+                                requireActivity().startActivity(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_NO_ANIMATION))
+//                                requireActivity().startActivityForResult(
+//                                    this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_NO_ANIMATION),
+//                                    REQUEST_MAP_DETAIL_ACTIVITY
+//                                )
                             }
                         }, 1500)
 
@@ -222,6 +227,9 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
                     BottomSheetBehavior.STATE_DRAGGING -> {
                     }
                     BottomSheetBehavior.STATE_COLLAPSED -> {}
+                    BottomSheetBehavior.STATE_HALF_EXPANDED -> {
+
+                    }
                 }
             }
 
@@ -232,7 +240,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
 
     }
     private fun initAnimation() {
-        root = requireView().findViewById(R.id.root)
+
         animMapInfo = animMapInfoLottie
         animMapInfo.apply {
             setAnimation("loading_small.json")
@@ -385,17 +393,24 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
     }
 
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        requireActivity()
-        if( requestCode == REQUEST_MAP_DETAIL_ACTIVITY) {
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            root.setVisible()
-        }
-    }
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//        requireActivity()
+//        if( requestCode == REQUEST_MAP_DETAIL_ACTIVITY) {
+//            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+//            root.setVisible()
+//        }
+//    }
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
         private const val REQUEST_MAP_DETAIL_ACTIVITY = 1004
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        root.setVisible()
     }
 
 }

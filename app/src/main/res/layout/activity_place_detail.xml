@@ -7,7 +7,21 @@
     android:id="@+id/root"
     tools:context="com.kravelteam.kravel_android.ui.map.PlaceDetailActivity">
 
+    <com.davidmiguel.dragtoclose.DragToClose
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/drag_to_close"
+        app:dragtoclose_closeOnClick="true"
+        app:dragtoclose_finishActivity="true"
+        app:dragtoclose_draggableContainer="@id/sv_place_detail"
+        app:dragtoclose_draggableView="@id/sv_place_detail"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
     <ScrollView
+        android:id="@+id/sv_place_detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
@@ -348,6 +362,6 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
-
+    </com.davidmiguel.dragtoclose.DragToClose>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
