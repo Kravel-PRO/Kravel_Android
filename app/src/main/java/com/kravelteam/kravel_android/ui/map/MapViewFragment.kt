@@ -38,6 +38,7 @@ import com.kravelteam.kravel_android.data.response.PhotoResponse
 import com.kravelteam.kravel_android.ui.adapter.HashTagRecyclerView
 import com.kravelteam.kravel_android.ui.adapter.MapPlaceRecyclerview
 import com.kravelteam.kravel_android.ui.adapter.PhotoReviewRecyclerview
+import com.kravelteam.kravel_android.ui.camera.CameraFragment
 import com.kravelteam.kravel_android.util.dpToPx
 import com.kravelteam.kravel_android.util.setGone
 import com.kravelteam.kravel_android.util.setRound
@@ -112,6 +113,11 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
                 trackingmode = false
                 naverMap.locationTrackingMode = NoFollow
             }
+        }
+
+        img_bottom_photo.setOnClickListener {
+             Intent(GlobalApp,CameraActivity::class.java).run {
+                 GlobalApp.startActivity(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
         }
 
         //initAreaWarningDailog()
@@ -403,7 +409,6 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
 //    }
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
-        private const val REQUEST_MAP_DETAIL_ACTIVITY = 1004
     }
 
     override fun onResume() {
