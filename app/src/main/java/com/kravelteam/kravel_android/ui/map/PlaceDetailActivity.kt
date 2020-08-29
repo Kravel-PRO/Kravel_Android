@@ -1,6 +1,7 @@
 package com.kravelteam.kravel_android.ui.map
 
 import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -8,6 +9,7 @@ import android.widget.ScrollView
 import androidx.core.widget.NestedScrollView
 import com.davidmiguel.dragtoclose.DragListener
 import com.davidmiguel.dragtoclose.DragToClose
+import com.kravelteam.kravel_android.KravelApplication.Companion.GlobalApp
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.GlideApp
 import com.kravelteam.kravel_android.common.HorizontalItemDecorator
@@ -46,6 +48,10 @@ class PlaceDetailActivity : AppCompatActivity() , OnMapReadyCallback {
         setResult(Activity.RESULT_OK)
         img_map_detail_arrow.setOnClickListener {
             finish()
+        }
+        img_map_detail_photo.setOnClickListener {
+               Intent(GlobalApp,CameraActivity::class.java).run {
+                   GlobalApp.startActivity(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
         }
         initSetting()
 

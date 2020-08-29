@@ -92,6 +92,9 @@ dependencies {
     implementation 'com.github.mabbas007:TagsEditText:1.0.5'
     implementation 'com.github.davidmigloz:drag-to-close:1.0.0'
 
+    //camera
+    implementation 'com.google.android.gms:play-services-vision:17.0.2'
+
 }
 
 configurations.all {
