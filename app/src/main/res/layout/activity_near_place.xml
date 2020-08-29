@@ -28,7 +28,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="나와 가까운 Kravel"
+                android:text="@string/NearPlaceList"
                 android:textSize="18sp"
                 android:fontFamily="@font/notosans_cjk_kr_regular"
                 android:textColor="@color/colorBlack"

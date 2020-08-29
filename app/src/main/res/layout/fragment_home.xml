@@ -24,10 +24,10 @@
         android:background="@drawable/coral_left_round_background">
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/txt_home_title1"
-            android:text="색다른 여행을 만들어 줄"
+            android:text="@string/mainWord1"
             android:fontFamily="@font/notosans_cjk_kr_regular"
             android:textSize="22sp"
             android:textColor="@color/colorWhite"
@@ -39,10 +39,10 @@
             app:layout_constraintLeft_toLeftOf="parent" />
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/txt_home_title2"
-            android:text="Kravel 장소가"
+            android:text="@string/mainWord2"
             android:fontFamily="@font/notosans_cjk_kr_bold"
             android:textSize="22sp"
             android:textColor="@color/colorWhite"
@@ -54,10 +54,10 @@
 
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/txt_home_title3"
-            android:text="준비되어 있어요!"
+            android:text="@string/mainWord3"
             android:fontFamily="@font/notosans_cjk_kr_bold"
             android:textSize="22sp"
             android:textColor="@color/colorWhite"
@@ -83,7 +83,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/txt_home_near_title1"
-                android:text="나와 가까운 "
+                android:text="@string/homeNearPlace1"
                 android:fontFamily="@font/notosans_cjk_kr_bold"
                 android:textSize="18sp"
                 android:textColor="@color/colorWhite"
@@ -94,7 +94,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/txt_home_near_title2"
-                android:text="Kravel"
+                android:text="@string/homeNearPlace2"
                 android:fontFamily="@font/notosans_cjk_kr_regular"
                 android:textSize="18sp"
                 android:textColor="@color/colorWhite"
@@ -105,7 +105,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="더보기 >"
+                android:text="@string/homeMoreBtn"
                 android:id="@+id/txt_home_near_place_more"
                 android:fontFamily="@font/notosans_cjk_kr_regular"
                 android:textColor="@color/colorWhite"
@@ -135,7 +135,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="요즘 여기가 "
+            android:text="@string/homePopularPlace1"
             android:id="@+id/txt_home_popular1"
             app:layout_constraintTop_toBottomOf="@id/cl_home_content1"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -149,8 +149,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="인기 있어요!"
             android:id="@+id/txt_home_popular2"
+            android:text="@string/homePopularPlace2"
             app:layout_constraintTop_toTopOf="@id/txt_home_popular1"
             app:layout_constraintBottom_toBottomOf="@id/txt_home_popular1"
             app:layout_constraintLeft_toRightOf="@id/txt_home_popular1"
@@ -190,7 +190,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="새롭게 올라온 "
+            android:text="@string/homeNewPhotoReview1"
             android:id="@+id/txt_home_photo1"
             app:layout_constraintTop_toBottomOf="@id/view_line"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -204,7 +204,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="포토리뷰"
+            android:text="@string/homeNewPhotoReview2"
             android:id="@+id/txt_home_photo2"
             app:layout_constraintTop_toTopOf="@id/txt_home_photo1"
             app:layout_constraintBottom_toBottomOf="@id/txt_home_photo1"

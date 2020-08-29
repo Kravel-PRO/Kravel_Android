@@ -25,7 +25,7 @@
         android:id="@+id/txt_photo_more"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="더 보기"
+        android:text="@string/more"
         android:textSize="15sp"
         android:visibility="gone"
         android:fontFamily="@font/notosans_cjk_kr_regular"
