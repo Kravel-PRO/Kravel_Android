@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Kravel</string>
+    <string name="login">Log in</string>
+    <string name="signup">Sign Up</string>
+    <string name="email">E-mail</string>
+    <string name="pw">Password</string>
+    <string name="hello_blank_fragment">hello</string>
+    <string name="emailExplain">Please enter your email.</string>
+    <string name="pwExplain">Please enter your password.</string>
+    <string name="loginWord1">Shall we go on a trip</string>
+    <string name="loginWord2">with Kavel
+        \ntoday?</string>
+    <string name="loginFailTitle">Login failed.</string>
+    <string name="loginFailContent">Incorrect account
+        \nor password.</string>
+    <string name="Retry">Retry</string>
+</resources>

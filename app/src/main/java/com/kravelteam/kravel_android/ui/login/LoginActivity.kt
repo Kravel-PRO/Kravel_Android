@@ -92,10 +92,11 @@ class LoginActivity : AppCompatActivity() {
         cl_login_title_space.visibility = View.VISIBLE
 
         val fade = ObjectAnimator.ofFloat(txt_login_title,View.ALPHA,0.0f,1.0f)
+        val fade2 = ObjectAnimator.ofFloat(txt_login_title1, View.ALPHA, 0.0f, 1.0f)
         val ty1 = ObjectAnimator.ofFloat(cl_login_edt_space, View.TRANSLATION_Y, 1250f, 0f)
         val ty2 = ObjectAnimator.ofFloat(cl_img_background, View.TRANSLATION_Y, 0f, -700f)
         AnimatorSet().run {
-            playTogether(fade,ty1,ty2)
+            playTogether(fade, fade2, ty1, ty2)
             duration = 1000
             start()
         }
@@ -105,10 +106,11 @@ class LoginActivity : AppCompatActivity() {
     private fun beforeAnimation(){
         val anim = AnimatorSet()
         val fade = ObjectAnimator.ofFloat(txt_login_title,View.ALPHA,1.0f,0.0f)
+        val fade2 = ObjectAnimator.ofFloat(txt_login_title1,View.ALPHA,1.0f,0.0f)
         val ty1 = ObjectAnimator.ofFloat(cl_login_edt_space, View.TRANSLATION_Y, 0f, 1250f)
         val ty2 = ObjectAnimator.ofFloat(cl_img_background, View.TRANSLATION_Y, -700f, 0f)
         anim.run {
-            playTogether(fade,ty1,ty2)
+            playTogether(fade,fade2, ty1,ty2)
             duration = 1000
             start()
 

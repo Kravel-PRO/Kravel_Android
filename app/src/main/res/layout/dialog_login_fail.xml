@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/white_fill_round_background">
+
+    <TextView
+        android:id="@+id/txt_login_fail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/notosans_cjk_kr_bold"
+        android:text="@string/loginFailTitle"
+        android:textColor="@color/colorCoral"
+        android:textSize="16sp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txt_login_fail_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/loginFailContent"
+        android:textColor="@color/colorBlackGrey"
+        android:textSize="16sp"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="@+id/txt_login_fail"
+        app:layout_constraintStart_toStartOf="@+id/txt_login_fail"
+        app:layout_constraintTop_toBottomOf="@+id/txt_login_fail" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/selector_btn_enable_background"
+        android:fontFamily="@font/notosans_cjk_kr_bold"
+        android:gravity="center"
+        android:paddingVertical="13dp"
+        android:text="@string/Retry"
+        android:textColor="@color/colorWhite"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txt_login_fail_content" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
