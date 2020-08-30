@@ -38,7 +38,6 @@ import com.kravelteam.kravel_android.data.response.PhotoResponse
 import com.kravelteam.kravel_android.ui.adapter.HashTagRecyclerView
 import com.kravelteam.kravel_android.ui.adapter.MapPlaceRecyclerview
 import com.kravelteam.kravel_android.ui.adapter.PhotoReviewRecyclerview
-import com.kravelteam.kravel_android.ui.camera.CameraFragment
 import com.kravelteam.kravel_android.util.dpToPx
 import com.kravelteam.kravel_android.util.setGone
 import com.kravelteam.kravel_android.util.setRound
@@ -249,7 +248,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
 
         animMapInfo = animMapInfoLottie
         animMapInfo.apply {
-            setAnimation("loading_small.json")
+            setAnimation("loading_map.json")
             playAnimation()
             loop(true)
         }
