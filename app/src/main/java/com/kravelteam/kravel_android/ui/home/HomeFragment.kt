@@ -1,7 +1,6 @@
 package com.kravelteam.kravel_android.ui.home
 
 import android.Manifest
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -21,25 +20,22 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.*
 import com.kravelteam.kravel_android.KravelApplication
+import com.kravelteam.kravel_android.KravelApplication.Companion.GlobalApp
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.HorizontalItemDecorator
 import com.kravelteam.kravel_android.common.VerticalItemDecorator
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.mock.PopularPlaceData
-import com.kravelteam.kravel_android.data.response.DetailPlaceResponse
 import com.kravelteam.kravel_android.data.response.PhotoResponse
-import com.kravelteam.kravel_android.ui.adapter.NearRecyclerview
+import com.kravelteam.kravel_android.network.NetworkManager
+import com.kravelteam.kravel_android.ui.adapter.NearPlaceRecyclerview
 import com.kravelteam.kravel_android.ui.adapter.PhotoReviewRecyclerview
 import com.kravelteam.kravel_android.ui.adapter.PopularRecyclerview
-import com.kravelteam.kravel_android.ui.map.MapViewFragment
-import com.naver.maps.geometry.LatLng
-import com.naver.maps.map.LocationTrackingMode
-import com.naver.maps.map.util.FusedLocationSource
+import com.kravelteam.kravel_android.util.*
 import kotlinx.android.synthetic.main.dialog_gps_permission.view.*
 import kotlinx.android.synthetic.main.fragment_home.*
+import org.koin.android.ext.android.inject
 import timber.log.Timber
-import java.text.SimpleDateFormat
-import java.util.*
 
 
 /**
@@ -51,8 +47,9 @@ class HomeFragment : Fragment() {
     internal lateinit var mLocationRequest: LocationRequest
     private val popularAdapter : PopularRecyclerview by lazy { PopularRecyclerview() }
     private val photoAdapter : PhotoReviewRecyclerview by lazy { PhotoReviewRecyclerview() }
-    private val nearAdapter : NearRecyclerview by lazy { NearRecyclerview() }
+    private val nearAdapter : NearPlaceRecyclerview by lazy { NearPlaceRecyclerview() }
 
+    private val networkManager : NetworkManager by inject()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -104,26 +101,35 @@ class HomeFragment : Fragment() {
     }
     private fun init() {
         txt_home_near_place_more.setOnDebounceClickListener {
-            startActivity(Intent(context, NearPlaceActivity::class.java))
+               Intent(GlobalApp,NearPlaceActivity::class.java).apply {
+                   putExtra("latitude",mLastLocation.latitude)
+                   putExtra("longitude",mLastLocation.longitude)
+               }.run {
+                   GlobalApp.startActivity(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+               }
         }
     }
     private fun initNearRecycler() {
-        rv_near_place.apply {
-            adapter = nearAdapter
-            addItemDecoration(HorizontalItemDecorator(16))
-        }
 
-        nearAdapter.initData(
-            listOf(
-                DetailPlaceResponse("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나", arrayListOf("#tag")),
-                DetailPlaceResponse("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나", arrayListOf("#tag")),
-                DetailPlaceResponse("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나", arrayListOf("#tag")),
-                DetailPlaceResponse("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나", arrayListOf("#tag")),
-                DetailPlaceResponse("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나", arrayListOf("#tag")),
-                DetailPlaceResponse("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나", arrayListOf("#tag"))
-            )
+        networkManager.getPlaceList(1.0,1.0).safeEnqueue (
+            onSuccess = {
+                rv_near_place.apply {
+                    adapter = nearAdapter
+                    addItemDecoration(HorizontalItemDecorator(16))
+                }
+                nearAdapter.initData(it.data!!.result.content)
+                if(it.data!!.result.content.isEmpty()) {
+                    cl_home_near_place.setGone()
+                }
+            },
+            onFailure = {
+               Timber.e("실패")
+
+            },
+            onError = {
+                networkErrorToast()
+            }
         )
-
     }
     private fun initPopularRecycler() {
         rv_popular_place.apply {
