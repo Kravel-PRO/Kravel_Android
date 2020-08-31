@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/cl_gps_transparent"
+    android:background="@drawable/white_fill_round_background">
+
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/cl_area_warning"
+        android:background="@drawable/white_dailog_background"
+        android:layout_marginTop="50dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <TextView
+            android:id="@+id/txt_gps_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="42dp"
+            android:text="@string/gpsWarningWord1"
+            android:textColor="@color/colorBlack"
+            android:textSize="14sp"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toTopOf="@+id/btn_gps_no"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/btn_gps_no"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="7dp"
+            android:background="@drawable/grey_round_background"
+            android:gravity="center"
+            android:paddingVertical="13dp"
+            android:text="@string/no"
+            android:textColor="@color/colorDarkGrey"
+            android:textSize="15sp"
+            android:fontFamily="@font/notosans_cjk_kr_bold"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_gps_yes"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txt_logout_title" />
+
+        <TextView
+            android:id="@+id/btn_gps_yes"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="7dp"
+            android:layout_marginRight="16dp"
+            android:background="@drawable/selector_btn_enable_background"
+            android:gravity="center"
+            android:paddingVertical="13dp"
+            android:text="@string/yes"
+            android:textColor="@color/colorWhite"
+            android:textSize="15sp"
+            android:fontFamily="@font/notosans_cjk_kr_bold"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_gps_no"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btn_gps_no"
+            app:layout_constraintTop_toTopOf="@+id/btn_gps_no" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/img_gps_warning"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_logout"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

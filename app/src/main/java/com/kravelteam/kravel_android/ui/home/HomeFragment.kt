@@ -5,6 +5,8 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.location.Location
 import android.location.LocationManager
 import android.os.Build
@@ -18,6 +20,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.*
+import com.kravelteam.kravel_android.KravelApplication
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.HorizontalItemDecorator
 import com.kravelteam.kravel_android.common.VerticalItemDecorator
@@ -32,6 +35,7 @@ import com.kravelteam.kravel_android.ui.map.MapViewFragment
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.util.FusedLocationSource
+import kotlinx.android.synthetic.main.dialog_gps_permission.view.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import timber.log.Timber
 import java.text.SimpleDateFormat
@@ -80,19 +84,23 @@ class HomeFragment : Fragment() {
   핸드폰 gps 가 꺼져있을 시 , gps를 키기위한 함수
    */
     private fun buildAlterMessageNoGPS() {
-        val builder = AlertDialog.Builder(context)
-        builder.setMessage("해당 기기에 gps가 꺼져있어 위치정보를 가져올 수 없습니다. gps를 사용하시겠습니까?")
-            .setCancelable(false)
-            .setPositiveButton("Yes") { dialog, id ->
-                startActivityForResult(
-                    Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-                    , 11)
-            }
-            .setNegativeButton("No") { dialog, id ->
-                dialog.cancel()
-            }
-        val alert: AlertDialog = builder.create()
-        alert.show()
+        val dialog = androidx.appcompat.app.AlertDialog.Builder(requireActivity()).create()
+        val view = LayoutInflater.from(KravelApplication.GlobalApp).inflate(R.layout.dialog_gps_permission, null)
+        view.cl_gps_transparent.setBackgroundColor(Color.TRANSPARENT)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        view.btn_gps_yes.setOnDebounceClickListener {
+            startActivityForResult(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS),11)
+        }
+        view.btn_gps_no.setOnDebounceClickListener {
+            dialog.cancel()
+        }
+
+        dialog.apply {
+            setView(view)
+            setCancelable(false)
+            show()
+        }
+
     }
     private fun init() {
         txt_home_near_place_more.setOnDebounceClickListener {

@@ -42,12 +42,12 @@
     <string name="mainWord1">당신의 한국 여행을</string>
     <string name="mainWord2">더 특별하게,</string>
     <string name="mainWord3">Kravel만의 장소를 둘러보세요.</string>
-    <string name="homeNearPlace1">나와 가까운</string>
+    <string name="homeNearPlace1">"나와 가까운 "</string>
     <string name="homeNearPlace2">Kravel</string>
     <string name="homeMoreBtn">더 보기 ></string>
     <string name="homePopularPlace1">"요즘 여기가 "</string>
     <string name="homePopularPlace2">인기 있어요!</string>
-    <string name="homeNewPhotoReview1">새롭게 올라온</string>
+    <string name="homeNewPhotoReview1">"새롭게 올라온 "</string>
     <string name="homeNewPhotoReview2">포토 리뷰</string>
     <string name="NewPhotoReview">새로운 포토 리뷰</string>
     <string name="NearPlaceList">나와 가까운 Kravel</string>
@@ -59,4 +59,7 @@
     <string name="more">더보기</string>
     <string name="warningServiceWord1">서비스가 지원되는 지역이 아니예요.</string>
     <string name="warningServiceWord2">한국에서 만나요!</string>
+    <string name="gpsWarningWord1">해당 기기에 gps가 꺼져있어 위치정보를 가져올 수 없습니다.\n gps를 사용하시겠습니까?</string>
+    <string name="yes">예</string>
+    <string name="no">아니오</string>
 </resources>

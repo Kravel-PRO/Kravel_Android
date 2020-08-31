@@ -49,6 +49,7 @@ import com.naver.maps.map.overlay.LocationOverlay
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
+import kotlinx.android.synthetic.main.dialog_gps_permission.view.*
 import kotlinx.android.synthetic.main.dialog_service_warning.view.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.rv_home_photo_review
@@ -114,6 +115,17 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
             }
         }
 
+//        togglebtn_gps_bottom.setOnDebounceClickListener {
+//            if(!trackingmode) {
+//                trackingmode = true
+//                naverMap.locationTrackingMode = Follow
+//
+//            } else {
+//                trackingmode = false
+//                naverMap.locationTrackingMode = NoFollow
+//            }
+//        }
+
         img_bottom_photo.setOnClickListener {
              Intent(GlobalApp,CameraActivity::class.java).run {
                  GlobalApp.startActivity(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
@@ -127,10 +139,6 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
     private fun initAreaWarningDailog() {
         val dialog = androidx.appcompat.app.AlertDialog.Builder(requireActivity()).create()
         val view = LayoutInflater.from(GlobalApp).inflate(R.layout.dialog_service_warning, null)
-
-        view.txt_area_warning_content1.text = "서비스가 지원되는 지역이 아니예요"
-        view.txt_area_warning_content2.text ="한국에서 크래블을 즐겨봐요!"
-        view.btn_area_warning_ok.text ="확인"
         view.cl_area_warning_background.setBackgroundColor(Color.TRANSPARENT)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         view.btn_area_warning_ok setOnDebounceClickListener {
@@ -173,6 +181,10 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
         )
 
 
+        togglebtn_gps.setGone()
+        img_reset.setGone()
+//        togglebtn_gps_bottom.setVisible()
+//        img_reset_bottom.setVisible()
 
         GlideApp.with(img_bottom_place).load(placeInfo.placeImg).into(img_bottom_place)
         // Round값 물어보기
@@ -210,6 +222,10 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
                             markerClick = false
                             marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_default)
                             cl_bottom_seat_place.setGone()
+                            togglebtn_gps.setVisible()
+                            img_reset.setVisible()
+//                            togglebtn_gps_bottom.setGone()
+//                            img_reset_bottom.setGone()
                         }
                     }
                     BottomSheetBehavior.STATE_EXPANDED -> {
@@ -314,19 +330,23 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
     핸드폰 gps 가 꺼져있을 시 , gps를 키기위한 함수
      */
     private fun buildAlterMessageNoGPS() {
-        val builder = AlertDialog.Builder(context)
-        builder.setMessage("해당 기기에 gps가 꺼져있어 위치정보를 가져올 수 없습니다. gps를 사용하시겠습니까?")
-            .setCancelable(false)
-            .setPositiveButton("Yes") { dialog, id ->
-                startActivityForResult(
-                    Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-                    , 11)
-            }
-            .setNegativeButton("No") { dialog, id ->
-                dialog.cancel()
-            }
-        val alert: AlertDialog = builder.create()
-        alert.show()
+        val dialog = androidx.appcompat.app.AlertDialog.Builder(requireActivity()).create()
+        val view = LayoutInflater.from(GlobalApp).inflate(R.layout.dialog_gps_permission, null)
+        view.cl_gps_transparent.setBackgroundColor(Color.TRANSPARENT)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        view.btn_gps_yes.setOnDebounceClickListener {
+            startActivityForResult(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS),11)
+        }
+        view.btn_gps_no.setOnDebounceClickListener {
+            dialog.cancel()
+        }
+
+        dialog.apply {
+            setView(view)
+            setCancelable(false)
+            show()
+        }
+
     }
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -378,6 +398,10 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
                 markerClick = false
                 rv_map_near_place.setVisible()
                 cl_bottom_seat_place.setGone()
+                togglebtn_gps.setVisible()
+                img_reset.setVisible()
+//                togglebtn_gps_bottom.setGone()
+//                img_reset_bottom.setGone()
                 marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_default)
             }
 
@@ -390,6 +414,10 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
                 rv_map_near_place.setVisible()
                 marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_default)
                 cl_bottom_seat_place.setGone()
+                togglebtn_gps.setVisible()
+                img_reset.setVisible()
+//                togglebtn_gps_bottom.setGone()
+//                img_reset_bottom.setGone()
             }
         }
     }

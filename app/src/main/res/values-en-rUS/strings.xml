@@ -41,12 +41,12 @@
     <string name="mainWord1">"Places that will make your trip "</string>
     <string name="mainWord2">to Korea more special.</string>
     <string name="mainWord3">The popular place these days.</string>
-    <string name="homeNearPlace1">a Kravel</string>
+    <string name="homeNearPlace1">"a Kravel "</string>
     <string name="homeNearPlace2">close to me</string>
     <string name="homeMoreBtn">more ></string>
     <string name="homePopularPlace1">"This place is "</string>
     <string name="homePopularPlace2">popular these days!</string>
-    <string name="homeNewPhotoReview1">New</string>
+    <string name="homeNewPhotoReview1">"New "</string>
     <string name="homeNewPhotoReview2">Photo Review</string>
     <string name="NewPhotoReview">New Photo Review</string>
     <string name="NearPlaceList">a Kravel close to me</string>
@@ -58,4 +58,7 @@
     <string name="more">more</string>
     <string name="warningServiceWord1">It\'s not a service area.</string>
     <string name="warningServiceWord2">Let\'s Enjoy Kravel in Korea!</string>
+    <string name="gpsWarningWord1">Unable to get location information because gps is turned off on the device. \n Do you want to use gps?</string>
+    <string name="yes">yes</string>
+    <string name="no">no</string>
 </resources>
