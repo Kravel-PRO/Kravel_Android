@@ -29,7 +29,7 @@ interface NetworkService {
     /**
      * 셀럽 리스트
      */
-    @GET("/api/articles/celebrities")
+    @GET("/api/celebrities")
     fun requestCelebList() : Call<BaseResponse<List<CelebResponse>>>
 
     /**
@@ -39,7 +39,7 @@ interface NetworkService {
     /**
      * 미디어 리스트
      */
-    @GET("/api/articles/medias")
+    @GET("/api/medias")
     fun requestMediaList() : Call<BaseResponse<List<MediaResponse>>>
 
 }

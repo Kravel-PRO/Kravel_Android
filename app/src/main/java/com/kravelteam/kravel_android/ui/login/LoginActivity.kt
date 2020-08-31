@@ -22,6 +22,7 @@ import com.kravelteam.kravel_android.util.startActivity
 import com.kravelteam.kravel_android.util.toast
 import kotlinx.android.synthetic.main.activity_login.*
 import org.koin.android.ext.android.inject
+import timber.log.Timber
 
 class LoginActivity : AppCompatActivity() {
 
@@ -63,7 +64,6 @@ class LoginActivity : AppCompatActivity() {
                 loginEmail = edt_login_email.text.toString(),
                 loginPw = edt_login_pw.text.toString()
             )
-
             networkManager.requestLogin(loginData).safeEnqueue(
                 onSuccess = {
                     val token = it.data.result.token
