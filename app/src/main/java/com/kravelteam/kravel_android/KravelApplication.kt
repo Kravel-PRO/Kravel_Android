@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.camera.camera2.Camera2Config
 import androidx.camera.core.CameraXConfig
 import com.kravelteam.kravel_android.network.authModule
+import com.kravelteam.kravel_android.network.recentModule
 import com.kravelteam.kravel_android.network.requestModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -24,7 +25,8 @@ class KravelApplication : Application(), CameraXConfig.Provider{
             modules(
                 listOf(
                     requestModule,
-                    authModule
+                    authModule,
+                    recentModule
                 )
             )
         }
