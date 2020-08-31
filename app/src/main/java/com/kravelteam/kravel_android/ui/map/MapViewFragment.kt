@@ -229,12 +229,9 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
                         }, 1500)
 
                     }
-                    BottomSheetBehavior.STATE_DRAGGING -> {
-                    }
+                    BottomSheetBehavior.STATE_DRAGGING -> {}
                     BottomSheetBehavior.STATE_COLLAPSED -> {}
-                    BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-
-                    }
+                    BottomSheetBehavior.STATE_HALF_EXPANDED -> {}
                 }
             }
 
