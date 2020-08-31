@@ -47,7 +47,6 @@ class DramaFragment : Fragment() {
 
         networkManager.requestMediaList().safeEnqueue(
             onSuccess = {
-                Timber.e(it.data.result[0].mediaName)
                 dramaAdapter.initData(it.data.result)
             },
             onFailure = {

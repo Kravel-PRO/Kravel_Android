@@ -16,6 +16,7 @@ class NetworkManager(authManager: AuthManager) {
         .setLevel(HttpLoggingInterceptor.Level.BODY)
 
     private val builder = OkHttpClient.Builder()
+        .addInterceptor(httpLoggingInterceptor)
         .addInterceptor(HeaderInterceptor(authManager))
         .connectTimeout(15, TimeUnit.SECONDS)
         .readTimeout(15, TimeUnit.SECONDS)
