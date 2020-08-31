@@ -63,33 +63,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <include layout="@layout/fragment_map_info"
-        android:id="@+id/bottom_sheet"
         android:visibility="gone"/>
 
-<!--    <androidx.appcompat.widget.AppCompatToggleButton-->
-<!--        android:id="@+id/togglebtn_gps_bottom"-->
-<!--        android:layout_width="48dp"-->
-<!--        android:layout_height="48dp"-->
-<!--        android:visibility="gone"-->
-<!--        android:layout_marginBottom="16dp"-->
-<!--        app:layout_constraintBottom_toTopOf="@id/bottom_sheet"-->
-<!--        app:layout_constraintLeft_toLeftOf="parent"-->
-<!--        app:layout_constraintRight_toRightOf="parent"-->
-<!--        android:background="@drawable/map_gps"-->
-<!--        app:layout_constraintHorizontal_bias="0.9"-->
-<!--        android:textOff=""-->
-<!--        android:textOn="" />-->
-
-
-<!--    <ImageView-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:id="@+id/img_reset_bottom"-->
-<!--        android:src="@drawable/btn_refresh"-->
-<!--        android:layout_marginBottom="16dp"-->
-<!--        android:visibility="gone"-->
-<!--        app:layout_constraintBottom_toTopOf="@id/togglebtn_gps"-->
-<!--        app:layout_constraintRight_toRightOf="@id/togglebtn_gps"-->
-<!--        app:layout_constraintLeft_toLeftOf="@id/togglebtn_gps"/>-->
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

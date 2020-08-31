@@ -7,12 +7,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.GlideApp
+import com.kravelteam.kravel_android.data.mock.NewPhotoReview
 import com.kravelteam.kravel_android.data.response.PlaceContentResponse
-import com.kravelteam.kravel_android.util.dpToPx
-import com.kravelteam.kravel_android.util.inflate
-import com.kravelteam.kravel_android.util.setRound
+import com.kravelteam.kravel_android.util.*
 
-class NearPlaceRecyclerview() : RecyclerView.Adapter<NearPlaceRecyclerview.ViewHolder>() {
+class NearPlaceDetailRecyclerview() : RecyclerView.Adapter<NearPlaceDetailRecyclerview.ViewHolder>(){
 
     private var data: List<PlaceContentResponse> = emptyList()
 
@@ -21,30 +20,30 @@ class NearPlaceRecyclerview() : RecyclerView.Adapter<NearPlaceRecyclerview.ViewH
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
-            = ViewHolder(parent.inflate(R.layout.item_home_near_place))
+    override fun getItemCount(): Int {
+       return data.size
+    }
 
-    override fun getItemCount(): Int = data.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+
         holder.bind(data[position])
         holder.setIsRecyclable(false)
     }
 
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val img : ImageView = itemView.findViewById(R.id.img_near_place)
-        private val view : View = itemView.findViewById(R.id.gradient)
-        private val txtPlace : TextView = itemView.findViewById(R.id.txt_home_near_place_title)
-        private val txtTag : TextView = itemView.findViewById(R.id.txt_home_near_place_tag1)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
+            = ViewHolder(parent.inflate(R.layout.item_rv_near_place))
 
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        private val img : ImageView = itemView.findViewById(R.id.img_rv_near)
+        private val txtPlace : TextView = itemView.findViewById(R.id.txt_rv_near_title)
+        private val txtTag : TextView = itemView.findViewById(R.id.txt_rv_near_tag)
         fun bind(item: PlaceContentResponse){
-            if(!item.imageUrl.isNullOrEmpty()) {
+            if(!item.imageUrl.isNullOrBlank()) {
                 GlideApp.with(itemView).load(item.imageUrl).into(img)
             }
-            img.setRound(12.dpToPx().toFloat())
-            view.setRound(12.dpToPx().toFloat())
+            img.setRound(5.dpToPx().toFloat())
             txtPlace.text = item.title
-
             var str : String = ""
             for(i in 0 until item.tags!!.size) {
                 str = str+"#"+item.tags!!.get(i)

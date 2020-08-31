@@ -1,5 +1,6 @@
 package com.kravelteam.kravel_android.network
 
+import android.gesture.OrientedBoundingBox
 import com.kravelteam.kravel_android.common.HeaderInterceptor
 import com.kravelteam.kravel_android.data.request.LoginRequest
 import com.kravelteam.kravel_android.data.request.SignUpRequest
@@ -16,6 +17,7 @@ class NetworkManager(authManager: AuthManager) {
         .setLevel(HttpLoggingInterceptor.Level.BODY)
 
     private val builder = OkHttpClient.Builder()
+        .addInterceptor(httpLoggingInterceptor)
         .addInterceptor(HeaderInterceptor(authManager))
         .connectTimeout(15, TimeUnit.SECONDS)
         .readTimeout(15, TimeUnit.SECONDS)
@@ -38,6 +40,15 @@ class NetworkManager(authManager: AuthManager) {
     fun requestCelebList() = retrofit.requestCelebList()
 
     fun requestMediaList() = retrofit.requestMediaList()
+
+    fun getPlaceList(
+        latitude : Double,
+        longitude : Double
+    ) = retrofit.getPlaceList(latitude, longitude)
+
+    fun getPlaceDetailList(
+        placeId : Int
+    ) = retrofit.getPlaceDetailList(placeId)
 
     private companion object {
         const val BASE_URL = "http://15.164.118.217:8080"
