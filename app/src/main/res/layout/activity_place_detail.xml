@@ -115,7 +115,7 @@
                 app:layout_constraintRight_toRightOf="parent">
 
                 <ImageView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_photo"
                     android:id="@+id/img_map_detail_photo"
@@ -139,7 +139,7 @@
 
                 <ImageView
                     android:id="@+id/img_map_detail_scrap"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_scrap"
                     app:layout_constraintRight_toRightOf="parent"
@@ -182,6 +182,16 @@
                     android:fontFamily="@font/notosans_cjk_kr_bold"
                     android:includeFontPadding="false"
                     />
+
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/img_photo_review_edit"
+                    android:src="@drawable/ic_write"
+                    app:layout_constraintTop_toTopOf="@id/txt_map_detail_photo_review"
+                    app:layout_constraintBottom_toBottomOf="@id/txt_map_detail_photo_review"
+                    app:layout_constraintRight_toRightOf="parent"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_map_detail_photo"

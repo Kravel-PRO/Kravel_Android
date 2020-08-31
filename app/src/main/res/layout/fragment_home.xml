@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/txt_home_title2"
             android:text="@string/mainWord2"
-            android:fontFamily="@font/notosans_cjk_kr_bold"
+            android:fontFamily="@font/notosans_cjk_kr_regular"
             android:textSize="22sp"
             android:textColor="@color/colorWhite"
             android:lineSpacingExtra="10sp"

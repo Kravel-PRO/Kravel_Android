@@ -44,7 +44,7 @@ class LoginActivity : AppCompatActivity() {
             afterAnimation()
         }
 
-        btn_signup.setOnClickListener {
+        btn_signup.setOnDebounceClickListener {
             val intent = Intent(this,
                 SignUpActivity::class.java)
             startActivity(intent)
