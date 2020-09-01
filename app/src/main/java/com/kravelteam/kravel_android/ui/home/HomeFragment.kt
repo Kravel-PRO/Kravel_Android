@@ -27,10 +27,12 @@ import com.kravelteam.kravel_android.common.VerticalItemDecorator
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.mock.PopularPlaceData
 import com.kravelteam.kravel_android.data.response.PhotoResponse
+import com.kravelteam.kravel_android.data.response.PlaceContentResponse
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.NearPlaceRecyclerview
 import com.kravelteam.kravel_android.ui.adapter.PhotoReviewRecyclerview
 import com.kravelteam.kravel_android.ui.adapter.PopularRecyclerview
+import com.kravelteam.kravel_android.ui.map.PlaceDetailActivity
 import com.kravelteam.kravel_android.util.*
 import kotlinx.android.synthetic.main.dialog_gps_permission.view.*
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -111,6 +113,17 @@ class HomeFragment : Fragment() {
     }
     private fun initNearRecycler() {
 
+
+        nearAdapter.setOnItemClickListener(object : NearPlaceRecyclerview.OnItemClickListener {
+            override fun onItemClick(v: View, data: PlaceContentResponse, pos: Int) {
+                Intent(GlobalApp,PlaceDetailActivity::class.java).apply {
+                    putExtra("placeId",data.placeId)
+                }.run {
+                    GlobalApp.startActivity(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                }
+            }
+
+        })
         networkManager.getPlaceList(1.0,1.0).safeEnqueue (
             onSuccess = {
                 rv_near_place.apply {
@@ -133,6 +146,17 @@ class HomeFragment : Fragment() {
     }
     private fun initPopularRecycler() {
 
+
+        popularAdapter.setOnItemClickListener(object : PopularRecyclerview.OnItemClickListener {
+            override fun onItemClick(v: View, data: PlaceContentResponse, pos: Int) {
+                   Intent(GlobalApp,PlaceDetailActivity::class.java).apply {
+                       putExtra("placeId",data.placeId)
+                   }.run {
+                       GlobalApp.startActivity(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                   }
+            }
+
+        })
         networkManager.getPopularPlaceList().safeEnqueue (
             onSuccess = {
                 rv_popular_place.apply {
@@ -141,6 +165,7 @@ class HomeFragment : Fragment() {
                 }
 
                 popularAdapter.initData(it.data!!.result.content)
+
             },
             onFailure = {
                 Timber.e("실패")
@@ -158,22 +183,30 @@ class HomeFragment : Fragment() {
         private const val FASTEST_INTERVAL: Long = 1000
     }
     private fun initPhotoRecycler() {
-        rv_home_photo_review.apply {
-            adapter = photoAdapter
-            addItemDecoration(VerticalItemDecorator(4))
-            addItemDecoration(HorizontalItemDecorator(4))
-        }
 
-        photoAdapter.initData(
-            listOf( PhotoResponse("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg"),
-                PhotoResponse("https://image.chosun.com/sitedata/image/202006/09/2020060902224_0.jpg"),
-                PhotoResponse("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg"),
-                PhotoResponse("https://image.chosun.com/sitedata/image/202006/09/2020060902224_0.jpg"),
-                PhotoResponse("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg"),
-                PhotoResponse("https://image.chosun.com/sitedata/image/202006/09/2020060902224_0.jpg"),
-                PhotoResponse("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg")
-            )
+        networkManager.getPhotoReview(0,6,"reviewLikes,desc").safeEnqueue (
+            onSuccess = {
+                rv_home_photo_review.apply {
+                    adapter = photoAdapter
+                    addItemDecoration(VerticalItemDecorator(4))
+                    addItemDecoration(HorizontalItemDecorator(4))
+                }
+
+                photoAdapter.initData(it.data.result.content)
+                if(it.data.result.content.isNullOrEmpty()) {
+                    txt_home_photo1.setGone()
+                    txt_home_photo2.setGone()
+                }
+            },
+            onFailure = {
+                Timber.e("실패")
+            },
+            onError = {
+                networkErrorToast()
+            }
         )
+
+
     }
 
     protected fun startLocationUpdates() {

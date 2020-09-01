@@ -16,6 +16,7 @@ import com.kravelteam.kravel_android.util.setRound
 
 class PopularRecyclerview() : RecyclerView.Adapter<PopularRecyclerview.ViewHolder>() {
 
+
     private var data : List<PlaceContentResponse> = listOf()
 
     fun initData(data: List<PlaceContentResponse>) {
@@ -23,6 +24,13 @@ class PopularRecyclerview() : RecyclerView.Adapter<PopularRecyclerview.ViewHolde
         notifyDataSetChanged()
     }
 
+    interface OnItemClickListener{
+        fun onItemClick(v:View, data: PlaceContentResponse, pos : Int)
+    }
+    private var listener : OnItemClickListener? = null
+    fun setOnItemClickListener(listener : OnItemClickListener) {
+        this.listener = listener
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
         = ViewHolder(parent.inflate(R.layout.item_home_popular_place))
 
@@ -30,7 +38,7 @@ class PopularRecyclerview() : RecyclerView.Adapter<PopularRecyclerview.ViewHolde
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.setIsRecyclable(false)
-        holder.bind(data[position])
+        holder.bind(data[position],listener)
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -40,7 +48,7 @@ class PopularRecyclerview() : RecyclerView.Adapter<PopularRecyclerview.ViewHolde
         private val txtTag : TextView = itemView.findViewById(R.id.txt_home_popular_tag)
         private val txtPhohoNum : TextView = itemView.findViewById(R.id.txt_home_popular_photo)
 
-        fun bind(item: PlaceContentResponse) {
+        fun bind(item: PlaceContentResponse, listener: OnItemClickListener?) {
             if(!item.imageUrl.isNullOrBlank()) {
                 GlideApp.with(itemView).load(item.imageUrl!!).into(img)
             }
@@ -58,6 +66,14 @@ class PopularRecyclerview() : RecyclerView.Adapter<PopularRecyclerview.ViewHolde
             }
             txtTag.text = str
             txtPhohoNum.text = item.reviewCount.toString()
+
+            val pos = adapterPosition
+            if(pos!= RecyclerView.NO_POSITION)
+            {
+                itemView.setOnClickListener {
+                    listener?.onItemClick(itemView,item,pos)
+                }
+            }
 
         }
     }
