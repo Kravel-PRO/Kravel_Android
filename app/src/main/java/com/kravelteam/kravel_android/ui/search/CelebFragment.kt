@@ -37,6 +37,8 @@ class CelebFragment : Fragment() {
     }
 
     private fun initRecycler(){
+
+
         celebAdapter = CelebRecyclerview()
 
         rv_celeb_list.apply {
@@ -49,6 +51,7 @@ class CelebFragment : Fragment() {
             onSuccess = {
                 Timber.e(it.data.result[0].celebrityName)
                 celebAdapter.initData(it.data.result)
+
             },
             onFailure = {
                 toast("실패")
@@ -57,7 +60,6 @@ class CelebFragment : Fragment() {
                 Timber.e("$it")
             }
         )
-
 //        celebAdapter.initData(
 //            listOf(
 //                CelebResponse("https://www.instagram.com/p/B20TsJegiq4/media/?size=l","지창욱",null),
