@@ -1,5 +1,6 @@
 package com.kravelteam.kravel_android.network
 
+import android.gesture.OrientedBoundingBox
 import com.kravelteam.kravel_android.common.HeaderInterceptor
 import com.kravelteam.kravel_android.data.request.LoginRequest
 import com.kravelteam.kravel_android.data.request.SignUpRequest
@@ -39,6 +40,17 @@ class NetworkManager(authManager: AuthManager) {
     fun requestCelebList() = retrofit.requestCelebList()
 
     fun requestMediaList() = retrofit.requestMediaList()
+
+    fun getPlaceList(
+        latitude : Double,
+        longitude : Double
+    ) = retrofit.getPlaceList(latitude, longitude)
+
+    fun getPlaceDetailList(
+        placeId : Int
+    ) = retrofit.getPlaceDetailList(placeId)
+
+    fun getPopularPlaceList() = retrofit.getPopularPlaceList()
 
     private companion object {
         const val BASE_URL = "http://15.164.118.217:8080"

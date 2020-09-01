@@ -35,13 +35,11 @@ import com.kravelteam.kravel_android.data.mock.MapNearPlaceData
 import com.kravelteam.kravel_android.data.mock.NearPlaceData
 import com.kravelteam.kravel_android.data.mock.PlaceInformationData
 import com.kravelteam.kravel_android.data.response.PhotoResponse
+import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.HashTagRecyclerView
 import com.kravelteam.kravel_android.ui.adapter.MapPlaceRecyclerview
 import com.kravelteam.kravel_android.ui.adapter.PhotoReviewRecyclerview
-import com.kravelteam.kravel_android.util.dpToPx
-import com.kravelteam.kravel_android.util.setGone
-import com.kravelteam.kravel_android.util.setRound
-import com.kravelteam.kravel_android.util.setVisible
+import com.kravelteam.kravel_android.util.*
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.LocationTrackingMode.*
@@ -49,12 +47,14 @@ import com.naver.maps.map.overlay.LocationOverlay
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
+import kotlinx.android.synthetic.main.dialog_gps_permission.view.*
 import kotlinx.android.synthetic.main.dialog_service_warning.view.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.rv_home_photo_review
 import kotlinx.android.synthetic.main.fragment_map.*
 import kotlinx.android.synthetic.main.fragment_map_info.*
 import kotlinx.android.synthetic.main.fragment_user.*
+import org.koin.android.ext.android.inject
 import timber.log.Timber
 
 
@@ -70,8 +70,9 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
 
     private val photoAdapter : PhotoReviewRecyclerview by lazy { PhotoReviewRecyclerview() } //BottomSheet
     private val hashtagAdapter : HashTagRecyclerView by lazy { HashTagRecyclerView() } //BottomSheet
-
     private val nearAdapter: MapPlaceRecyclerview by lazy { MapPlaceRecyclerview() }
+
+    private val networkManager : NetworkManager by inject()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -114,6 +115,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
             }
         }
 
+
         img_bottom_photo.setOnClickListener {
              Intent(GlobalApp,CameraActivity::class.java).run {
                  GlobalApp.startActivity(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
@@ -127,14 +129,9 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
     private fun initAreaWarningDailog() {
         val dialog = androidx.appcompat.app.AlertDialog.Builder(requireActivity()).create()
         val view = LayoutInflater.from(GlobalApp).inflate(R.layout.dialog_service_warning, null)
-
-        view.txt_area_warning_content1.text = "서비스가 지원되는 지역이 아니예요"
-        view.txt_area_warning_content2.text ="한국에서 크래블을 즐겨봐요!"
-        view.btn_area_warning_ok.text ="확인"
         view.cl_area_warning_background.setBackgroundColor(Color.TRANSPARENT)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         view.btn_area_warning_ok setOnDebounceClickListener {
-
         }
 
         dialog.apply {
@@ -155,9 +152,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
                 PhotoResponse("https://image.chosun.com/sitedata/image/202006/09/2020060902224_0.jpg"),
                 PhotoResponse("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg")
             ),
-            placeTag =  arrayListOf( HashTagData("호텔델루나"),
-                HashTagData("아이유"),
-                HashTagData("여진구")),
+            placeTag =  arrayOf("아이유","여진구"),
             placeImg = "https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg",
             marker = marker.position,
             placeBus = "2020,1102,1110",
@@ -173,13 +168,14 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
         )
 
 
+        togglebtn_gps.setGone()
+        img_reset.setGone()
 
         GlideApp.with(img_bottom_place).load(placeInfo.placeImg).into(img_bottom_place)
         // Round값 물어보기
         img_bottom_place.setRound(10.dpToPx().toFloat())
         txt_bottom_title.text = placeInfo.placeName
         txt_bottom_map_address1.text =  placeInfo.placeAddress
-       // txt_bottom_map_address2.text = placeInfo.placeAddress
 
         rv_map_hashtag.apply {
             adapter = hashtagAdapter
@@ -210,6 +206,8 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
                             markerClick = false
                             marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_default)
                             cl_bottom_seat_place.setGone()
+                            togglebtn_gps.setVisible()
+                            img_reset.setVisible()
                         }
                     }
                     BottomSheetBehavior.STATE_EXPANDED -> {
@@ -218,13 +216,9 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
 
                         Handler().postDelayed({
                             Intent(GlobalApp, PlaceDetailActivity::class.java).apply {
-                                putExtra("data", placeInfo)
+                                putExtra("placeId",1)
                             }.run {
                                 requireActivity().startActivity(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_NO_ANIMATION))
-//                                requireActivity().startActivityForResult(
-//                                    this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_NO_ANIMATION),
-//                                    REQUEST_MAP_DETAIL_ACTIVITY
-//                                )
                             }
                         }, 1500)
 
@@ -270,63 +264,49 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
 
     }
     private fun initRecycler() {
-        rv_map_near_place.apply {
-            adapter = nearAdapter
-            addItemDecoration(HorizontalItemDecorator(16))
-        }
 
-        nearAdapter.initData(
-            listOf(
-                NearPlaceData(
-                    "호텔델루나", listOf(HashTagData("아이유"),HashTagData("여진구")),
-                    "https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg",
-                    "호텔델루나 주소"
-                ),
-                NearPlaceData(
-                    "호텔델루나",
-                    listOf(HashTagData("아이유"),HashTagData("여진구")),
-                    "https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg",
-                    "호텔델루나 주소"
-                ),
-                NearPlaceData(
-                    "호텔델루나",
-                    listOf(HashTagData("아이유"),HashTagData("여진구")),
-                    "https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg",
-                    "호텔델루나 주소"
-                ),
-                NearPlaceData(
-                    "호텔델루나",
-                    listOf(HashTagData("아이유"),HashTagData("여진구")),
-                    "https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg",
-                    "호텔델루나 주소"
-                ),
-                NearPlaceData(
-                    "호텔델루나",
-                    listOf(HashTagData("아이유"),HashTagData("여진구")),
-                    "https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg",
-                    "호텔델루나 주소"
-                )
+        /**
+         * latitude,longitude 바꿔줘야함!
+         */
+        networkManager.getPlaceList(1.0,1.0).safeEnqueue (
+            onSuccess = {
+                rv_map_near_place.apply {
+                    adapter = nearAdapter
+                    addItemDecoration(HorizontalItemDecorator(16))
+                }
 
-            )
+                nearAdapter.initData(it.data!!.result!!.content)
+            },
+            onFailure = {
+                Timber.e("실패")
+
+            },
+            onError = {
+                networkErrorToast()
+            }
         )
     }
     /*
     핸드폰 gps 가 꺼져있을 시 , gps를 키기위한 함수
      */
     private fun buildAlterMessageNoGPS() {
-        val builder = AlertDialog.Builder(context)
-        builder.setMessage("해당 기기에 gps가 꺼져있어 위치정보를 가져올 수 없습니다. gps를 사용하시겠습니까?")
-            .setCancelable(false)
-            .setPositiveButton("Yes") { dialog, id ->
-                startActivityForResult(
-                    Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-                    , 11)
-            }
-            .setNegativeButton("No") { dialog, id ->
-                dialog.cancel()
-            }
-        val alert: AlertDialog = builder.create()
-        alert.show()
+        val dialog = androidx.appcompat.app.AlertDialog.Builder(requireActivity()).create()
+        val view = LayoutInflater.from(GlobalApp).inflate(R.layout.dialog_gps_permission, null)
+        view.cl_gps_transparent.setBackgroundColor(Color.TRANSPARENT)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        view.btn_gps_yes.setOnDebounceClickListener {
+            startActivityForResult(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS),11)
+        }
+        view.btn_gps_no.setOnDebounceClickListener {
+            dialog.cancel()
+        }
+
+        dialog.apply {
+            setView(view)
+            setCancelable(false)
+            show()
+        }
+
     }
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -378,6 +358,8 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
                 markerClick = false
                 rv_map_near_place.setVisible()
                 cl_bottom_seat_place.setGone()
+                togglebtn_gps.setVisible()
+                img_reset.setVisible()
                 marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_default)
             }
 
@@ -390,19 +372,13 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
                 rv_map_near_place.setVisible()
                 marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_default)
                 cl_bottom_seat_place.setGone()
+                togglebtn_gps.setVisible()
+                img_reset.setVisible()
             }
         }
     }
 
 
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//        requireActivity()
-//        if( requestCode == REQUEST_MAP_DETAIL_ACTIVITY) {
-//            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-//            root.setVisible()
-//        }
-//    }
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
     }

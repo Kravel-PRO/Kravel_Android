@@ -4,9 +4,7 @@ import com.kravelteam.kravel_android.data.request.LoginRequest
 import com.kravelteam.kravel_android.data.request.SignUpRequest
 import com.kravelteam.kravel_android.data.response.*
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface NetworkService {
 
@@ -41,5 +39,32 @@ interface NetworkService {
      */
     @GET("/api/medias")
     fun requestMediaList() : Call<BaseResponse<List<MediaResponse>>>
+
+    /**
+     * 장소
+     */
+
+    /**
+     *  장소
+     */
+    @GET("/api/places")
+    fun getPlaceList(
+        @Query("latitude") latitude : Double,
+        @Query("longitude") longitude : Double
+    ) : Call<BaseResponse<PlaceDataResponse>>
+
+    /**
+     * 장소 상세
+     */
+    @GET("/api/places/{placeId}")
+    fun getPlaceDetailList(
+        @Path("placeId") placeId : Int
+    ) : Call<BaseResponse<PlaceDetailResponse>>
+
+    /**
+     * 인기있는 장소 리스트
+     */
+    @GET("/api/places")
+    fun getPopularPlaceList() : Call<BaseResponse<PlaceDataResponse>>
 
 }

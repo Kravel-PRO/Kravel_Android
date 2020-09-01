@@ -1,10 +1,11 @@
 package com.kravelteam.kravel_android.ui.home
 
 import android.Manifest
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.location.Location
 import android.location.LocationManager
 import android.os.Build
@@ -18,24 +19,23 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.*
+import com.kravelteam.kravel_android.KravelApplication
+import com.kravelteam.kravel_android.KravelApplication.Companion.GlobalApp
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.HorizontalItemDecorator
 import com.kravelteam.kravel_android.common.VerticalItemDecorator
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.mock.PopularPlaceData
-import com.kravelteam.kravel_android.data.response.DetailPlaceResponse
 import com.kravelteam.kravel_android.data.response.PhotoResponse
-import com.kravelteam.kravel_android.ui.adapter.NearRecyclerview
+import com.kravelteam.kravel_android.network.NetworkManager
+import com.kravelteam.kravel_android.ui.adapter.NearPlaceRecyclerview
 import com.kravelteam.kravel_android.ui.adapter.PhotoReviewRecyclerview
 import com.kravelteam.kravel_android.ui.adapter.PopularRecyclerview
-import com.kravelteam.kravel_android.ui.map.MapViewFragment
-import com.naver.maps.geometry.LatLng
-import com.naver.maps.map.LocationTrackingMode
-import com.naver.maps.map.util.FusedLocationSource
+import com.kravelteam.kravel_android.util.*
+import kotlinx.android.synthetic.main.dialog_gps_permission.view.*
 import kotlinx.android.synthetic.main.fragment_home.*
+import org.koin.android.ext.android.inject
 import timber.log.Timber
-import java.text.SimpleDateFormat
-import java.util.*
 
 
 /**
@@ -47,8 +47,9 @@ class HomeFragment : Fragment() {
     internal lateinit var mLocationRequest: LocationRequest
     private val popularAdapter : PopularRecyclerview by lazy { PopularRecyclerview() }
     private val photoAdapter : PhotoReviewRecyclerview by lazy { PhotoReviewRecyclerview() }
-    private val nearAdapter : NearRecyclerview by lazy { NearRecyclerview() }
+    private val nearAdapter : NearPlaceRecyclerview by lazy { NearPlaceRecyclerview() }
 
+    private val networkManager : NetworkManager by inject()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -80,59 +81,75 @@ class HomeFragment : Fragment() {
   핸드폰 gps 가 꺼져있을 시 , gps를 키기위한 함수
    */
     private fun buildAlterMessageNoGPS() {
-        val builder = AlertDialog.Builder(context)
-        builder.setMessage("해당 기기에 gps가 꺼져있어 위치정보를 가져올 수 없습니다. gps를 사용하시겠습니까?")
-            .setCancelable(false)
-            .setPositiveButton("Yes") { dialog, id ->
-                startActivityForResult(
-                    Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-                    , 11)
-            }
-            .setNegativeButton("No") { dialog, id ->
-                dialog.cancel()
-            }
-        val alert: AlertDialog = builder.create()
-        alert.show()
+        val dialog = androidx.appcompat.app.AlertDialog.Builder(requireActivity()).create()
+        val view = LayoutInflater.from(KravelApplication.GlobalApp).inflate(R.layout.dialog_gps_permission, null)
+        view.cl_gps_transparent.setBackgroundColor(Color.TRANSPARENT)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        view.btn_gps_yes.setOnDebounceClickListener {
+            startActivityForResult(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS),11)
+        }
+        view.btn_gps_no.setOnDebounceClickListener {
+            dialog.cancel()
+        }
+
+        dialog.apply {
+            setView(view)
+            setCancelable(false)
+            show()
+        }
+
     }
     private fun init() {
         txt_home_near_place_more.setOnDebounceClickListener {
-            startActivity(Intent(context, NearPlaceActivity::class.java))
+               Intent(GlobalApp,NearPlaceActivity::class.java).apply {
+                   putExtra("latitude",mLastLocation.latitude)
+                   putExtra("longitude",mLastLocation.longitude)
+               }.run {
+                   GlobalApp.startActivity(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+               }
         }
     }
     private fun initNearRecycler() {
-        rv_near_place.apply {
-            adapter = nearAdapter
-            addItemDecoration(HorizontalItemDecorator(16))
-        }
 
-        nearAdapter.initData(
-            listOf(
-                DetailPlaceResponse("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나", arrayListOf("#tag")),
-                DetailPlaceResponse("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나", arrayListOf("#tag")),
-                DetailPlaceResponse("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나", arrayListOf("#tag")),
-                DetailPlaceResponse("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나", arrayListOf("#tag")),
-                DetailPlaceResponse("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나", arrayListOf("#tag")),
-                DetailPlaceResponse("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나", arrayListOf("#tag"))
-            )
+        networkManager.getPlaceList(1.0,1.0).safeEnqueue (
+            onSuccess = {
+                rv_near_place.apply {
+                    adapter = nearAdapter
+                    addItemDecoration(HorizontalItemDecorator(16))
+                }
+                nearAdapter.initData(it.data!!.result.content)
+                if(it.data!!.result.content.isEmpty()) {
+                    cl_home_near_place.setGone()
+                }
+            },
+            onFailure = {
+               Timber.e("실패")
+
+            },
+            onError = {
+                networkErrorToast()
+            }
         )
-
     }
     private fun initPopularRecycler() {
-        rv_popular_place.apply {
-            adapter = popularAdapter
-            addItemDecoration(VerticalItemDecorator(12))
-        }
 
-        popularAdapter.initData(
-            listOf(
-                PopularPlaceData("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나", arrayListOf("#tag"),100),
-                PopularPlaceData("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나", arrayListOf("#tag"),10),
-                PopularPlaceData("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나", arrayListOf("#tag"),30),
-                PopularPlaceData("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나", arrayListOf("#tag"),50),
-                PopularPlaceData("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나", arrayListOf("#tag"),50),
-                PopularPlaceData("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나", arrayListOf("#tag"),70)
-            )
+        networkManager.getPopularPlaceList().safeEnqueue (
+            onSuccess = {
+                rv_popular_place.apply {
+                    adapter = popularAdapter
+                    addItemDecoration(VerticalItemDecorator(12))
+                }
+
+                popularAdapter.initData(it.data!!.result.content)
+            },
+            onFailure = {
+                Timber.e("실패")
+            },
+            onError = {
+                networkErrorToast()
+            }
         )
+
 
     }
     companion object {

@@ -32,7 +32,6 @@
         <activity android:name=".ui.search.SearchDetailActivity" />
         <activity android:name=".ui.signup.SetLanguageActivity" />
         <activity android:name=".ui.login.LoginActivity">
-
         </activity>
         <activity android:name=".ui.home.NearPlaceActivity" />
         <activity android:name=".ui.home.PhotoReviewActivity" />

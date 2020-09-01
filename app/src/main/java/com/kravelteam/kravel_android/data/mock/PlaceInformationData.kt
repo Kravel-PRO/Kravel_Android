@@ -10,7 +10,7 @@ import java.io.Serializable
 @Parcelize
 data class PlaceInformationData(
     var placeName : String,
-    var placeTag : ArrayList<HashTagData>,
+    var placeTag : Array<String>,
     var placeAddress : String,
     var placePhotoReview : ArrayList<PhotoResponse>,
     var marker : LatLng,
