@@ -17,12 +17,12 @@ import com.kravelteam.kravel_android.common.VerticalItemDecorator
 import com.kravelteam.kravel_android.data.mock.HashTagData
 import com.kravelteam.kravel_android.data.mock.PlaceInformationData
 import com.kravelteam.kravel_android.data.response.PhotoResponse
+import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.HashTagRecyclerView
 import com.kravelteam.kravel_android.ui.adapter.MapNearPlaceRecyclerview
 import com.kravelteam.kravel_android.ui.adapter.PhotoReviewRecyclerview
-import com.kravelteam.kravel_android.util.fadeIn
-import com.kravelteam.kravel_android.util.fadeInWithVisible
-import com.kravelteam.kravel_android.util.fadeOutWithGone
+import com.kravelteam.kravel_android.util.*
+import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
@@ -30,21 +30,27 @@ import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import kotlinx.android.synthetic.main.activity_place_detail.*
+import kotlinx.android.synthetic.main.fragment_map.*
 import kotlinx.android.synthetic.main.fragment_map_info.*
+import org.koin.android.ext.android.inject
 import timber.log.Timber
+import kotlin.properties.Delegates
 
 class PlaceDetailActivity : AppCompatActivity() , OnMapReadyCallback {
     private val hashtagAdapter : HashTagRecyclerView by lazy { HashTagRecyclerView() }
     private val photoAdapter : PhotoReviewRecyclerview by lazy {PhotoReviewRecyclerview()}
     private val nearplaceAdapter : MapNearPlaceRecyclerview by lazy { MapNearPlaceRecyclerview() } //BottomSheet
-    private lateinit var placeInfo : PlaceInformationData
+    private var placeId : Int = 0
     private lateinit var naverMap: NaverMap
+    private val networkManager : NetworkManager by inject()
+    private var latitude : Double = 0.0
+    private var longitude : Double = 0.0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_place_detail)
 
-        //overridePendingTransition(R.anim.transition_in, R.anim.transition_out)
-        placeInfo = intent.getParcelableExtra("data") as PlaceInformationData
+        placeId = intent.getIntExtra("placeId",0)
         setResult(Activity.RESULT_OK)
         img_map_detail_arrow.setOnClickListener {
             finish()
@@ -91,15 +97,35 @@ class PlaceDetailActivity : AppCompatActivity() , OnMapReadyCallback {
 
     }
     private fun initSetting() {
-        txt_map_detail_title.text = placeInfo.placeName
-        txt_map_detail_address.text = placeInfo.placeAddress
-        txt_map_detail_address2.text = placeInfo.placeAddress
-        GlideApp.with(applicationContext).load(placeInfo.placeImg).into(img_map_detail_place)
 
-        txt_map_detail_bus_content.text = placeInfo.placeBus
-        txt_map_detail_subway_content.text = placeInfo.placeSubway
-        initMap()
-        initHashTag()
+
+        networkManager.getPlaceDetailList(placeId).safeEnqueue (
+            onSuccess = {
+                txt_map_detail_title.text = it.data.result.title
+                txt_map_detail_address.text = it.data.result.location
+                txt_map_detail_address2.text = it.data.result.location
+                if(!it.data.result.imageUrl.isNullOrBlank()) {
+                    GlideApp.with(applicationContext).load(it.data.result.imageUrl)
+                        .into(img_map_detail_place)
+                }
+                latitude = it.data.result.latitude
+                longitude = it.data.result.longitude
+                initMap()
+               // initHashTag(it.data.result.)
+
+//                txt_map_detail_bus_content.text = placeInfo.placeBus
+//                txt_map_detail_subway_content.text = placeInfo.placeSubway
+            },
+            onFailure = {
+                Timber.e("실패")
+
+            },
+            onError = {
+                networkErrorToast()
+            }
+        )
+
+
         initPhotoRecycler()
         initNearPlaceRecycler()
     }
@@ -109,7 +135,7 @@ class PlaceDetailActivity : AppCompatActivity() , OnMapReadyCallback {
             addItemDecoration(HorizontalItemDecorator(12))
         }
 
-        nearplaceAdapter.initData(placeInfo.placeNearPlace)
+       // nearplaceAdapter.initData(placeInfo.placeNearPlace)
     }
     private fun initMap() {
         val fm = supportFragmentManager
@@ -120,13 +146,13 @@ class PlaceDetailActivity : AppCompatActivity() , OnMapReadyCallback {
         mapFragment.getMapAsync(this)
     }
 
-    private fun initHashTag() {
+    private fun initHashTag(data : Array<String>) {
         rv_map_detail_hashtag.apply {
             adapter = hashtagAdapter
             addItemDecoration(HorizontalItemDecorator(4))
         }
 
-        hashtagAdapter.initData(placeInfo.placeTag)
+        hashtagAdapter.initData(data)
     }
     private fun initPhotoRecycler() {
         rv_map_detail_photo.apply {
@@ -135,16 +161,16 @@ class PlaceDetailActivity : AppCompatActivity() , OnMapReadyCallback {
             addItemDecoration(HorizontalItemDecorator(4))
         }
 
-        photoAdapter.initData(placeInfo.placePhotoReview)
+      //  photoAdapter.initData(placeInfo.placePhotoReview)
     }
 
     override fun onMapReady(naverMap: NaverMap) {
         this.naverMap = naverMap
         val marker = Marker()
+        marker.position = LatLng(latitude, longitude)
         val uiSettings = naverMap.uiSettings
         uiSettings.isZoomControlEnabled = false
-        naverMap.moveCamera(CameraUpdate.scrollTo(placeInfo.marker))
-        marker.position = placeInfo.marker
+        naverMap.moveCamera(CameraUpdate.scrollTo(marker.position))
         marker.map = naverMap
         marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_focus)
 

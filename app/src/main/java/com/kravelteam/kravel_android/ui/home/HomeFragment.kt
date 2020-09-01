@@ -132,21 +132,24 @@ class HomeFragment : Fragment() {
         )
     }
     private fun initPopularRecycler() {
-        rv_popular_place.apply {
-            adapter = popularAdapter
-            addItemDecoration(VerticalItemDecorator(12))
-        }
 
-        popularAdapter.initData(
-            listOf(
-                PopularPlaceData("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나", arrayListOf("#tag"),100),
-                PopularPlaceData("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나", arrayListOf("#tag"),10),
-                PopularPlaceData("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나", arrayListOf("#tag"),30),
-                PopularPlaceData("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나", arrayListOf("#tag"),50),
-                PopularPlaceData("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나", arrayListOf("#tag"),50),
-                PopularPlaceData("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나", arrayListOf("#tag"),70)
-            )
+        networkManager.getPopularPlaceList().safeEnqueue (
+            onSuccess = {
+                rv_popular_place.apply {
+                    adapter = popularAdapter
+                    addItemDecoration(VerticalItemDecorator(12))
+                }
+
+                popularAdapter.initData(it.data!!.result.content)
+            },
+            onFailure = {
+                Timber.e("실패")
+            },
+            onError = {
+                networkErrorToast()
+            }
         )
+
 
     }
     companion object {
