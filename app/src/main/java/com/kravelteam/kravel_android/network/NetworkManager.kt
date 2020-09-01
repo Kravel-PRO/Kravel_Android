@@ -58,6 +58,8 @@ class NetworkManager(authManager: AuthManager) {
         sort : String
     ) = retrofit.getPhotoReview(offset, size, sort)
 
+    fun getCelebPhotoReview(id : Int) = retrofit.getCelebPhotoReview(id)
+
     private companion object {
         const val BASE_URL = "http://15.164.118.217:8080"
     }

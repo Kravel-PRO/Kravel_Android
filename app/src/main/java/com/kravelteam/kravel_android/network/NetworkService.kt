@@ -35,6 +35,14 @@ interface NetworkService {
      */
 
     /**
+     * 셀럽 상세 - 포토 리뷰
+     */
+    @GET("/api/celebrities/{id}/reviews")
+    fun getCelebPhotoReview(
+        @Path("id") id : Int
+    ) : Call<BaseResponse<CelebPhotoReviewResponse>>
+
+    /**
      * 미디어 리스트
      */
     @GET("/api/medias")
