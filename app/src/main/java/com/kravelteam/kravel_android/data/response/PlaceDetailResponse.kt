@@ -13,5 +13,8 @@ data class PlaceDetailResponse(
     val mediaId : Int,
     val mediaName : String,
     val reviewCount : Int,
+    val bus : String,
+    val subway : String?,
+    val tags : Array<String>?,
     val celebrities : Array<PlaceCelebResponse>
 )

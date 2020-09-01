@@ -1,13 +1,19 @@
 package com.kravelteam.kravel_android.ui.home
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import com.kravelteam.kravel_android.KravelApplication
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.VerticalItemDecorator
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.mock.NewPhotoReview
+import com.kravelteam.kravel_android.data.response.PlaceContentResponse
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.NearPlaceDetailRecyclerview
+import com.kravelteam.kravel_android.ui.adapter.NearPlaceRecyclerview
+import com.kravelteam.kravel_android.ui.map.PlaceDetailActivity
 import com.kravelteam.kravel_android.util.networkErrorToast
 import com.kravelteam.kravel_android.util.safeEnqueue
 import kotlinx.android.synthetic.main.activity_near_place.*
@@ -36,6 +42,17 @@ class NearPlaceActivity : AppCompatActivity() {
     }
     private fun initRecycler() {
 
+
+        placeAdapter.setOnItemClickListener(object : NearPlaceDetailRecyclerview.OnItemClickListener {
+            override fun onItemClick(v: View, data: PlaceContentResponse, pos: Int) {
+                Intent(KravelApplication.GlobalApp, PlaceDetailActivity::class.java).apply {
+                    putExtra("placeId",data.placeId)
+                }.run {
+                    KravelApplication.GlobalApp.startActivity(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                }
+            }
+
+        })
         networkManager.getPlaceList(1.0,1.0).safeEnqueue(
             onSuccess = {
                 rv_near_place.apply {

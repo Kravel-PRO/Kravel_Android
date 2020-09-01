@@ -20,14 +20,20 @@ class NearPlaceRecyclerview() : RecyclerView.Adapter<NearPlaceRecyclerview.ViewH
         this.data = data
         notifyDataSetChanged()
     }
-
+    interface OnItemClickListener{
+        fun onItemClick(v:View, data: PlaceContentResponse, pos : Int)
+    }
+    private var listener : OnItemClickListener? = null
+    fun setOnItemClickListener(listener : OnItemClickListener) {
+        this.listener = listener
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
             = ViewHolder(parent.inflate(R.layout.item_home_near_place))
 
     override fun getItemCount(): Int = data.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(data[position])
+        holder.bind(data[position],listener)
         holder.setIsRecyclable(false)
     }
 
@@ -37,7 +43,7 @@ class NearPlaceRecyclerview() : RecyclerView.Adapter<NearPlaceRecyclerview.ViewH
         private val txtPlace : TextView = itemView.findViewById(R.id.txt_home_near_place_title)
         private val txtTag : TextView = itemView.findViewById(R.id.txt_home_near_place_tag1)
 
-        fun bind(item: PlaceContentResponse){
+        fun bind(item: PlaceContentResponse,listener : OnItemClickListener?){
             if(!item.imageUrl.isNullOrEmpty()) {
                 GlideApp.with(itemView).load(item.imageUrl).into(img)
             }
@@ -54,6 +60,14 @@ class NearPlaceRecyclerview() : RecyclerView.Adapter<NearPlaceRecyclerview.ViewH
                 }
             }
             txtTag.text = str
+
+            val pos = adapterPosition
+            if(pos!= RecyclerView.NO_POSITION)
+            {
+                itemView.setOnClickListener {
+                    listener?.onItemClick(itemView,item,pos)
+                }
+            }
         }
     }
 }

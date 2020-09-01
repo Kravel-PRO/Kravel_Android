@@ -23,11 +23,17 @@ class NearPlaceDetailRecyclerview() : RecyclerView.Adapter<NearPlaceDetailRecycl
     override fun getItemCount(): Int {
        return data.size
     }
-
+    interface OnItemClickListener{
+        fun onItemClick(v:View, data: PlaceContentResponse, pos : Int)
+    }
+    private var listener : OnItemClickListener? = null
+    fun setOnItemClickListener(listener : OnItemClickListener) {
+        this.listener = listener
+    }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        holder.bind(data[position])
+        holder.bind(data[position],listener)
         holder.setIsRecyclable(false)
     }
 
@@ -38,7 +44,7 @@ class NearPlaceDetailRecyclerview() : RecyclerView.Adapter<NearPlaceDetailRecycl
         private val img : ImageView = itemView.findViewById(R.id.img_rv_near)
         private val txtPlace : TextView = itemView.findViewById(R.id.txt_rv_near_title)
         private val txtTag : TextView = itemView.findViewById(R.id.txt_rv_near_tag)
-        fun bind(item: PlaceContentResponse){
+        fun bind(item: PlaceContentResponse, listener: OnItemClickListener?){
             if(!item.imageUrl.isNullOrBlank()) {
                 GlideApp.with(itemView).load(item.imageUrl).into(img)
             }
@@ -53,6 +59,15 @@ class NearPlaceDetailRecyclerview() : RecyclerView.Adapter<NearPlaceDetailRecycl
                 }
             }
             txtTag.text = str
+
+
+            val pos = adapterPosition
+            if(pos!= RecyclerView.NO_POSITION)
+            {
+                itemView.setOnClickListener {
+                    listener?.onItemClick(itemView,item,pos)
+                }
+            }
         }
     }
 }

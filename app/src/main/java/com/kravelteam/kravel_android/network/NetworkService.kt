@@ -67,4 +67,19 @@ interface NetworkService {
     @GET("/api/places")
     fun getPopularPlaceList() : Call<BaseResponse<PlaceDataResponse>>
 
+
+    /**
+     * 포토 리뷰
+     */
+
+    /**
+     * Home - Photo Review 최신순
+     */
+    @GET("/api/reviews")
+    fun getPhotoReview(
+        @Query("offset") offset : Int,
+        @Query("size") size : Int,
+        @Query("sort") sort : String
+    ) : Call<BaseResponse<PhotoReviewResponse>>
+
 }

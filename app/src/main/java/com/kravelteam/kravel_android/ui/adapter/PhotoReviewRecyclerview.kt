@@ -14,6 +14,7 @@ import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.GlideApp
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.response.PhotoResponse
+import com.kravelteam.kravel_android.data.response.PhotoReviewData
 import com.kravelteam.kravel_android.ui.home.PhotoReviewActivity
 import com.kravelteam.kravel_android.util.inflate
 import com.kravelteam.kravel_android.util.setGone
@@ -22,9 +23,9 @@ import org.koin.core.context.GlobalContext
 
 class PhotoReviewRecyclerview() : RecyclerView.Adapter<PhotoReviewRecyclerview.ViewHolder>(){
 
-    private var data: List<PhotoResponse> = emptyList()
+    private var data: List<PhotoReviewData> = emptyList()
 
-    fun initData(data: List<PhotoResponse>){
+    fun initData(data: List<PhotoReviewData>){
         this.data = data
         notifyDataSetChanged()
     }
@@ -55,13 +56,17 @@ class PhotoReviewRecyclerview() : RecyclerView.Adapter<PhotoReviewRecyclerview.V
         private val img : ImageView = itemView.findViewById(R.id.img_photo_review)
         private val view: View = itemView.findViewById(R.id.view_img_background)
         private val txtMore : TextView = itemView.findViewById(R.id.txt_photo_more)
-        fun bind(item: PhotoResponse){
-            GlideApp.with(itemView).load(item.img).into(img)
+        fun bind(item: PhotoReviewData){
+            if(!item.imageUrl.isNullOrEmpty()) {
+                GlideApp.with(itemView).load(item.imageUrl).into(img)
+            }
             txtMore.setGone()
             view.setGone()
         }
-        fun bind2(item: PhotoResponse){
-            GlideApp.with(itemView).load(item.img).into(img)
+        fun bind2(item: PhotoReviewData){
+            if(!item.imageUrl.isNullOrEmpty()) {
+                GlideApp.with(itemView).load(item.imageUrl).into(img)
+            }
             txtMore.setVisible()
             view.setVisible()
             img.setOnDebounceClickListener {
