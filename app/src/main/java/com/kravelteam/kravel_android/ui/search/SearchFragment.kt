@@ -4,26 +4,27 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import com.google.android.material.tabs.TabLayout
+import com.kravelteam.kravel_android.KravelApplication
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.common.SearchWord
 import com.kravelteam.kravel_android.ui.adapter.CelebRecyclerview
 import com.kravelteam.kravel_android.ui.adapter.SearchViewPagerAdapter
 import com.kravelteam.kravel_android.ui.adapter.SearchWordRecyclerview
-import com.kravelteam.kravel_android.util.hideKeyboard
-import com.kravelteam.kravel_android.util.setGone
-import com.kravelteam.kravel_android.util.setVisible
-import com.kravelteam.kravel_android.util.showKeyboard
+import com.kravelteam.kravel_android.util.*
 import kotlinx.android.synthetic.main.fragment_search.*
+import java.lang.Exception
 
 class SearchFragment : Fragment() {
 
     private val wordAdapter : SearchWordRecyclerview by lazy { SearchWordRecyclerview() }
     private val searchResultAdapter : CelebRecyclerview by lazy { CelebRecyclerview() }
+
+    private var dataSize = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,6 +40,7 @@ class SearchFragment : Fragment() {
         initViewPager()
         initSearchView()
         initRecycler()
+        addSearchWord()
     }
 
     private fun initViewPager() {
@@ -64,18 +66,23 @@ class SearchFragment : Fragment() {
         rv_search_recent.apply {
             adapter = wordAdapter
         }
-        wordAdapter.initData(
-           listOf(
-               SearchWord("아이유"),
-               SearchWord("호텔델루나")
-           )
-        )
+
+        val r = Runnable {
+            try {
+                val data = KravelApplication.db.searchWordDao().getAll()
+                dataSize = data.size
+                wordAdapter.initData(data)
+            } catch (e: Exception){}
+        }
+        val thread = Thread(r)
+        thread.start()
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private fun initSearchView(){
         edt_search_word.setOnTouchListener { _, _ ->
             showKeyboard()
+            edt_search_word.requestFocus()
             cl_search_tab.setGone()
             cl_search_recent.setVisible()
             img_search_back.setVisible()
@@ -84,9 +91,39 @@ class SearchFragment : Fragment() {
 
         img_search_back.setOnDebounceClickListener {
             hideKeyboard()
+            edt_search_word.imeOptions = EditorInfo.IME_ACTION_SEARCH
             cl_search_tab.setVisible()
             cl_search_recent.setGone()
             img_search_back.setGone()
+        }
+    }
+
+    private fun addSearchWord(){
+        edt_search_word.setOnEditorActionListener { _, actionId, _ ->
+            if(actionId == EditorInfo.IME_ACTION_SEARCH){
+                val word = SearchWord(dataSize, edt_search_word.text.toString())
+                wordAdapter.addData(word)
+                dataSize++
+                var r = Runnable {
+                    KravelApplication.db.searchWordDao().insertWord(word)
+                }
+
+                val thread = Thread(r)
+                thread.start()
+
+                //검색어 영역 보이기
+                cl_search_recent.setVisible()
+                cl_search_tab.setGone()
+
+                //엔터 누를시 최근 검색어 내역 보이기
+                cl_search_recent_word.setVisible()
+                rv_search_recent.setVisible()
+
+                //엔터 누를시 최근 검색어가 없습니다 지우기
+                cl_search_recent_word_empty.setGone()
+
+            }
+            true
         }
     }
 }

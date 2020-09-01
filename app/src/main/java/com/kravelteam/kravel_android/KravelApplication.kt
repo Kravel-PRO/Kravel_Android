@@ -3,8 +3,8 @@ package com.kravelteam.kravel_android
 import android.app.Application
 import androidx.camera.camera2.Camera2Config
 import androidx.camera.core.CameraXConfig
+import com.kravelteam.kravel_android.common.AppDatabase
 import com.kravelteam.kravel_android.network.authModule
-import com.kravelteam.kravel_android.network.recentModule
 import com.kravelteam.kravel_android.network.requestModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -15,6 +15,7 @@ class KravelApplication : Application(), CameraXConfig.Provider{
         super.onCreate()
 
         GlobalApp = this
+        db = AppDatabase.getInstance(this)!!
 
         if(BuildConfig.DEBUG){
             Timber.plant(Timber.DebugTree())
@@ -25,8 +26,7 @@ class KravelApplication : Application(), CameraXConfig.Provider{
             modules(
                 listOf(
                     requestModule,
-                    authModule,
-                    recentModule
+                    authModule
                 )
             )
         }
@@ -38,5 +38,6 @@ class KravelApplication : Application(), CameraXConfig.Provider{
 
     companion object {
         lateinit var GlobalApp : KravelApplication
+        lateinit var db : AppDatabase
     }
 }
