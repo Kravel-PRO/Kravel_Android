@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import com.kravelteam.kravel_android.data.common.SearchWord
+import timber.log.Timber
 
 @Dao
 interface SearchWordDao {

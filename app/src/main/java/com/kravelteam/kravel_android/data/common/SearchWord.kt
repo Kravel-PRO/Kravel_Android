@@ -6,8 +6,9 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "searchWord")
 data class SearchWord(
-    @PrimaryKey
-    val id: Int,
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = 0,
+
     @ColumnInfo(name = "word")
-    val word: String
+    var word: String
 )
