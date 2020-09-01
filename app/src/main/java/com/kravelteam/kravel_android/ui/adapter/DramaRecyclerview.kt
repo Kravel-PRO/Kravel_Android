@@ -49,9 +49,9 @@ class DramaRecyclerview() : RecyclerView.Adapter<DramaRecyclerview.ViewHolder>()
             }
             //GlideApp.with(itemView).load(item.imgUrl).apply(RequestOptions.circleCropTransform()).into(img)
             GlideApp.with(itemView).load("https://image.chosun.com/sitedata/image/202006/09/2020060902224_0.jpg").apply(RequestOptions.circleCropTransform()).into(img)
-            txtName.text = item.mediaName
+            txtName.text = item.name
             txtYear.visibility = View.VISIBLE
-            txtYear.text = item.openYear
+            txtYear.text = item.year
         }
     }
 }

@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
+import com.kravelteam.kravel_android.ui.map.CameraActivity
 import com.kravelteam.kravel_android.ui.signup.SetLanguageActivity
 import com.kravelteam.kravel_android.util.startActivity
 import kotlinx.android.synthetic.main.dialog_logout.view.*
@@ -33,6 +34,9 @@ class UserFragment : Fragment() {
     }
 
     private fun initSetting(){
+        txt_example.setOnDebounceClickListener {
+            startActivity(CameraActivity::class)
+        }
         cl_user_photo.setOnDebounceClickListener {
             startActivity(MyPhotoReviewActivity::class)
         }
