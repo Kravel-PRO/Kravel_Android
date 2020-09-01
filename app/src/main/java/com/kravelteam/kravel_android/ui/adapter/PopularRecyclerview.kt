@@ -9,15 +9,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.GlideApp
 import com.kravelteam.kravel_android.data.mock.PopularPlaceData
+import com.kravelteam.kravel_android.data.response.PlaceContentResponse
 import com.kravelteam.kravel_android.util.dpToPx
 import com.kravelteam.kravel_android.util.inflate
 import com.kravelteam.kravel_android.util.setRound
 
 class PopularRecyclerview() : RecyclerView.Adapter<PopularRecyclerview.ViewHolder>() {
 
-    private var data : List<PopularPlaceData> = listOf()
+    private var data : List<PlaceContentResponse> = listOf()
 
-    fun initData(data: List<PopularPlaceData>) {
+    fun initData(data: List<PlaceContentResponse>) {
         this.data = data
         notifyDataSetChanged()
     }
@@ -39,13 +40,24 @@ class PopularRecyclerview() : RecyclerView.Adapter<PopularRecyclerview.ViewHolde
         private val txtTag : TextView = itemView.findViewById(R.id.txt_home_popular_tag)
         private val txtPhohoNum : TextView = itemView.findViewById(R.id.txt_home_popular_photo)
 
-        fun bind(item: PopularPlaceData) {
-            GlideApp.with(itemView).load(item.img).into(img)
+        fun bind(item: PlaceContentResponse) {
+            if(!item.imageUrl.isNullOrBlank()) {
+                GlideApp.with(itemView).load(item.imageUrl!!).into(img)
+            }
             img.setRound(20.dpToPx().toFloat())
             view.setRound(20.dpToPx().toFloat())
-            txtPlace.text = item.place
-            txtTag.text = item.tag[0]
-            txtPhohoNum.text = item.photo.toString()
+            txtPlace.text = item.title
+
+            var str : String = ""
+            for(i in 0 until item.tags!!.size) {
+                str = str+"#"+item.tags!!.get(i)
+
+                if(i!=item.tags!!.size-1) {
+                    str = str+" "
+                }
+            }
+            txtTag.text = str
+            txtPhohoNum.text = item.reviewCount.toString()
 
         }
     }

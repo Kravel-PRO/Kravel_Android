@@ -10,9 +10,9 @@ import com.kravelteam.kravel_android.util.inflate
 
 class HashTagRecyclerView() : RecyclerView.Adapter<HashTagRecyclerView.ViewHolder>() {
 
-    private var data: List<HashTagData> = emptyList()
+    private var data: Array<String>? = emptyArray()
 
-    fun initData(data: List<HashTagData>){
+    fun initData(data: Array<String>?){
         this.data = data
         notifyDataSetChanged()
     }
@@ -20,17 +20,17 @@ class HashTagRecyclerView() : RecyclerView.Adapter<HashTagRecyclerView.ViewHolde
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
             = ViewHolder(parent.inflate(R.layout.item_hashtag))
 
-    override fun getItemCount(): Int = data.size
+    override fun getItemCount(): Int = data!!.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(data[position])
+        holder.bind(data!!.get(position))
         holder.setIsRecyclable(false)
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val txtTag : TextView = itemView.findViewById(R.id.txt_hash_tag)
-        fun bind(item: HashTagData){
-            txtTag.text = "#"+item.tag
+        fun bind(item: String){
+            txtTag.text = "#"+item
         }
     }
 }

@@ -11,6 +11,7 @@ import com.kravelteam.kravel_android.common.GlideApp
 import com.kravelteam.kravel_android.common.HorizontalItemDecorator
 import com.kravelteam.kravel_android.data.mock.HashTagData
 import com.kravelteam.kravel_android.data.mock.NearPlaceData
+import com.kravelteam.kravel_android.data.response.PlaceContentResponse
 import com.kravelteam.kravel_android.util.dpToPx
 import com.kravelteam.kravel_android.util.inflate
 import com.kravelteam.kravel_android.util.setRound
@@ -18,9 +19,9 @@ import com.kravelteam.kravel_android.util.setRound
 
 class MapPlaceRecyclerview() : RecyclerView.Adapter<MapPlaceRecyclerview.ViewHolder>() {
 
-    private var data: List<NearPlaceData> = emptyList()
+    private var data: List<PlaceContentResponse> = emptyList()
 
-    fun initData(data: List<NearPlaceData>){
+    fun initData(data: List<PlaceContentResponse>){
         this.data = data
         notifyDataSetChanged()
     }
@@ -43,14 +44,16 @@ class MapPlaceRecyclerview() : RecyclerView.Adapter<MapPlaceRecyclerview.ViewHol
         private val hashtagAdapter : HashTagRecyclerView by lazy { HashTagRecyclerView() }
         private val rvHashTag : RecyclerView = itemView.findViewById(R.id.rv_map_near_hashtag)
 
-        fun bind(item: NearPlaceData){
-            GlideApp.with(itemView).load(item.img).into(img)
+        fun bind(item: PlaceContentResponse){
+            if(!item.imageUrl.isNullOrBlank()) {
+                GlideApp.with(itemView).load(item.imageUrl).into(img)
+            }
             clContent.setRound(5.dpToPx().toFloat())
-            txtPlace.text = item.placeTitle
-            txtAddress.text = item.address
-            initHashTag(item.tag)
+            txtPlace.text = item.title
+            txtAddress.text = item.location
+            initHashTag(item.tags)
         }
-        private fun initHashTag(hashTagData: List<HashTagData>) {
+        private fun initHashTag(hashTagData: Array<String>?) {
             rvHashTag.apply {
                 adapter = hashtagAdapter
                 addItemDecoration(HorizontalItemDecorator(4))

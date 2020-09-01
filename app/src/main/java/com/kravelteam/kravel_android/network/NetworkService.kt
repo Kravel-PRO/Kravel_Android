@@ -61,4 +61,10 @@ interface NetworkService {
         @Path("placeId") placeId : Int
     ) : Call<BaseResponse<PlaceDetailResponse>>
 
+    /**
+     * 인기있는 장소 리스트
+     */
+    @GET("/api/places")
+    fun getPopularPlaceList() : Call<BaseResponse<PlaceDataResponse>>
+
 }
