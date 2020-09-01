@@ -19,6 +19,11 @@ class SearchWordRecyclerview() : RecyclerView.Adapter<SearchWordRecyclerview.Vie
         notifyDataSetChanged()
     }
 
+    fun addData(item: SearchWord){
+        data.add(item)
+        notifyDataSetChanged()
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
         =ViewHolder(parent.inflate(R.layout.item_search_word))
 

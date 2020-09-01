@@ -225,7 +225,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
 
         animMapInfo = animMapInfoLottie
         animMapInfo.apply {
-            setAnimation("loading_small.json")
+            setAnimation("loading_map.json")
             playAnimation()
             loop(true)
         }

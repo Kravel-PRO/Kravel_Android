@@ -9,6 +9,7 @@ import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.HorizontalItemDecorator
 import com.kravelteam.kravel_android.common.VerticalItemDecorator
 import com.kravelteam.kravel_android.data.response.CelebResponse
+import com.kravelteam.kravel_android.network.AuthManager
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.CelebRecyclerview
 import com.kravelteam.kravel_android.ui.adapter.DramaRecyclerview
@@ -47,7 +48,6 @@ class DramaFragment : Fragment() {
 
         networkManager.requestMediaList().safeEnqueue(
             onSuccess = {
-                Timber.e(it.data.result[0].mediaName)
                 dramaAdapter.initData(it.data.result)
             },
             onFailure = {

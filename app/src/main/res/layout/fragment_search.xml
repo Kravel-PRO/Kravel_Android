@@ -43,6 +43,7 @@
                 android:paddingRight="30dp"
                 android:textColor="@color/colorBlack"
                 android:textSize="15sp"
+                android:imeOptions="actionSearch"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/img_search_back"
@@ -166,7 +167,8 @@
                     android:layout_height="0.5dp"
                     android:background="@color/colorGrey"
                     android:layout_marginTop="11dp"
-                    app:layout_constraintTop_toBottomOf="@id/txt_search_recent_title"/>
+                    app:layout_constraintTop_toBottomOf="@id/txt_search_recent_title"
+                    android:visibility="gone"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_search_recent_result"
