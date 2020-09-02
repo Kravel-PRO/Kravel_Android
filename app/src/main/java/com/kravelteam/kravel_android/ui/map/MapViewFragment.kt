@@ -35,10 +35,9 @@ import com.kravelteam.kravel_android.data.mock.MapNearPlaceData
 import com.kravelteam.kravel_android.data.mock.NearPlaceData
 import com.kravelteam.kravel_android.data.mock.PlaceInformationData
 import com.kravelteam.kravel_android.data.response.PhotoResponse
+import com.kravelteam.kravel_android.data.response.PlaceContentResponse
 import com.kravelteam.kravel_android.network.NetworkManager
-import com.kravelteam.kravel_android.ui.adapter.HashTagRecyclerView
-import com.kravelteam.kravel_android.ui.adapter.MapPlaceRecyclerview
-import com.kravelteam.kravel_android.ui.adapter.PhotoReviewRecyclerview
+import com.kravelteam.kravel_android.ui.adapter.*
 import com.kravelteam.kravel_android.util.*
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
@@ -47,6 +46,7 @@ import com.naver.maps.map.overlay.LocationOverlay
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
+import kotlinx.android.synthetic.main.activity_place_detail.*
 import kotlinx.android.synthetic.main.dialog_gps_permission.view.*
 import kotlinx.android.synthetic.main.dialog_service_warning.view.*
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -140,49 +140,37 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
             show()
         }
     }
-    private fun initBottomSheet(marker: Marker) {
-        val placeInfo : PlaceInformationData = PlaceInformationData(
-            placeName = "호텔델루나",
-            placeAddress = "호텔델루나 주소",
-            placePhotoReview = arrayListOf( PhotoResponse("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg"),
-                PhotoResponse("https://image.chosun.com/sitedata/image/202006/09/2020060902224_0.jpg"),
-                PhotoResponse("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg"),
-                PhotoResponse("https://image.chosun.com/sitedata/image/202006/09/2020060902224_0.jpg"),
-                PhotoResponse("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg"),
-                PhotoResponse("https://image.chosun.com/sitedata/image/202006/09/2020060902224_0.jpg"),
-                PhotoResponse("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg")
-            ),
-            placeTag =  arrayOf("아이유","여진구"),
-            placeImg = "https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg",
-            marker = marker.position,
-            placeBus = "2020,1102,1110",
-            placeSubway = "7호선 숭실대입구역",
-            placeNearPlace = arrayListOf(
-                MapNearPlaceData("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","남산"),
-                MapNearPlaceData("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","서울"),
-                MapNearPlaceData("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","경복궁"),
-                MapNearPlaceData("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","지도"),
-                MapNearPlaceData("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","안녕"),
-                MapNearPlaceData("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","남산")
-            )
+    private fun initBottomSheet(marker: Marker, placeId : Int) {
+
+
+        networkManager.getPlaceDetailList(placeId).safeEnqueue (
+            onSuccess = {
+                txt_bottom_title.text = it.data.result.title
+                txt_bottom_map_address1.text = it.data.result.location
+                if(!it.data.result.imageUrl.isNullOrBlank()) {
+                    GlideApp.with(img_bottom_place).load(it.data.result.imageUrl).into(img_bottom_place)
+                }
+                // Round값 물어보기
+                img_bottom_place.setRound(10.dpToPx().toFloat())
+
+                initMap(it.data.result.latitude,it.data.result.longitude)
+                rv_map_hashtag.apply {
+                    adapter = hashtagAdapter
+                    addItemDecoration(HorizontalItemDecorator(4))
+                }
+                hashtagAdapter.initData(it.data.result.tags)
+
+            },
+            onFailure = {
+                Timber.e("실패")
+
+            },
+            onError = {
+                networkErrorToast()
+            }
         )
-
-
         togglebtn_gps.setGone()
         img_reset.setGone()
-
-        GlideApp.with(img_bottom_place).load(placeInfo.placeImg).into(img_bottom_place)
-        // Round값 물어보기
-        img_bottom_place.setRound(10.dpToPx().toFloat())
-        txt_bottom_title.text = placeInfo.placeName
-        txt_bottom_map_address1.text =  placeInfo.placeAddress
-
-        rv_map_hashtag.apply {
-            adapter = hashtagAdapter
-            addItemDecoration(HorizontalItemDecorator(4))
-        }
-
-        hashtagAdapter.initData(placeInfo.placeTag)
 
         rv_home_photo_review.apply {
             adapter = photoAdapter
@@ -190,9 +178,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
             addItemDecoration(HorizontalItemDecorator(4))
         }
 
-        photoAdapter.initData(placeInfo.placePhotoReview)
-
-        initMap(placeInfo.marker)
+      //  photoAdapter.initData(placeInfo.placePhotoReview)
 
 
         cl_bottom_seat_place.setVisible()
@@ -246,7 +232,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
         root.setGone()
         animMapInfoLottie.setVisible()
     }
-    private fun initMap(markerItemLatLng: LatLng) {
+    private fun initMap(latitude : Double, longitude : Double) {
         val fm = childFragmentManager
         val map2Fragment = fm.findFragmentById(R.id.mapView) as MapFragment?
             ?: MapFragment.newInstance().also {
@@ -255,8 +241,8 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
 
         map2Fragment.getMapAsync{naverMap ->
             val marker = Marker()
-            naverMap.moveCamera(CameraUpdate.scrollTo(markerItemLatLng))
-            marker.position = markerItemLatLng
+            marker.position = LatLng(latitude,longitude)
+            naverMap.moveCamera(CameraUpdate.scrollTo(marker.position))
             marker.map = naverMap
             marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_focus)
 
@@ -268,6 +254,16 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
         /**
          * latitude,longitude 바꿔줘야함!
          */
+        nearAdapter.setOnItemClickListener(object : MapPlaceRecyclerview.OnItemClickListener {
+            override fun onItemClick(v: View, data: PlaceContentResponse, pos: Int) {
+                Intent(GlobalApp,PlaceDetailActivity::class.java).apply {
+                    putExtra("placeId",data.placeId)
+                }.run {
+                    GlobalApp.startActivity(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                }
+            }
+
+        })
         networkManager.getPlaceList(1.0,1.0).safeEnqueue (
             onSuccess = {
                 rv_map_near_place.apply {
@@ -344,6 +340,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
             }
         }
 
+        val placeId = 1
         val marker = com.naver.maps.map.overlay.Marker()
         marker.position = LatLng(37.5606311, 126.9936153)
         marker.map = naverMap
@@ -352,7 +349,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
             if(!markerClick) {
                 marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_focus)
                 rv_map_near_place.setGone()
-                initBottomSheet(marker)
+                initBottomSheet(marker,placeId)
                 markerClick = true
             } else {
                 markerClick = false
@@ -368,7 +365,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
 
         naverMap.setOnMapClickListener { pointF, latLng ->
             if(markerClick) {
-              markerClick = false
+                markerClick = false
                 rv_map_near_place.setVisible()
                 marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_default)
                 cl_bottom_seat_place.setGone()

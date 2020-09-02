@@ -35,6 +35,14 @@ interface NetworkService {
      */
 
     /**
+     * 셀럽 상세 - 포토 리뷰
+     */
+    @GET("/api/celebrities/{id}/reviews")
+    fun getCelebPhotoReview(
+        @Path("id") id : Int
+    ) : Call<BaseResponse<CelebPhotoReviewResponse>>
+
+    /**
      * 미디어 리스트
      */
     @GET("/api/medias")
@@ -66,5 +74,20 @@ interface NetworkService {
      */
     @GET("/api/places")
     fun getPopularPlaceList() : Call<BaseResponse<PlaceDataResponse>>
+
+
+    /**
+     * 포토 리뷰
+     */
+
+    /**
+     * Home - Photo Review 최신순
+     */
+    @GET("/api/reviews")
+    fun getPhotoReview(
+        @Query("offset") offset : Int,
+        @Query("size") size : Int,
+        @Query("sort") sort : String
+    ) : Call<BaseResponse<PhotoReviewResponse>>
 
 }

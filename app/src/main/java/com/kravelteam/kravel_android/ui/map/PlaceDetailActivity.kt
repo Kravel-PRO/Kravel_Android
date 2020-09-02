@@ -110,11 +110,12 @@ class PlaceDetailActivity : AppCompatActivity() , OnMapReadyCallback {
                 }
                 latitude = it.data.result.latitude
                 longitude = it.data.result.longitude
-                initMap()
-               // initHashTag(it.data.result.)
+                txt_map_detail_bus_content.text = it.data.result.bus
+                txt_map_detail_subway_content.text = it.data.result.subway
 
-//                txt_map_detail_bus_content.text = placeInfo.placeBus
-//                txt_map_detail_subway_content.text = placeInfo.placeSubway
+                initMap()
+                initHashTag(it.data.result.tags)
+
             },
             onFailure = {
                 Timber.e("실패")
@@ -146,7 +147,7 @@ class PlaceDetailActivity : AppCompatActivity() , OnMapReadyCallback {
         mapFragment.getMapAsync(this)
     }
 
-    private fun initHashTag(data : Array<String>) {
+    private fun initHashTag(data : Array<String>?) {
         rv_map_detail_hashtag.apply {
             adapter = hashtagAdapter
             addItemDecoration(HorizontalItemDecorator(4))

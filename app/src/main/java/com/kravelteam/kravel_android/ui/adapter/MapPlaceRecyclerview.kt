@@ -26,13 +26,21 @@ class MapPlaceRecyclerview() : RecyclerView.Adapter<MapPlaceRecyclerview.ViewHol
         notifyDataSetChanged()
     }
 
+
+    interface OnItemClickListener{
+        fun onItemClick(v:View, data: PlaceContentResponse, pos : Int)
+    }
+    private var listener : OnItemClickListener? = null
+    fun setOnItemClickListener(listener : OnItemClickListener) {
+        this.listener = listener
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
             = ViewHolder(parent.inflate(R.layout.item_map_near_place))
 
     override fun getItemCount(): Int = data.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(data[position])
+        holder.bind(data[position],listener)
         holder.setIsRecyclable(false)
     }
 
@@ -44,7 +52,7 @@ class MapPlaceRecyclerview() : RecyclerView.Adapter<MapPlaceRecyclerview.ViewHol
         private val hashtagAdapter : HashTagRecyclerView by lazy { HashTagRecyclerView() }
         private val rvHashTag : RecyclerView = itemView.findViewById(R.id.rv_map_near_hashtag)
 
-        fun bind(item: PlaceContentResponse){
+        fun bind(item: PlaceContentResponse,listener: OnItemClickListener?){
             if(!item.imageUrl.isNullOrBlank()) {
                 GlideApp.with(itemView).load(item.imageUrl).into(img)
             }
@@ -52,6 +60,14 @@ class MapPlaceRecyclerview() : RecyclerView.Adapter<MapPlaceRecyclerview.ViewHol
             txtPlace.text = item.title
             txtAddress.text = item.location
             initHashTag(item.tags)
+
+            val pos = adapterPosition
+            if(pos!= RecyclerView.NO_POSITION)
+            {
+                itemView.setOnClickListener {
+                    listener?.onItemClick(itemView,item,pos)
+                }
+            }
         }
         private fun initHashTag(hashTagData: Array<String>?) {
             rvHashTag.apply {
