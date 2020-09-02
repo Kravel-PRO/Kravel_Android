@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.mypage.AddressActivity"
+    android:background="@color/colorWhite">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_address_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/cl_address_content"
+        app:layout_constraintVertical_weight="0.78">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="주소 찾기"
+            android:textColor="@color/colorBlack"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/img_address_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/btn_back"
+            android:layout_marginLeft="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/view_address_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorWhiteGrey"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_address_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/cl_address_toolbar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_weight="8.89">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_address_search_space"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="16dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/cl_address_explain_space"
+            app:layout_constraintVertical_weight="1.2">
+
+            <TextView
+                android:id="@+id/txt_address_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="주소"
+                android:textSize="15sp"
+                android:textColor="@color/colorBlack"
+                app:layout_constraintBottom_toTopOf="@+id/edt_address_search"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed"/>
+
+            <EditText
+                android:id="@+id/edt_address_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/signup_edit_style"
+                android:hint="예 ) 녹사평대로 195 6호선 녹사평역"
+                android:textColor="@color/colorBlack"
+                android:textColorHint="@color/colorDarkGrey"
+                android:textSize="15sp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txt_address_title" />
+
+            <ImageView
+                android:id="@+id/img_report_search_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/btn_search"
+                android:layout_marginRight="16dp"
+                app:layout_constraintBottom_toBottomOf="@+id/edt_address_search"
+                app:layout_constraintEnd_toEndOf="@+id/edt_address_search"
+                app:layout_constraintTop_toTopOf="@+id/edt_address_search" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_address_explain_space"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/cl_address_search_space"
+            app:layout_constraintBottom_toTopOf="@id/cl_address_complete_space"
+            app:layout_constraintVertical_weight="4">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_address_sample_space"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingHorizontal="16dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/txt_address_sample1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="아래와 같은 방법으로 검색을 하시면 더욱 정확한 \n결과가 검색됩니다."
+                    android:textColor="@color/colorBlack"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/txt_address_sample2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="도로명"
+                    android:layout_marginTop="16dp"
+                    android:textColor="@color/colorBlack"
+                    app:layout_constraintStart_toStartOf="@+id/txt_address_sample1"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_address_sample1" />
+
+                <TextView
+                    android:id="@+id/txt_address_sample3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="예) 양화로 160, 조천읍 교래리 "
+                    android:textColor="@color/colorBlue"
+                    app:layout_constraintStart_toStartOf="@+id/txt_address_sample2"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_address_sample2" />
+
+                <TextView
+                    android:id="@+id/txt_address_sample4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="건물명"
+                    android:layout_marginTop="12dp"
+                    android:textColor="@color/colorBlack"
+                    app:layout_constraintStart_toStartOf="@+id/txt_address_sample3"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_address_sample3" />
+
+                <TextView
+                    android:id="@+id/txt_address_sample5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="예) 현대백화점 미아점, 경복궁"
+                    android:textColor="@color/colorBlue"
+                    app:layout_constraintStart_toStartOf="@+id/txt_address_sample4"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_address_sample4" />
+
+                <TextView
+                    android:id="@+id/txt_address_sample6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="지역명"
+                    android:layout_marginTop="12dp"
+                    android:textColor="@color/colorBlack"
+                    app:layout_constraintStart_toStartOf="@+id/txt_address_sample5"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_address_sample5" />
+
+                <TextView
+                    android:id="@+id/txt_address_sample7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="예) 서귀포시 하원동, 면목동 산1-4"
+                    android:textColor="@color/colorBlue"
+                    app:layout_constraintStart_toStartOf="@+id/txt_address_sample6"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_address_sample6" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_address_result_space"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/txt_address_result_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="검색 결과"
+                    android:textColor="@color/colorDarkGrey"
+                    android:textSize="12sp"
+                    android:layout_marginHorizontal="16dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_address_result_title"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/item_address"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_address_complete_space"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="16dp"
+            app:layout_constraintTop_toBottomOf="@id/cl_address_explain_space"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_weight="1">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:background="@drawable/selector_btn_enable_background"
+                android:fontFamily="@font/notosans_cjk_kr_bold"
+                android:gravity="center"
+                android:paddingVertical="16dp"
+                android:text="완료"
+                android:textColor="@color/colorWhite"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteX="20dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
