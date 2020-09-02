@@ -2,6 +2,7 @@ package com.kravelteam.kravel_android.ui.search
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.Handler
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,15 +18,15 @@ import com.kravelteam.kravel_android.ui.adapter.SearchViewPagerAdapter
 import com.kravelteam.kravel_android.ui.adapter.SearchWordRecyclerview
 import com.kravelteam.kravel_android.util.*
 import kotlinx.android.synthetic.main.fragment_search.*
-import timber.log.Timber
-import java.lang.Exception
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class SearchFragment : Fragment() {
 
-    private val wordAdapter : SearchWordRecyclerview by lazy { SearchWordRecyclerview() }
+    private lateinit var wordAdapter : SearchWordRecyclerview
     private val searchResultAdapter : CelebRecyclerview by lazy { CelebRecyclerview() }
 
-    private var data: List<SearchWord> = emptyList()
     private var dataSize = 0
 
     override fun onCreateView(
@@ -84,21 +85,20 @@ class SearchFragment : Fragment() {
     }
 
     private fun initRecycler(){
+        wordAdapter = SearchWordRecyclerview(
+            onUpdateSize = {
+                dataSize--
+            }
+        )
         rv_search_recent.apply {
             adapter = wordAdapter
         }
 
-        val r = Runnable {
-            try {
-                val d = KravelApplication.db.searchWordDao().getAll()
-                wordAdapter.initData(d)
-                dataSize = d.size
-            } catch (e: Exception) { }
+        CoroutineScope(Dispatchers.IO).launch {
+            val data = KravelApplication.db.searchWordDao().getAll()
+                wordAdapter.initData(data)
+                dataSize = data.size
         }
-
-        val thread = Thread(r)
-        thread.start()
-
 
     }
 
@@ -126,18 +126,35 @@ class SearchFragment : Fragment() {
     private fun addSearchWord(){
         edt_search_word.setOnEditorActionListener { _, actionId, _ ->
             if(actionId == EditorInfo.IME_ACTION_SEARCH){
-                val word = SearchWord(word = edt_search_word.text.toString())
-                wordAdapter.addData(word)
-                val r = Runnable {
-                    KravelApplication.db.searchWordDao().insertWord(word)
+                val edt_word = edt_search_word.text.toString()
+                val word = SearchWord(word = edt_word)
+
+                var find: SearchWord? = null
+                CoroutineScope(Dispatchers.IO).launch {
+                    find = KravelApplication.db.searchWordDao().findWord(edt_word)
                 }
 
-                val thread = Thread(r)
-                thread.start()
+                if (find != null) {
+                    wordAdapter.deleteData(edt_word)
+                    CoroutineScope(Dispatchers.IO).launch {
+                        KravelApplication.db.searchWordDao().deleteWord(edt_word)
+                    }
+                } else {
+                    if(dataSize >= 10) { //10개 이상일 때 첫번째 data 삭제
+                        wordAdapter.deleteFirstData()
+                    } else {
+                        dataSize++
+                    }
+                }
+                wordAdapter.addData(word)
+                CoroutineScope(Dispatchers.IO).launch {
+                    KravelApplication.db.searchWordDao().insertWord(word)
+                }
 
                 initVisibleRecentWord()
             }
             true
         }
+
     }
 }
