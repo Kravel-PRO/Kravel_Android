@@ -5,6 +5,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Color.*
 import android.graphics.drawable.ColorDrawable
@@ -16,10 +17,13 @@ import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.airbnb.lottie.LottieAnimationView
+import com.bumptech.glide.load.engine.Resource
 import com.bumptech.glide.load.engine.bitmap_recycle.IntegerArrayAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -46,6 +50,7 @@ import com.naver.maps.map.overlay.LocationOverlay
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_place_detail.*
 import kotlinx.android.synthetic.main.bottom_sheet_place.*
 import kotlinx.android.synthetic.main.bottom_sheet_place.view.*
@@ -198,6 +203,8 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
                     BottomSheetBehavior.STATE_EXPANDED -> {
 
                         initAnimation()
+                        activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+                        (activity as AppCompatActivity).cl_main_bottom?.setGone()
                         Handler().postDelayed({
                             initBottomSheetDetail(placeId)
                         }, 1500)
@@ -258,6 +265,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
 
         cl_bottom_seat_place.setGone()
         cl_bottom_sheet_map_detail.setVisible()
+        bottomSheetDetailBehavior.setPeekHeight(Resources.getSystem().displayMetrics.heightPixels)
         bottomSheetDetailBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         bottomSheetDetailBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -268,6 +276,8 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
                     BottomSheetBehavior.STATE_COLLAPSED -> {}
                     BottomSheetBehavior.STATE_HALF_EXPANDED -> {
                         cl_bottom_seat_place.setVisible()
+                        activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+                        (activity as AppCompatActivity).cl_main_bottom?.setVisible()
                         cl_bottom_sheet_map_detail.setGone()
                     }
                 }
