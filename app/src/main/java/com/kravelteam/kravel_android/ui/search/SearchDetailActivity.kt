@@ -66,7 +66,9 @@ class SearchDetailActivity : AppCompatActivity() {
                     addItemDecoration(HorizontalItemDecorator(4))
                     addItemDecoration(VerticalItemDecorator(4))
                 }
-                photoAdapter.initData(it.data.result!!.reviews)
+                if(!it.data.result.reviews.isNullOrEmpty()) {
+                    photoAdapter.initData(it.data.result!!.reviews)
+                }
             },
             onFailure = {
                 toast("실패")
