@@ -1,6 +1,5 @@
 package com.kravelteam.kravel_android.network
 
-import android.gesture.OrientedBoundingBox
 import com.kravelteam.kravel_android.common.HeaderInterceptor
 import com.kravelteam.kravel_android.data.request.LoginRequest
 import com.kravelteam.kravel_android.data.request.SignUpRequest
@@ -30,6 +29,17 @@ class NetworkManager(authManager: AuthManager) {
         .client(builder)
         .build()
         .create(NetworkService::class.java)
+
+    private var kakaoRetrofit = Retrofit.Builder()
+        .baseUrl("https://dapi.kakao.com")
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+        .create(NetworkService::class.java)
+
+    fun requestSearchAddress(
+        token: String,
+        query: String
+    ) = kakaoRetrofit.requestSearchAddress(token,query)
 
     fun requestLogin(data : LoginRequest)
             = retrofit.requestLogin(data)

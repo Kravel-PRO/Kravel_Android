@@ -1,17 +1,14 @@
 package com.kravelteam.kravel_android.dao
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import com.kravelteam.kravel_android.data.common.SearchWord
-import timber.log.Timber
+import org.jetbrains.annotations.NotNull
 
 @Dao
 interface SearchWordDao {
 
     @Query("SELECT * FROM searchWord")
-    fun getAll(): List<SearchWord>
+    fun getAll(): MutableList<SearchWord>
 
     @Query("SELECT * FROM searchWord WHERE word LIKE :word")
     fun findWord(word: String): SearchWord
@@ -19,6 +16,6 @@ interface SearchWordDao {
     @Insert
     fun insertWord(word: SearchWord)
 
-    @Delete
-    fun deleteWord(word: SearchWord)
+    @Query("DELETE FROM searchWord WHERE word = :word")
+    fun deleteWord(word: String)
 }

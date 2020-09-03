@@ -1,20 +1,34 @@
 package com.kravelteam.kravel_android.ui.map
 
 import android.annotation.SuppressLint
+import android.content.ContentValues
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.hardware.Camera
+import android.media.AudioManager
+import android.media.MediaPlayer
+import android.media.MediaScannerConnection
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
+import android.os.Environment
+import android.provider.MediaStore
+import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.camera.view.PreviewView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.LifecycleOwner
+import androidx.core.net.toFile
 import com.google.common.util.concurrent.ListenableFuture
+import com.kravelteam.kravel_android.KravelApplication
 import com.kravelteam.kravel_android.R
+import com.kravelteam.kravel_android.common.GlideApp
+import com.kravelteam.kravel_android.common.setOnDebounceClickListener
+import com.kravelteam.kravel_android.util.dpToPx
+import com.kravelteam.kravel_android.util.setRound
 import kotlinx.android.synthetic.main.activity_camera.*
 import timber.log.Timber
 import java.io.File
@@ -22,17 +36,17 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import java.util.jar.Manifest
 
 
+@Suppress("DEPRECATION")
 class CameraActivity : AppCompatActivity(){
 
     private var imageCapture: ImageCapture? = null
 
-    private lateinit var outputDirectory: File
     private lateinit var cameraExecutor: ExecutorService
     private lateinit var cameraProviderFuture : ListenableFuture<ProcessCameraProvider>
 
+    private var shoot: MediaPlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +54,7 @@ class CameraActivity : AppCompatActivity(){
 
         cameraProviderFuture = ProcessCameraProvider.getInstance(this)
 
-        // Request camera permissions
+        //카메라 퍼미션
         if (allPermissionsGranted()) {
             startCamera()
         } else {
@@ -48,43 +62,100 @@ class CameraActivity : AppCompatActivity(){
                 this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
         }
 
-        // Set up the listener for take photo button
         btn_camera_capture.setOnClickListener { takePhoto() }
-
-        outputDirectory = getOutputDirectory()
 
         cameraExecutor = Executors.newSingleThreadExecutor()
 
+        galleryPreview()
     }
 
+    private fun galleryPreview(){
+        img_gallery_icon.setOnDebounceClickListener {
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type =MediaStore.Images.Media.CONTENT_TYPE
+            intent.data = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+            startActivity(intent)
+        }
+    }
+
+
     private fun takePhoto() {
-        // Get a stable reference of the modifiable image capture use case
         val imageCapture = imageCapture ?: return
 
-        // Create time-stamped output file to hold the image
-        val photoFile = File(
-            outputDirectory,
-            SimpleDateFormat(FILENAME_FORMAT, Locale.US
-            ).format(System.currentTimeMillis()) + ".jpg")
+        //안드로이드 버전에 따라 저장 경로 지정
+        val values = ContentValues()
 
-        // Create output options object which contains file + metadata
-        val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
+        val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() +
+                File.separator +
+                "Camera"
+        val file = File(dir)
+        if (!file.exists()) {
+            file.mkdirs()
+        }
 
-        // Set up image capture listener, which is triggered after photo has
-        // been taken
+        val f = File(file, "kravel_${SimpleDateFormat(FILENAME_FORMAT, Locale.KOREA).format(System.currentTimeMillis())}.jpg")
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            with(values) {
+                put(MediaStore.Images.Media.TITLE, "Kravel")
+                put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis())
+                put(MediaStore.Images.Media.RELATIVE_PATH, "DCIM/Camera")
+                put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+            }
+        } else {
+            with(values) {
+                put(MediaStore.Images.Media.TITLE, "Kravel")
+                put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis())
+                put(MediaStore.Images.Media.BUCKET_ID, "Kravel")
+                put(MediaStore.Images.Media.DATA, f.absolutePath)
+                put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+            }
+        }
+
+        val outputOptions = ImageCapture.OutputFileOptions.Builder(
+            applicationContext.contentResolver,
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            values
+        ).build()
+
+        //카메라 셔터
+        val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        val volume = audioManager.getStreamVolume(AudioManager.STREAM_NOTIFICATION)
+        if(volume!=0){
+            if(shoot == null){
+                shoot = MediaPlayer.create(applicationContext,Uri.parse("file:///system/media/audio/ui/camera_click.ogg"))
+            }
+            shoot?.start()
+        }
+
+        //깜빡이는 애니메이션 넣어주기
+
+        // 이미지 캡쳐
         imageCapture.takePicture(
             outputOptions, ContextCompat.getMainExecutor(this), object : ImageCapture.OnImageSavedCallback {
                 override fun onError(exc: ImageCaptureException) {
-                    Timber.e("Photo capture failed: ${exc.message}")
+                    Timber.e("실패 ${exc.message}")
                 }
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                    val savedUri = Uri.fromFile(photoFile)
-                    val msg = "Photo capture succeeded: $savedUri"
-                    Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
-                    Timber.d(msg)
+                    val savedUri = Uri.fromFile(f)
+
+                    GlideApp.with(applicationContext).load(output.savedUri).into(img_gallery_take_picture)
+                    img_gallery_take_picture.setRound(10.dpToPx().toFloat())
+
+                    val mimeType = MimeTypeMap.getSingleton()
+                        .getMimeTypeFromExtension(savedUri?.toFile()?.extension)
+                    Timber.e(savedUri?.toFile()?.absolutePath)
+                    MediaScannerConnection.scanFile(
+                        applicationContext,
+                        arrayOf(savedUri?.toFile()?.absolutePath),
+                        arrayOf(mimeType)
+                    ) { _, uri ->
+                        Timber.e( "저장된 곳: $uri")
+                    }
                 }
             })
+
     }
 
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
@@ -92,41 +163,31 @@ class CameraActivity : AppCompatActivity(){
             baseContext, it) == PackageManager.PERMISSION_GRANTED
     }
 
-    private fun getOutputDirectory(): File {
-        val mediaDir = externalMediaDirs.firstOrNull()?.let {
-            File(it, resources.getString(R.string.app_name)).apply { mkdirs() } }
-        return if (mediaDir != null && mediaDir.exists())
-            mediaDir else filesDir
-    }
     @SuppressLint("RestrictedApi")
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
 
         cameraProviderFuture.addListener(Runnable {
-            // Used to bind the lifecycle of cameras to the lifecycle owner
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
 
-            // Preview
             val preview = Preview.Builder()
                 .build()
                 .also {
                     it.setSurfaceProvider(preview_camera.createSurfaceProvider())
                 }
 
-            // Select back camera as a default
+            imageCapture = ImageCapture.Builder()
+                .build()
+
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
             try {
-                // Unbind use cases before rebinding
                 cameraProvider.unbindAll()
 
-                // Bind use cases to camera
                 cameraProvider.bindToLifecycle(
-                    this, cameraSelector, preview)
+                    this, cameraSelector, preview, imageCapture)
 
-            } catch(exc: Exception) {
-                Log.e(TAG, "Use case binding failed", exc)
-            }
+            } catch(exc: Exception) {}
 
         }, ContextCompat.getMainExecutor(this))
     }
@@ -142,7 +203,7 @@ class CameraActivity : AppCompatActivity(){
                 startCamera()
             } else {
                 Toast.makeText(this,
-                    "Permissions not granted by the user.",
+                    "카메라 권한 설정을 해주세요",
                     Toast.LENGTH_SHORT).show()
                 finish()
             }
@@ -155,7 +216,7 @@ class CameraActivity : AppCompatActivity(){
     }
 
     companion object {
-        private const val TAG = "CameraXBasic"
+//        private const val TAG = "CameraXBasic"
         private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
         private const val REQUEST_CODE_PERMISSIONS = 10
         private val REQUIRED_PERMISSIONS = arrayOf(android.Manifest.permission.CAMERA)

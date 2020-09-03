@@ -33,12 +33,16 @@ class ReportActivity : AppCompatActivity() {
             }
         )
 
-        edt_report_place_area.onTextChangeListener(
-            onTextChanged = {
-                if(!edt_report_place_area.text.isNullOrBlank()) edt_report_place_area.setBackgroundResource(R.drawable.signup_edit_style_true)
-                else edt_report_place_area.setBackgroundResource(R.drawable.signup_edit_style)
-            }
-        )
+        edt_report_place_area.setOnDebounceClickListener {
+            startActivity(AddressActivity::class)
+        }
+
+//        edt_report_place_area.onTextChangeListener(
+//            onTextChanged = {
+//                if(!edt_report_place_area.text.isNullOrBlank()) edt_report_place_area.setBackgroundResource(R.drawable.signup_edit_style_true)
+//                else edt_report_place_area.setBackgroundResource(R.drawable.signup_edit_style)
+//            }
+//        )
 
         edt_report_place_tag.onTextChangeListener(
             onTextChanged = {
