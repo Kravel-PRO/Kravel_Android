@@ -7,8 +7,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ScrollView
 import androidx.core.widget.NestedScrollView
-import com.davidmiguel.dragtoclose.DragListener
-import com.davidmiguel.dragtoclose.DragToClose
 import com.kravelteam.kravel_android.KravelApplication.Companion.GlobalApp
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.GlideApp
@@ -61,44 +59,8 @@ class PlaceDetailActivity : AppCompatActivity() , OnMapReadyCallback {
         }
         initSetting()
 
-        sv_place_detail.setOnScrollChangeListener(object : View.OnScrollChangeListener{
-            override fun onScrollChange(
-                v: View?,
-                scrollX: Int,
-                scrollY: Int,
-                oldScrollX: Int,
-                oldScrollY: Int
-            ) {
-                Timber.e("scrollY ::::::::::" + scrollY)
-                Timber.e("oldscrollY:::::::::::::::::"+oldScrollY)
-                if(scrollY == 0 ) {
-                    Timber.e("scroll!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-                    val dragToClose = findViewById<DragToClose>(R.id.drag_to_close)
-                    dragToClose.setDragListener(object : DragListener{
-                        override fun onDragging(dragOffset: Float) {
-                        }
-
-                        override fun onStartDraggingView() {
-                        }
-
-                        override fun onViewCosed() {
-                        }
-
-                    })
-                    sv_place_detail.setOnClickListener {
-                        dragToClose.closeDraggableContainer()
-                    }
-                }
-
-
-            }
-
-        })
-
     }
     private fun initSetting() {
-
-
         networkManager.getPlaceDetailList(placeId).safeEnqueue (
             onSuccess = {
                 txt_map_detail_title.text = it.data.result.title
@@ -156,13 +118,29 @@ class PlaceDetailActivity : AppCompatActivity() , OnMapReadyCallback {
         hashtagAdapter.initData(data)
     }
     private fun initPhotoRecycler() {
-        rv_map_detail_photo.apply {
-            adapter = photoAdapter
-            addItemDecoration(VerticalItemDecorator(4))
-            addItemDecoration(HorizontalItemDecorator(4))
-        }
 
-      //  photoAdapter.initData(placeInfo.placePhotoReview)
+
+        networkManager.getPlaceReview(placeId).safeEnqueue(
+            onSuccess = {
+                rv_map_detail_photo.apply {
+                    adapter = photoAdapter
+                    addItemDecoration(VerticalItemDecorator(4))
+                    addItemDecoration(HorizontalItemDecorator(4))
+                }
+
+                if(!it.data.result.content.isNullOrEmpty()) {
+                    photoAdapter.initData(it.data.result.content)
+                }
+            },
+            onFailure = {
+                Timber.e("실패")
+
+            },
+            onError = {
+                networkErrorToast()
+            }
+        )
+
     }
 
     override fun onMapReady(naverMap: NaverMap) {

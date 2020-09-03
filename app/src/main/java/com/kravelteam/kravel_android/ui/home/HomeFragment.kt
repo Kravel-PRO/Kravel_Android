@@ -17,7 +17,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
+import androidx.core.view.marginBottom
 import com.google.android.gms.location.*
 import com.kravelteam.kravel_android.KravelApplication
 import com.kravelteam.kravel_android.KravelApplication.Companion.GlobalApp
@@ -133,6 +135,7 @@ class HomeFragment : Fragment() {
                 nearAdapter.initData(it.data!!.result.content)
                 if(it.data!!.result.content.isEmpty()) {
                     cl_home_near_place.setGone()
+
                 }
             },
             onFailure = {
