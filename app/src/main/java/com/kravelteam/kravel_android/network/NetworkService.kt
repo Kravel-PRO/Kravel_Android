@@ -9,6 +9,15 @@ import retrofit2.http.*
 interface NetworkService {
 
     /**
+     * 카카오 - 키워드 장소 검색 Api
+     */
+    @GET("/v2/local/search/keyword.json")
+    fun requestSearchAddress(
+        @Header("Authorization")  token : String,
+        @Query("query") query: String
+    ) : Call<AddressResponse>
+
+    /**
      * 로그인
      */
     @POST("/auth/sign-in")

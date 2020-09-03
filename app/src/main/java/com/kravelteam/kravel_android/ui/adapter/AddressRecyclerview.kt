@@ -5,14 +5,14 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.kravelteam.kravel_android.R
-import com.kravelteam.kravel_android.data.response.AddressResponse
+import com.kravelteam.kravel_android.data.response.AddressData
 import com.kravelteam.kravel_android.util.inflate
 
 class AddressRecyclerview : RecyclerView.Adapter<AddressRecyclerview.ViewHolder>(){
 
-    private var data: List<AddressResponse> = emptyList()
+    private var data: List<AddressData> = emptyList()
 
-    fun initData(data: List<AddressResponse>){
+    fun initData(data: List<AddressData>){
         this.data = data
         notifyDataSetChanged()
     }
@@ -32,7 +32,7 @@ class AddressRecyclerview : RecyclerView.Adapter<AddressRecyclerview.ViewHolder>
         private val txtPlaceName :TextView = view.findViewById(R.id.txt_place_name)
         private val txtPlaceAddress : TextView = view.findViewById(R.id.txt_place_address)
 
-        fun bind(item: AddressResponse){
+        fun bind(item: AddressData){
             txtPlaceName.text = item.place_name
             txtPlaceAddress.text = item.address_name
         }
