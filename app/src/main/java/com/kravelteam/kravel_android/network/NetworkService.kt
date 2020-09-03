@@ -75,6 +75,13 @@ interface NetworkService {
     @GET("/api/places")
     fun getPopularPlaceList() : Call<BaseResponse<PlaceDataResponse>>
 
+    /**
+     * 장소 상세 - 포토 리뷰
+     */
+    @GET("/api/places/{placeId}/reviews")
+    fun getPlaceReview(
+        @Path("placeId") placeId: Int
+    ) : Call<BaseResponse<PhotoReviewResponse>>
 
     /**
      * 포토 리뷰

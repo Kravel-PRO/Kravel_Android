@@ -47,6 +47,8 @@ import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
 import kotlinx.android.synthetic.main.activity_place_detail.*
+import kotlinx.android.synthetic.main.bottom_sheet_place.*
+import kotlinx.android.synthetic.main.bottom_sheet_place.view.*
 import kotlinx.android.synthetic.main.dialog_gps_permission.view.*
 import kotlinx.android.synthetic.main.dialog_service_warning.view.*
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -65,11 +67,15 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
     private var markerClick : Boolean = false
     private lateinit var naverMap : NaverMap
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
+    private lateinit var bottomSheetDetailBehavior : BottomSheetBehavior<ConstraintLayout>
     private lateinit var animMapInfo: LottieAnimationView
     private lateinit var root: View
 
+    private val nearplaceAdapter : MapNearPlaceRecyclerview by lazy { MapNearPlaceRecyclerview() } //BottomSheet_Detail
     private val photoAdapter : PhotoReviewRecyclerview by lazy { PhotoReviewRecyclerview() } //BottomSheet
     private val hashtagAdapter : HashTagRecyclerView by lazy { HashTagRecyclerView() } //BottomSheet
+
+
     private val nearAdapter: MapPlaceRecyclerview by lazy { MapPlaceRecyclerview() }
 
     private val networkManager : NetworkManager by inject()
@@ -93,9 +99,10 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
 
         mapFragment.getMapAsync(this)
 
-
+        animMapInfo = animMapInfoLottie
         root = requireView().findViewById(R.id.root)
         bottomSheetBehavior = BottomSheetBehavior.from<ConstraintLayout>(cl_bottom_seat_place)
+        bottomSheetDetailBehavior = BottomSheetBehavior.from<ConstraintLayout>(cl_bottom_sheet_map_detail)
 
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
 
@@ -142,7 +149,6 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
     }
     private fun initBottomSheet(marker: Marker, placeId : Int) {
 
-
         networkManager.getPlaceDetailList(placeId).safeEnqueue (
             onSuccess = {
                 txt_bottom_title.text = it.data.result.title
@@ -153,12 +159,13 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
                 // Round값 물어보기
                 img_bottom_place.setRound(10.dpToPx().toFloat())
 
-                initMap(it.data.result.latitude,it.data.result.longitude)
+                initMap("BOTTOM",it.data.result.latitude,it.data.result.longitude)
                 rv_map_hashtag.apply {
                     adapter = hashtagAdapter
                     addItemDecoration(HorizontalItemDecorator(4))
                 }
                 hashtagAdapter.initData(it.data.result.tags)
+                initPhotoReview("BOTTOM",it.data.result.placeId)
 
             },
             onFailure = {
@@ -171,14 +178,6 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
         )
         togglebtn_gps.setGone()
         img_reset.setGone()
-
-        rv_home_photo_review.apply {
-            adapter = photoAdapter
-            addItemDecoration(VerticalItemDecorator(4))
-            addItemDecoration(HorizontalItemDecorator(4))
-        }
-
-      //  photoAdapter.initData(placeInfo.placePhotoReview)
 
 
         cl_bottom_seat_place.setVisible()
@@ -199,13 +198,8 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
                     BottomSheetBehavior.STATE_EXPANDED -> {
 
                         initAnimation()
-
                         Handler().postDelayed({
-                            Intent(GlobalApp, PlaceDetailActivity::class.java).apply {
-                                putExtra("placeId",1)
-                            }.run {
-                                requireActivity().startActivity(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_NO_ANIMATION))
-                            }
+                            initBottomSheetDetail(placeId)
                         }, 1500)
 
                     }
@@ -217,13 +211,103 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
             }
-
         })
 
     }
+
+    private fun initPhotoReview(mode : String,placeId: Int) {
+        networkManager.getPlaceReview(placeId).safeEnqueue(
+            onSuccess = {
+                when(mode) {
+                    "BOTTOM" -> {
+                        rv_home_photo_review.apply {
+                            adapter = photoAdapter
+                            addItemDecoration(VerticalItemDecorator(4))
+                            addItemDecoration(HorizontalItemDecorator(4))
+                        }
+                        if(!it.data.result.content.isNullOrEmpty()) {
+                            photoAdapter.initData(it.data.result.content)
+                        }
+                    }
+                    "BOTTOM_D" -> {
+                        cl_bottom_sheet_map_detail.rv_map_detail_photo.apply {
+                            adapter = photoAdapter
+                            addItemDecoration(VerticalItemDecorator(4))
+                            addItemDecoration(HorizontalItemDecorator(4))
+                        }
+                        if(!it.data.result.content.isNullOrEmpty()) {
+                            photoAdapter.initData(it.data.result.content)
+                        }
+
+                    }
+                }
+            },
+            onFailure = {
+                Timber.e("실패")
+
+            },
+            onError = {
+                networkErrorToast()
+            }
+        )
+
+
+
+    }
+    private fun initBottomSheetDetail(placeId : Int) {
+
+        cl_bottom_seat_place.setGone()
+        cl_bottom_sheet_map_detail.setVisible()
+        bottomSheetDetailBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        bottomSheetDetailBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                onResume()
+
+                when(newState) {
+                    BottomSheetBehavior.STATE_DRAGGING -> {}
+                    BottomSheetBehavior.STATE_COLLAPSED -> {}
+                    BottomSheetBehavior.STATE_HALF_EXPANDED -> {
+                        cl_bottom_seat_place.setVisible()
+                        cl_bottom_sheet_map_detail.setGone()
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+        })
+
+        networkManager.getPlaceDetailList(placeId).safeEnqueue (
+            onSuccess = {
+                cl_bottom_sheet_map_detail.txt_map_detail_title.text = it.data.result.title
+                cl_bottom_sheet_map_detail.txt_map_detail_address.text = it.data.result.location
+                cl_bottom_sheet_map_detail.txt_map_detail_address2.text = it.data.result.location
+                if(!it.data.result.imageUrl.isNullOrBlank()) {
+                    GlideApp.with(cl_bottom_sheet_map_detail.img_map_detail_place).load(it.data.result.imageUrl).into(cl_bottom_sheet_map_detail.img_map_detail_place)
+                }
+
+                initMap("BOTTOM_D",it.data.result.latitude,it.data.result.longitude)
+                cl_bottom_sheet_map_detail.rv_map_detail_hashtag.apply {
+                    adapter = hashtagAdapter
+                    addItemDecoration(HorizontalItemDecorator(4))
+                }
+                hashtagAdapter.initData(it.data.result.tags)
+
+                cl_bottom_sheet_map_detail.txt_map_detail_bus_content.text = it.data.result.bus
+                cl_bottom_sheet_map_detail.txt_map_detail_subway_content.text = it.data.result.subway
+                initPhotoReview("BOTTOM_D",placeId)
+
+            },
+            onFailure = {
+                Timber.e("실패")
+
+            },
+            onError = {
+                networkErrorToast()
+            }
+        )
+    }
     private fun initAnimation() {
 
-        animMapInfo = animMapInfoLottie
         animMapInfo.apply {
             setAnimation("loading_map.json")
             playAnimation()
@@ -232,21 +316,48 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
         root.setGone()
         animMapInfoLottie.setVisible()
     }
-    private fun initMap(latitude : Double, longitude : Double) {
+
+    /**
+     * BottomSheet 안의 Map 띄우기
+     */
+    private fun initMap(mode:String,latitude : Double, longitude : Double) {
         val fm = childFragmentManager
-        val map2Fragment = fm.findFragmentById(R.id.mapView) as MapFragment?
-            ?: MapFragment.newInstance().also {
-                fm.beginTransaction().add(R.id.mapView, it).commit()
+        when(mode) {
+            "BOTTOM" -> {
+                val map2Fragment = fm.findFragmentById(R.id.mapView) as MapFragment?
+                    ?: MapFragment.newInstance().also {
+                        fm.beginTransaction().add(R.id.mapView, it).commit()
+                    }
+
+                map2Fragment.getMapAsync{naverMap ->
+                    val marker = Marker()
+                    marker.position = LatLng(latitude,longitude)
+                    naverMap.moveCamera(CameraUpdate.scrollTo(marker.position))
+                    marker.map = naverMap
+                    marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_focus)
+
+                }
+
             }
+            "BOTTOM_D" -> {
+                val mapBottomFragment = fm.findFragmentById(R.id.place_detail_map) as MapFragment?
+                    ?:MapFragment.newInstance().also {
+                        fm.beginTransaction().add(R.id.place_detail_map,it).commit()
+                    }
 
-        map2Fragment.getMapAsync{naverMap ->
-            val marker = Marker()
-            marker.position = LatLng(latitude,longitude)
-            naverMap.moveCamera(CameraUpdate.scrollTo(marker.position))
-            marker.map = naverMap
-            marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_focus)
+                mapBottomFragment.getMapAsync{naverMap ->
+                    val marker = Marker()
+                    marker.position = LatLng(latitude,longitude)
+                    naverMap.moveCamera(CameraUpdate.scrollTo(marker.position))
+                    marker.map = naverMap
+                    marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_focus)
 
+                }
+            }
         }
+
+
+
 
     }
     private fun initRecycler() {
@@ -385,6 +496,8 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
 
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         root.setVisible()
+        animMapInfo.setGone()
+
     }
 
 }
