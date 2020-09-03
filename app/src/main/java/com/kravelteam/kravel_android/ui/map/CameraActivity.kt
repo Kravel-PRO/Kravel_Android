@@ -32,7 +32,6 @@ class CameraActivity : AppCompatActivity(){
 
     private var imageCapture: ImageCapture? = null
 
-    private lateinit var outputDirectory: File
     private lateinit var cameraExecutor: ExecutorService
     private lateinit var cameraProviderFuture : ListenableFuture<ProcessCameraProvider>
 
@@ -53,8 +52,6 @@ class CameraActivity : AppCompatActivity(){
 
         // Set up the listener for take photo button
         btn_camera_capture.setOnClickListener { takePhoto() }
-
-        outputDirectory = getOutputDirectory()
 
         cameraExecutor = Executors.newSingleThreadExecutor()
 
@@ -148,14 +145,6 @@ class CameraActivity : AppCompatActivity(){
             baseContext, it) == PackageManager.PERMISSION_GRANTED
     }
 
-    private fun getOutputDirectory(): File {
-        val mediaDir = externalMediaDirs.firstOrNull()?.let {
-            Timber.e("${it.absolutePath}")
-            File(it, resources.getString(R.string.app_name)).apply { mkdirs() }
-        }
-        return if (mediaDir != null && mediaDir.exists())
-            mediaDir else filesDir
-    }
     @SuppressLint("RestrictedApi")
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
