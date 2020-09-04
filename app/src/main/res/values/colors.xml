@@ -18,6 +18,7 @@
     <color name="colorOpacityBlack">#D9272727</color>
     <color name="colorOpacity15Black">#26272727</color>
     <color name="colorOpacity60Black">#99272727</color>
+    <color name="colorOpacity30Black">#4D272727</color>
     <color name="colorGrey">#d5d5d5</color>
     <color name="colorBlackGrey">#4a4a4a</color>
     <color name="colorBrown">#e2cfba</color>

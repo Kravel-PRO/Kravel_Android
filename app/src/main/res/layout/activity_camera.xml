@@ -12,11 +12,20 @@
         android:layout_height="match_parent"/>
 
     <ImageView
+        android:id="@+id/img_camera_concept_ill"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="gone"/>
+
+    <ImageView
         android:id="@+id/btn_camera_capture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/btn_pick"
         android:layout_marginBottom="24dp"
+        android:src="@drawable/btn_pick"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -33,8 +42,8 @@
 
     <ImageView
         android:id="@+id/img_gallery_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
         android:layout_marginBottom="4dp"
         android:src="@drawable/ic_gallery_inactivity"
         app:layout_constraintBottom_toTopOf="@+id/txt_gallery_name"
@@ -63,5 +72,96 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/img_gallery_icon"
         app:layout_constraintStart_toStartOf="@+id/img_gallery_icon" />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_camera_concept_example"
+        android:layout_width="42dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/white_round_line_background"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.76"
+        app:layout_constraintStart_toEndOf="@+id/btn_camera_capture"
+        app:layout_constraintBottom_toTopOf="@id/txt_camera_concept_example"
+        android:visibility="visible">
+
+        <ImageView
+            android:id="@+id/img_camera_concept_example"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/txt_camera_concept_example"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="예시"
+        android:textColor="@color/colorWhite"
+        android:textSize="12sp"
+        android:layout_marginBottom="24dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/cl_camera_concept_example"
+        app:layout_constraintStart_toStartOf="@+id/cl_camera_concept_example" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="18dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_camera_capture">
+
+        <TextView
+            android:id="@+id/txt_camera_unselect_basic"
+            android:layout_width="63dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_camera_unclicked"
+            android:gravity="center"
+            android:paddingVertical="3dp"
+            android:text="일반"
+            android:textColor="@color/colorOpacity30Black"
+            android:textSize="14sp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/txt_camera_select"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintHorizontal_chainStyle="packed"/>
+
+        <TextView
+            android:id="@+id/txt_camera_select"
+            android:layout_width="63dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_camera_clicked"
+            android:gravity="center"
+            android:paddingVertical="3dp"
+            android:text="일반"
+            android:layout_marginHorizontal="10dp"
+            android:textColor="@color/colorBlack"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/txt_camera_unselect_concept"
+            app:layout_constraintStart_toEndOf="@+id/txt_camera_unselect_basic"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txt_camera_unselect_concept"
+            android:layout_width="63dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_camera_unclicked"
+            android:gravity="center"
+            android:paddingVertical="3dp"
+            android:text="기생충"
+            android:textColor="@color/colorOpacity30Black"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/txt_camera_select"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
