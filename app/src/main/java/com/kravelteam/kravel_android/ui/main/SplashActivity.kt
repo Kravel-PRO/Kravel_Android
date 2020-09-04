@@ -34,6 +34,6 @@ class SplashActivity : AppCompatActivity() {
             } else {
                 startActivity(LoginActivity::class,true)
             }
-        },3000)
+        },1500)
     }
 }

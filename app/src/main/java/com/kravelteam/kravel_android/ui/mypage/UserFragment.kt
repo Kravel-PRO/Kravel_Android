@@ -1,6 +1,8 @@
 package com.kravelteam.kravel_android.ui.mypage
 
 import android.app.AlertDialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,16 +10,21 @@ import android.view.View
 import android.view.ViewGroup
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
+import com.kravelteam.kravel_android.network.AuthManager
+import com.kravelteam.kravel_android.ui.login.LoginActivity
 import com.kravelteam.kravel_android.ui.map.CameraActivity
 import com.kravelteam.kravel_android.ui.signup.SetLanguageActivity
 import com.kravelteam.kravel_android.util.startActivity
 import kotlinx.android.synthetic.main.dialog_logout.view.*
 import kotlinx.android.synthetic.main.fragment_user.*
+import org.koin.android.ext.android.inject
 
 /**
  * A simple [Fragment] subclass.
  */
 class UserFragment : Fragment() {
+
+    private val authManager : AuthManager by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,6 +41,7 @@ class UserFragment : Fragment() {
     }
 
     private fun initSetting(){
+        //삭제해야함
         txt_example.setOnDebounceClickListener {
             startActivity(CameraActivity::class)
         }
@@ -67,9 +75,15 @@ class UserFragment : Fragment() {
     private fun initDialog(){
         val dialog = AlertDialog.Builder(context).create()
         val view = LayoutInflater.from(context).inflate(R.layout.dialog_logout, null)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         view.btn_logout_cancel.setOnDebounceClickListener {
             dialog.cancel()
+        }
+
+        view.btn_logout.setOnDebounceClickListener {
+            authManager.autoLogin = false
+            startActivity(LoginActivity::class,true)
         }
 
         dialog.apply {
