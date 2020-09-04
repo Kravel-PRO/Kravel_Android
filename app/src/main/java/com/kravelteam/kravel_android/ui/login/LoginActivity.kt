@@ -66,7 +66,7 @@ class LoginActivity : AppCompatActivity() {
             )
             networkManager.requestLogin(loginData).safeEnqueue(
                 onSuccess = {
-                    val token = it.data.result.token
+                    val token = ""
                     authManager.apply {
                         this.token = token
                         autoLogin = true

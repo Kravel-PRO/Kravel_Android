@@ -34,7 +34,7 @@ class ReportActivity : AppCompatActivity() {
         )
 
         edt_report_place_area.setOnDebounceClickListener {
-            startActivity(AddressActivity::class)
+            startActivityForResult(Intent(this,AddressActivity::class.java), REQUEST_CODE_SELECT_ADDRESS)
         }
 
 //        edt_report_place_area.onTextChangeListener(
@@ -73,6 +73,7 @@ class ReportActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
         if(requestCode == REQUEST_CODE_SELECT_IMAGE){
             if(resultCode == Activity.RESULT_OK){
                 data?.let{
@@ -83,10 +84,19 @@ class ReportActivity : AppCompatActivity() {
                     img_report_upload_photo.scaleType = ImageView.ScaleType.CENTER_CROP
                 }
             }
+        } else if (requestCode == REQUEST_CODE_SELECT_ADDRESS){
+            if(resultCode == Activity.RESULT_OK){
+                data?.let {
+                    edt_report_place_area.text = it.getStringExtra("address")
+                    edt_report_place_area.setTextColor(resources.getColor(R.color.colorBlack))
+                    edt_report_place_area.setBackgroundResource(R.drawable.signup_edit_style)
+                }
+            }
         }
     }
 
     companion object {
         private const val REQUEST_CODE_SELECT_IMAGE = 1000
+        private const val REQUEST_CODE_SELECT_ADDRESS = 1500
     }
 }

@@ -1,5 +1,6 @@
 package com.kravelteam.kravel_android.ui.mypage
 
+import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
@@ -14,12 +15,20 @@ import org.koin.android.ext.android.inject
 class AddressActivity : AppCompatActivity() {
 
     private val networkManager : NetworkManager by inject()
-    private val addressAdapter: AddressRecyclerview by lazy { AddressRecyclerview() }
+    private lateinit var addressAdapter: AddressRecyclerview
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_address)
 
+        addressAdapter = AddressRecyclerview (
+            onFinish = {
+                val intent = intent
+                intent.putExtra("address", it)
+                setResult(Activity.RESULT_OK,intent)
+                finish()
+            }
+        )
         rv_address.adapter = addressAdapter
 
         initSearch()

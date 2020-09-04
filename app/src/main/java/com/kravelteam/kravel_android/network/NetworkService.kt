@@ -23,7 +23,7 @@ interface NetworkService {
     @POST("/auth/sign-in")
     fun requestLogin(
         @Body data : LoginRequest
-    ) : Call<BaseResponse<LoginResponse>>
+    ) : Call<Unit>
 
     /**
      * 회원가입

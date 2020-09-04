@@ -23,6 +23,7 @@ fun <T> Call<T>.safeEnqueue(
                 response: Response<T>
             ) {
                 if ( response.isSuccessful ) {
+                    Timber.e("${response.headers()}")
                     response.body()?.let {
                         onSuccess(it)
                     } ?: onFailure(response)
