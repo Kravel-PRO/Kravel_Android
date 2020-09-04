@@ -23,10 +23,36 @@ fun <T> Call<T>.safeEnqueue(
                 response: Response<T>
             ) {
                 if ( response.isSuccessful ) {
-                    Timber.e("${response.headers()}")
                     response.body()?.let {
                         onSuccess(it)
                     } ?: onFailure(response)
+                } else {
+                    onFailure(response)
+                }
+            }
+        }
+    )
+}
+
+fun <T> Call<T>.safeLoginEnqueue(
+    onError: (Throwable) -> Unit = onErrorStub,
+    onSuccess: (String) -> Unit = {},
+    onFailure: (Response<T>) -> Unit = {}
+) {
+    this.enqueue(
+        object : Callback<T> {
+            override fun onFailure(call: Call<T>, t: Throwable) {
+                onError(t)
+            }
+
+            override fun onResponse(
+                call: Call<T>,
+                response: Response<T>
+            ) {
+                if ( response.isSuccessful ) {
+                    response.headers()["Authorization"]?.split(" ")?.let {
+                        onSuccess(it[1])
+                    }?: onFailure(response)
                 } else {
                     onFailure(response)
                 }
