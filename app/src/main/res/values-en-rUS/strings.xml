@@ -8,9 +8,8 @@
     <string name="hello_blank_fragment">hello</string>
     <string name="emailExplain">Please enter your email.</string>
     <string name="pwExplain">Please enter your password.</string>
-    <string name="loginWord1">Shall we go on a trip</string>
-    <string name="loginWord2">with Kavel
-        \ntoday?</string>
+    <string name="loginWord1">Kravel,</string>
+    <string name="loginWord2">Let\'s travel Korea          With K-culture</string>
     <string name="loginFailTitle">Login failed.</string>
     <string name="loginFailContent">Incorrect account
         \nor password.</string>

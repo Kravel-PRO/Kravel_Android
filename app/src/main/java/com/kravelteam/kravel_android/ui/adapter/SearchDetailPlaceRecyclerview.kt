@@ -40,7 +40,11 @@ class SearchDetailPlaceRecyclerview() : RecyclerView.Adapter<SearchDetailPlaceRe
             GlideApp.with(itemView).load(item.imageUrl).into(img)
             img.setRound(10.dpToPx().toFloat())
             txtPlace.text = item.title
-            txtTag.text = item.celebrities[0]
+            var tags = ""
+            item.celebrities.forEach {
+                tags += "#$it "
+            }
+            txtTag.text = tags
         }
     }
 }

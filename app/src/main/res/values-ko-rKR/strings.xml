@@ -8,9 +8,8 @@
     <string name="hello_blank_fragment">안녕</string>
     <string name="emailExplain">이메일을 입력해주세요.</string>
     <string name="pwExplain">비밀번호를 입력해주세요.</string>
-    <string name="loginWord1">오늘도</string>
-    <string name="loginWord2">Kravel과 함께
-        \n여행을 떠나볼까요?</string>
+    <string name="loginWord1">Kravel,</string>
+    <string name="loginWord2">K-culture와          함께 떠나는 한국 여행</string>
     <string name="loginFailTitle">로그인을 실패했습니다.</string>
     <string name="loginFailContent">존재하지 않는 계정
         \n또는 비밀번호가 잘못되었습니다.</string>

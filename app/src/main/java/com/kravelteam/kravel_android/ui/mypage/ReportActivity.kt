@@ -22,7 +22,9 @@ class ReportActivity : AppCompatActivity() {
 
         initChangeEditText()
         initUploadImg()
-        initCreateTag()
+        img_report_back.setOnDebounceClickListener {
+            finish()
+        }
     }
 
     private fun initChangeEditText(){
@@ -37,29 +39,12 @@ class ReportActivity : AppCompatActivity() {
             startActivityForResult(Intent(this,AddressActivity::class.java), REQUEST_CODE_SELECT_ADDRESS)
         }
 
-//        edt_report_place_area.onTextChangeListener(
-//            onTextChanged = {
-//                if(!edt_report_place_area.text.isNullOrBlank()) edt_report_place_area.setBackgroundResource(R.drawable.signup_edit_style_true)
-//                else edt_report_place_area.setBackgroundResource(R.drawable.signup_edit_style)
-//            }
-//        )
-
         edt_report_place_tag.onTextChangeListener(
             onTextChanged = {
                 if(!edt_report_place_tag.text.isNullOrBlank()) edt_report_place_tag.setBackgroundResource(R.drawable.signup_edit_style_true)
                 else edt_report_place_tag.setBackgroundResource(R.drawable.signup_edit_style)
             }
         )
-    }
-
-    private fun initCreateTag(){
-//        edt_report_place_tag.setOnKeyListener { v, keyCode, event ->
-//            if ((event.action == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
-//                //edt_report_place_tag.text = Editable.Factory.getInstance().newEditable("#${edt_report_place_tag.text}")
-//                Timber.e("snffldkdkdk")
-//            }
-//            true
-//        }
     }
 
     private fun initUploadImg(){

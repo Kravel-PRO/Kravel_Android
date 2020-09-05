@@ -13,7 +13,7 @@ interface NetworkService {
      */
     @GET("/v2/local/search/keyword.json")
     fun requestSearchAddress(
-        @Header("Authorization")  token : String,
+        @Header("Authorization") token : String,
         @Query("query") query: String
     ) : Call<AddressResponse>
 
