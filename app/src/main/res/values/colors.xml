@@ -24,5 +24,6 @@
     <color name="colorBrown">#e2cfba</color>
     <color name="colorWhiteMiddleGrey">#f8f8f8</color>
     <color name="colorBlue">#4a90e2</color>
+    <color name="colorOpacityBrown">#BD979797</color>
 
 </resources>

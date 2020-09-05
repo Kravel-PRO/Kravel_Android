@@ -85,7 +85,7 @@
         app:layout_constraintHorizontal_bias="0.76"
         app:layout_constraintStart_toEndOf="@+id/btn_camera_capture"
         app:layout_constraintBottom_toTopOf="@id/txt_camera_concept_example"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/img_camera_concept_example"
@@ -103,7 +103,7 @@
         android:textColor="@color/colorWhite"
         android:textSize="12sp"
         android:layout_marginBottom="24dp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/cl_camera_concept_example"
         app:layout_constraintStart_toStartOf="@+id/cl_camera_concept_example" />
@@ -161,6 +161,54 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/txt_camera_select"
             app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_no_access_camera"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorOpacityBrown"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/img_access_camera_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_no_access_camera"
+            app:layout_constraintBottom_toTopOf="@+id/txt_no_access_camera_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.35000002"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/txt_no_access_camera_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:fontFamily="@font/notosans_cjk_kr_bold"
+            android:text="카메라 접근 권한 허용"
+            android:textColor="@color/colorWhite"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/txt_no_access_camera_content2"
+            app:layout_constraintEnd_toEndOf="@+id/img_access_camera_icon"
+            app:layout_constraintStart_toStartOf="@+id/img_access_camera_icon"
+            app:layout_constraintTop_toBottomOf="@+id/img_access_camera_icon" />
+
+        <TextView
+            android:id="@+id/txt_no_access_camera_content2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="카메라 접근 권한 허용 후에\n사진을 촬영할 수 있습니다."
+            android:textColor="@color/colorWhite"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/txt_no_access_camera_content"
+            app:layout_constraintStart_toStartOf="@+id/txt_no_access_camera_content"
+            app:layout_constraintTop_toBottomOf="@+id/txt_no_access_camera_content" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

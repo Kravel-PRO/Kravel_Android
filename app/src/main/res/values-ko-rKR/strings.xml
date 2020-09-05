@@ -60,4 +60,13 @@
     <string name="gpsWarningWord1">해당 기기에 gps가 꺼져있어 위치정보를 가져올 수 없습니다.\ngps를 사용하시겠습니까?</string>
     <string name="yes">예</string>
     <string name="no">아니오</string>
+    <string name="mypageword">Kravel과 당신의 여행을 특별하게
+        \n만들어보세요.</string>
+    <string name="myPhotoReview">내 포토 리뷰</string>
+    <string name="scrap">스크랩</string>
+    <string name="updatePw">비밀번호 수정</string>
+    <string name="updateUserInfo">내 정보 수정</string>
+    <string name="setLanguage">언어 설정</string>
+    <string name="report">제보하기</string>
+    <string name="logout">로그아웃</string>
 </resources>

@@ -60,4 +60,13 @@
     <string name="gpsWarningWord1">Unable to get location information because gps is turned off on the device. \n Do you want to use gps?</string>
     <string name="yes">yes</string>
     <string name="no">no</string>
+    <string name="mypageword">Make your trip special
+        \nwith Kravel.</string>
+    <string name="myPhotoReview">My photo review</string>
+    <string name="scrap">Scrap</string>
+    <string name="updateUserInfo">Modify my information</string>
+    <string name="updatePw">Modify Password</string>
+    <string name="setLanguage">Language setting</string>
+    <string name="report">Report</string>
+    <string name="logout">Log out</string>
 </resources>
