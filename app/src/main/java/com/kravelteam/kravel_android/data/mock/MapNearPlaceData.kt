@@ -6,6 +6,6 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class MapNearPlaceData (
-    val imgPlace : String,
-    val txtPlace : String
+    var imgPlace : String?,
+    var txtPlace : String?
 ) : Parcelable

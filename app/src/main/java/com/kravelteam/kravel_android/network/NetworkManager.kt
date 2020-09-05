@@ -76,10 +76,10 @@ class NetworkManager(authManager: AuthManager) {
     fun getPopularPlaceList() = retrofit.getPopularPlaceList()
 
     fun getPhotoReview(
-        offset : Int,
+        page : Int,
         size : Int,
         sort : String
-    ) = retrofit.getPhotoReview(offset, size, sort)
+    ) = retrofit.getPhotoReview(page, size, sort)
 
     fun getCelebPhotoReview(id : Int) = retrofit.getCelebPhotoReview(id)
 

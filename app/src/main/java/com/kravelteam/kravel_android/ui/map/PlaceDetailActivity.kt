@@ -2,24 +2,19 @@ package com.kravelteam.kravel_android.ui.map
 
 import android.app.Activity
 import android.content.Intent
+import android.os.*
 import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.view.View
-import android.widget.ScrollView
-import androidx.core.widget.NestedScrollView
 import com.kravelteam.kravel_android.KravelApplication.Companion.GlobalApp
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.GlideApp
 import com.kravelteam.kravel_android.common.HorizontalItemDecorator
 import com.kravelteam.kravel_android.common.VerticalItemDecorator
-import com.kravelteam.kravel_android.data.mock.HashTagData
-import com.kravelteam.kravel_android.data.mock.PlaceInformationData
-import com.kravelteam.kravel_android.data.response.PhotoResponse
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.HashTagRecyclerView
 import com.kravelteam.kravel_android.ui.adapter.MapNearPlaceRecyclerview
 import com.kravelteam.kravel_android.ui.adapter.PhotoReviewRecyclerview
-import com.kravelteam.kravel_android.util.*
+import com.kravelteam.kravel_android.util.networkErrorToast
+import com.kravelteam.kravel_android.util.safeEnqueue
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.MapFragment
@@ -28,13 +23,12 @@ import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import kotlinx.android.synthetic.main.activity_place_detail.*
-import kotlinx.android.synthetic.main.fragment_map.*
-import kotlinx.android.synthetic.main.fragment_map_info.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
-import kotlin.properties.Delegates
+import java.net.URL
 
-class PlaceDetailActivity : AppCompatActivity() , OnMapReadyCallback {
+
+class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
     private val hashtagAdapter : HashTagRecyclerView by lazy { HashTagRecyclerView() }
     private val photoAdapter : PhotoReviewRecyclerview by lazy {PhotoReviewRecyclerview()}
     private val nearplaceAdapter : MapNearPlaceRecyclerview by lazy { MapNearPlaceRecyclerview() } //BottomSheet
@@ -48,25 +42,29 @@ class PlaceDetailActivity : AppCompatActivity() , OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_place_detail)
 
-        placeId = intent.getIntExtra("placeId",0)
+        if (Build.VERSION.SDK_INT > 9) {
+            val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
+            StrictMode.setThreadPolicy(policy)
+        }
+        placeId = intent.getIntExtra("placeId", 0)
         setResult(Activity.RESULT_OK)
         img_map_detail_arrow.setOnClickListener {
             finish()
         }
         img_map_detail_photo.setOnClickListener {
-               Intent(GlobalApp,CameraActivity::class.java).run {
+               Intent(GlobalApp, CameraActivity::class.java).run {
                    GlobalApp.startActivity(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
         }
         initSetting()
 
     }
     private fun initSetting() {
-        networkManager.getPlaceDetailList(placeId).safeEnqueue (
+        networkManager.getPlaceDetailList(placeId).safeEnqueue(
             onSuccess = {
                 txt_map_detail_title.text = it.data.result.title
                 txt_map_detail_address.text = it.data.result.location
                 txt_map_detail_address2.text = it.data.result.location
-                if(!it.data.result.imageUrl.isNullOrBlank()) {
+                if (!it.data.result.imageUrl.isNullOrBlank()) {
                     GlideApp.with(applicationContext).load(it.data.result.imageUrl)
                         .into(img_map_detail_place)
                 }
@@ -78,6 +76,7 @@ class PlaceDetailActivity : AppCompatActivity() , OnMapReadyCallback {
                 initMap()
                 initHashTag(it.data.result.tags)
 
+
             },
             onFailure = {
                 Timber.e("실패")
@@ -88,19 +87,43 @@ class PlaceDetailActivity : AppCompatActivity() , OnMapReadyCallback {
             }
         )
 
-
+        initNearPlaceRecycler(latitude, longitude)
         initPhotoRecycler()
-        initNearPlaceRecycler()
+
     }
-    private fun initNearPlaceRecycler() {
+    private fun initNearPlaceRecycler(latitude: Double, longitude: Double) {
         rv_map_detail_near_place.apply {
-            adapter =nearplaceAdapter
+            adapter = nearplaceAdapter
             addItemDecoration(HorizontalItemDecorator(12))
         }
 
-       // nearplaceAdapter.initData(placeInfo.placeNearPlace)
+        val handler: Handler = object : Handler() {
+            override fun handleMessage(msg: Message?) {
+                var url: URL = URL(
+                    "http://api.visitkorea.or.kr/openapi/service/rest/KorService/locationBasedList?&MobileOS=AND&MobileApp=Kravel&radius=1000"
+                            + "&ServiceKey=" + resources.getString(R.string.open_api_kor_place)
+                            + "&mapX=126.981611&mapY=37.568477"
+                )
+                //                + "&mapX="+longitude.toString()+"&mapY="+latitude.toString())
+
+                val parserHandler = XmlPullParserHandler()
+                val neardatas = parserHandler.parse(url.openStream())
+
+                nearplaceAdapter.initData(neardatas)
+                nearplaceAdapter.notifyDataSetChanged()
+            }
+        }
+
+
+        object : Thread() {
+            override fun run() {
+                val msg = handler.obtainMessage()
+                handler.sendMessage(msg)
+            }
+        }.start()
     }
     private fun initMap() {
+
         val fm = supportFragmentManager
         val mapFragment = fm.findFragmentById(R.id.place_detail_map) as MapFragment?
             ?: MapFragment.newInstance().also {
@@ -109,7 +132,7 @@ class PlaceDetailActivity : AppCompatActivity() , OnMapReadyCallback {
         mapFragment.getMapAsync(this)
     }
 
-    private fun initHashTag(data : Array<String>?) {
+    private fun initHashTag(data: Array<String>?) {
         rv_map_detail_hashtag.apply {
             adapter = hashtagAdapter
             addItemDecoration(HorizontalItemDecorator(4))
@@ -128,7 +151,7 @@ class PlaceDetailActivity : AppCompatActivity() , OnMapReadyCallback {
                     addItemDecoration(HorizontalItemDecorator(4))
                 }
 
-                if(!it.data.result.content.isNullOrEmpty()) {
+                if (!it.data.result.content.isNullOrEmpty()) {
                     photoAdapter.initData(it.data.result.content)
                 }
             },
@@ -154,4 +177,5 @@ class PlaceDetailActivity : AppCompatActivity() , OnMapReadyCallback {
         marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_focus)
 
     }
+
 }

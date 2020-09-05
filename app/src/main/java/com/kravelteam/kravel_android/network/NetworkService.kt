@@ -123,7 +123,7 @@ interface NetworkService {
      */
     @GET("/api/reviews")
     fun getPhotoReview(
-        @Query("offset") offset : Int,
+        @Query("page") page : Int,
         @Query("size") size : Int,
         @Query("sort") sort : String
     ) : Call<BaseResponse<PhotoReviewResponse>>
