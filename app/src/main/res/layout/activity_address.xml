@@ -206,7 +206,37 @@
                     app:layout_constraintTop_toBottomOf="@+id/txt_address_result_title"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:listitem="@layout/item_address"/>
+                    tools:listitem="@layout/item_address"
+                    android:visibility="gone"/>
+
+                <ImageView
+                    android:id="@+id/img_no_empty_result"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_no_scrap_tiger"
+                    app:layout_constraintBottom_toTopOf="@+id/txt_address_empty"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_address_result_title"
+                    app:layout_constraintVertical_bias="0.22000003"
+                    app:layout_constraintVertical_chainStyle="packed"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/txt_address_empty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:text="검색 결과가 없습니다.\n검색어를 다시 한 번 확인해주세요."
+                    android:textColor="@color/colorDarkGrey"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/img_no_empty_result"
+                    app:layout_constraintStart_toStartOf="@+id/img_no_empty_result"
+                    app:layout_constraintTop_toBottomOf="@+id/img_no_empty_result"
+                    android:visibility="gone"/>
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
