@@ -30,17 +30,11 @@ class PhotoReviewRecyclerview() : RecyclerView.Adapter<PhotoReviewRecyclerview.V
         notifyDataSetChanged()
     }
 
-    override fun getItemCount(): Int {
-        return if(data.size > 6){
-            6
-        } else {
-            data.size
-        }
-    }
+    override fun getItemCount(): Int = data.size
 
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if(position == 5){
+        if(position == data.size){
             holder.bind2(data[position])
         } else {
             holder.bind(data[position])

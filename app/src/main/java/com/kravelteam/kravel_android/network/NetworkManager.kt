@@ -51,6 +51,18 @@ class NetworkManager(authManager: AuthManager) {
 
     fun requestMediaList() = retrofit.requestMediaList()
 
+    fun requestCelebDetail(
+        id: Int
+    ) = retrofit.requestCelebDetail(id)
+
+    fun requestMediaDetail(
+        id: Int
+    ) = retrofit.requestMediaDetail(id)
+
+    fun requestMediaPhotoReview(
+        id: Int
+    ) = retrofit.requestMediaPhotoReview(id)
+
     fun getPlaceList(
         latitude : Double,
         longitude : Double

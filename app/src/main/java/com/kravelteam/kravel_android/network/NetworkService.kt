@@ -42,6 +42,10 @@ interface NetworkService {
     /**
      * 셀럽 상세
      */
+    @GET("/api/celebrities/{id}")
+    fun requestCelebDetail(
+        @Path("id") id: Int
+    ) : Call<BaseResponse<CelebDetailResponse>>
 
     /**
      * 셀럽 상세 - 포토 리뷰
@@ -56,6 +60,24 @@ interface NetworkService {
      */
     @GET("/api/medias")
     fun requestMediaList() : Call<BaseResponse<List<MediaResponse>>>
+
+    /**
+     * 미디어 상세
+     *
+     */
+    @GET("/api/medias/{id}")
+    fun requestMediaDetail(
+        @Path("id") id: Int
+    ) : Call<BaseResponse<MediaDetailResponse>>
+
+    /**
+     * 미디어 상세 - 포토 리뷰
+     *
+     */
+    @GET("/api/medias/{id}/reviews")
+    fun requestMediaPhotoReview(
+        @Path("id") id: Int
+    ) : Call<BaseResponse<CelebPhotoReviewResponse>>
 
     /**
      * 장소

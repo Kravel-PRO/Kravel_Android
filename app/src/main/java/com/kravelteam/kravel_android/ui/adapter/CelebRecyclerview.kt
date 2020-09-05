@@ -45,6 +45,7 @@ class CelebRecyclerview() : RecyclerView.Adapter<CelebRecyclerview.ViewHolder>()
             itemView.setOnDebounceClickListener {
                 Intent(KravelApplication.GlobalApp,SearchDetailActivity::class.java).apply {
                     putExtra("id",item.celebrityId)
+                    putExtra("part","celeb")
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 }.run { KravelApplication.GlobalApp.startActivity(this) }
             }
