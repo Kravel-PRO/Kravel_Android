@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.Handler
+import android.os.Message
 import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
@@ -63,6 +64,7 @@ import kotlinx.android.synthetic.main.fragment_map_info.*
 import kotlinx.android.synthetic.main.fragment_user.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
+import java.net.URL
 
 
 class MapViewFragment : Fragment(),OnMapReadyCallback{
@@ -305,6 +307,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
                 cl_bottom_sheet_map_detail.txt_map_detail_bus_content.text = it.data.result.bus
                 cl_bottom_sheet_map_detail.txt_map_detail_subway_content.text = it.data.result.subway
                 initPhotoReview("BOTTOM_D",placeId)
+                initNearPlaceRecycler(it.data.result.latitude,it.data.result.longitude)
 
             },
             onFailure = {
@@ -316,6 +319,42 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
             }
         )
     }
+    private fun initNearPlaceRecycler(latitude: Double, longitude: Double) {
+        /**
+         * latitude, longitude 로 바꿔주기
+         */
+
+        cl_bottom_sheet_map_detail.rv_map_detail_near_place.apply {
+            adapter = nearplaceAdapter
+            addItemDecoration(HorizontalItemDecorator(12))
+        }
+
+        val handler: Handler = object : Handler() {
+            override fun handleMessage(msg: Message?) {
+                var url: URL = URL(
+                    "http://api.visitkorea.or.kr/openapi/service/rest/KorService/locationBasedList?&MobileOS=AND&MobileApp=Kravel&radius=1000"
+                            + "&ServiceKey=" + resources.getString(R.string.open_api_kor_place)
+                            + "&mapX=126.981611&mapY=37.568477"
+                )
+                //                + "&mapX="+longitude.toString()+"&mapY="+latitude.toString())
+
+                val parserHandler = XmlPullParserHandler()
+                val neardatas = parserHandler.parse(url.openStream())
+
+                nearplaceAdapter.initData(neardatas)
+                nearplaceAdapter.notifyDataSetChanged()
+            }
+        }
+
+
+        object : Thread() {
+            override fun run() {
+                val msg = handler.obtainMessage()
+                handler.sendMessage(msg)
+            }
+        }.start()
+    }
+
     private fun initAnimation() {
 
         animMapInfo.apply {

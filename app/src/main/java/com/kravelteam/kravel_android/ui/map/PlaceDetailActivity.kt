@@ -1,16 +1,14 @@
 package com.kravelteam.kravel_android.ui.map
 
-import android.R.attr.data
 import android.app.Activity
 import android.content.Intent
-import android.os.Bundle
+import android.os.*
 import androidx.appcompat.app.AppCompatActivity
 import com.kravelteam.kravel_android.KravelApplication.Companion.GlobalApp
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.GlideApp
 import com.kravelteam.kravel_android.common.HorizontalItemDecorator
 import com.kravelteam.kravel_android.common.VerticalItemDecorator
-import com.kravelteam.kravel_android.data.mock.MapNearPlaceData
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.HashTagRecyclerView
 import com.kravelteam.kravel_android.ui.adapter.MapNearPlaceRecyclerview
@@ -26,13 +24,11 @@ import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import kotlinx.android.synthetic.main.activity_place_detail.*
 import org.koin.android.ext.android.inject
-import org.xmlpull.v1.XmlPullParser
-import org.xmlpull.v1.XmlPullParserFactory
 import timber.log.Timber
 import java.net.URL
 
 
-class PlaceDetailActivity : AppCompatActivity() , OnMapReadyCallback {
+class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
     private val hashtagAdapter : HashTagRecyclerView by lazy { HashTagRecyclerView() }
     private val photoAdapter : PhotoReviewRecyclerview by lazy {PhotoReviewRecyclerview()}
     private val nearplaceAdapter : MapNearPlaceRecyclerview by lazy { MapNearPlaceRecyclerview() } //BottomSheet
@@ -42,12 +38,14 @@ class PlaceDetailActivity : AppCompatActivity() , OnMapReadyCallback {
     private var latitude : Double = 0.0
     private var longitude : Double = 0.0
 
-    val datas = mutableListOf<MapNearPlaceData>()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_place_detail)
 
+        if (Build.VERSION.SDK_INT > 9) {
+            val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
+            StrictMode.setThreadPolicy(policy)
+        }
         placeId = intent.getIntExtra("placeId", 0)
         setResult(Activity.RESULT_OK)
         img_map_detail_arrow.setOnClickListener {
@@ -94,71 +92,38 @@ class PlaceDetailActivity : AppCompatActivity() , OnMapReadyCallback {
 
     }
     private fun initNearPlaceRecycler(latitude: Double, longitude: Double) {
-        getXmlData()
         rv_map_detail_near_place.apply {
             adapter = nearplaceAdapter
             addItemDecoration(HorizontalItemDecorator(12))
         }
 
-        nearplaceAdapter.initData(datas)
+        val handler: Handler = object : Handler() {
+            override fun handleMessage(msg: Message?) {
+                var url: URL = URL(
+                    "http://api.visitkorea.or.kr/openapi/service/rest/KorService/locationBasedList?&MobileOS=AND&MobileApp=Kravel&radius=1000"
+                            + "&ServiceKey=" + resources.getString(R.string.open_api_kor_place)
+                            + "&mapX=126.981611&mapY=37.568477"
+                )
+                //                + "&mapX="+longitude.toString()+"&mapY="+latitude.toString())
 
-    }
-    private fun getXmlData() {
-        var checkImage = false
-        var checkTitle = false
-        var title : String? = null
-        var image : String? = null
-        try {
-            var url: URL = URL(
-                "http://api.visitkorea.or.kr/openapi/service/rest/KorService/locationBasedList?&MobileOS=AND&MobileApp=Kravel&radius=1000"
-                        + "&ServiceKey=" + R.string.open_api_kor_place
-                        + "&mapX=126.981611&mapY=37.568477"
-            )
-//                + "&mapX="+longitude.toString()+"&mapY="+latitude.toString())
+                val parserHandler = XmlPullParserHandler()
+                val neardatas = parserHandler.parse(url.openStream())
 
-            val parseCreator: XmlPullParserFactory = XmlPullParserFactory.newInstance()
-            val parser: XmlPullParser = parseCreator.newPullParser()
-
-            parser.setInput(url.openStream(), null)
-
-            var parserEvent = parser.eventType
-
-            while (parserEvent != XmlPullParser.END_DOCUMENT) {
-                when (parserEvent) {
-                    XmlPullParser.START_TAG -> {
-                        if (parser.name.equals("title")) {
-                            checkTitle = true
-                        }
-                        if (parser.name.equals("firstimage")) {
-                            checkImage = true
-                        }
-                    }
-                    XmlPullParser.TEXT -> {
-                        if (checkTitle) {
-                            Timber.e("Title:::: ${parser.text}")
-                            title = parser.text
-                            checkTitle = false
-                        }
-                        if (checkImage) {
-                            Timber.e("Image:::: ${parser.text}")
-                            image = parser.text
-                            checkImage = false
-                        }
-                    }
-                    XmlPullParser.END_TAG -> {
-                        if (parser.name.equals("item")) {
-                            Timber.e("ddddd?")
-                            datas.add(MapNearPlaceData(image, title));
-                        }
-                    }
-                }
-                parserEvent = parser.next()
+                nearplaceAdapter.initData(neardatas)
+                nearplaceAdapter.notifyDataSetChanged()
             }
-        } catch (e: Exception) {
-            Timber.e("에러")
         }
+
+
+        object : Thread() {
+            override fun run() {
+                val msg = handler.obtainMessage()
+                handler.sendMessage(msg)
+            }
+        }.start()
     }
     private fun initMap() {
+
         val fm = supportFragmentManager
         val mapFragment = fm.findFragmentById(R.id.place_detail_map) as MapFragment?
             ?: MapFragment.newInstance().also {
@@ -212,4 +177,5 @@ class PlaceDetailActivity : AppCompatActivity() , OnMapReadyCallback {
         marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_focus)
 
     }
+
 }
