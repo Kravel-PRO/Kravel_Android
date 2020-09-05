@@ -20,7 +20,6 @@ class MapNearPlaceRecyclerview() : RecyclerView.Adapter<MapNearPlaceRecyclerview
 
     fun initData(data: List<MapNearPlaceData>){
         this.data = data
-        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
