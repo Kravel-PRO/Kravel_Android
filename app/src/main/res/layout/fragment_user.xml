@@ -26,6 +26,32 @@
                 android:text="dkdkdkdkdkk"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <TextView
+                android:id="@+id/txt_user_nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:fontFamily="@font/notosans_cjk_kr_bold"
+                android:text="oo님"
+                android:textColor="@color/colorWhite"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toTopOf="@+id/txt_user_explain"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.6"
+                app:layout_constraintVertical_chainStyle="packed" />
+
+            <TextView
+                android:id="@+id/txt_user_explain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mypageword"
+                android:textColor="@color/colorWhite"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/txt_user_nickname"
+                app:layout_constraintTop_toBottomOf="@+id/txt_user_nickname" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -70,7 +96,7 @@
                     android:id="@+id/txt_user_photo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="내 포토 리뷰"
+                    android:text="@string/myPhotoReview"
                     android:textColor="@color/colorBlack"
                     android:textSize="15sp"
                     android:layout_marginTop="6dp"
@@ -103,7 +129,7 @@
                     android:id="@+id/txt_user_scrap"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="스크랩"
+                    android:text="@string/scrap"
                     android:textColor="@color/colorBlack"
                     android:textSize="15sp"
                     android:layout_marginTop="6dp"
@@ -155,7 +181,7 @@
                     android:id="@+id/txt_user_update_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="내 정보 수정"
+                    android:text="@string/updateUserInfo"
                     android:textColor="@color/colorBlack"
                     android:textSize="15sp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -203,7 +229,7 @@
                     android:id="@+id/txt_user_update_pw"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="비밀번호 수정"
+                    android:text="@string/updatePw"
                     android:textColor="@color/colorBlack"
                     android:textSize="15sp"
                     app:layout_constraintHorizontal_bias="0.1"
@@ -251,7 +277,7 @@
                     android:id="@+id/txt_user_set_lang"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="언어 설정"
+                    android:text="@string/setLanguage"
                     android:textColor="@color/colorBlack"
                     android:textSize="15sp"
                     app:layout_constraintHorizontal_bias="0.1"
@@ -299,7 +325,7 @@
                     android:id="@+id/txt_user_report"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="제보하기"
+                    android:text="@string/report"
                     android:textColor="@color/colorBlack"
                     android:textSize="15sp"
                     app:layout_constraintHorizontal_bias="0.1"
@@ -347,7 +373,7 @@
                     android:id="@+id/txt_user_logout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="로그아웃"
+                    android:text="@string/logout"
                     android:textColor="@color/colorBlack"
                     android:textSize="15sp"
                     app:layout_constraintHorizontal_bias="0.1"

@@ -1,7 +1,9 @@
 package com.kravelteam.kravel_android.ui.search
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.kravelteam.kravel_android.KravelApplication
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.GlideApp
 import com.kravelteam.kravel_android.common.HorizontalItemDecorator
@@ -13,10 +15,12 @@ import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.PhotoReviewRecyclerview
 import com.kravelteam.kravel_android.ui.adapter.SearchDetailPlaceRecyclerview
 import com.kravelteam.kravel_android.util.safeEnqueue
+import com.kravelteam.kravel_android.util.startActivity
 import com.kravelteam.kravel_android.util.toast
 import kotlinx.android.synthetic.main.activity_search_detail.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
+import java.net.URL
 
 class SearchDetailActivity : AppCompatActivity() {
 
@@ -25,19 +29,33 @@ class SearchDetailActivity : AppCompatActivity() {
     private val networkManager : NetworkManager by inject()
 
     private var id : Int = 0
+    private var part : String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search_detail)
 
         id = intent.getIntExtra("id",0)
+        part = intent.getStringExtra("part")
+
         initRecycler()
+        initPlaceMoreBtn()
         initSetting()
     }
 
     private fun initSetting(){
-        GlideApp.with(this).load("https://6.vikiplatform.com/image/a11230e2d98d4a73825a4c10c8c6feb0.jpg?x=b&a=0x0&s=460x268&e=t&f=t&cb=1").into(img_search_detail_title)
         img_search_detail_back.setOnDebounceClickListener {
             finish()
+        }
+    }
+
+    private fun initPlaceMoreBtn(){
+        //7개 이상일 때 더보기 버튼 활성화
+        btn_search_detail_more.setOnDebounceClickListener {
+            Intent(KravelApplication.GlobalApp,PlaceMoreActivity::class.java).apply {
+                putExtra("id",id)
+                putExtra("part",part)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }.run { KravelApplication.GlobalApp.startActivity(this) }
         }
     }
 
@@ -47,35 +65,68 @@ class SearchDetailActivity : AppCompatActivity() {
             addItemDecoration(HorizontalItemDecorator(8))
             addItemDecoration(VerticalItemDecorator(16))
         }
-        placeAdapter.initData(
-            listOf(
-                DetailPlaceResponse("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나", arrayListOf("#tag")),
-                DetailPlaceResponse("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나", arrayListOf("#tag")),
-                DetailPlaceResponse("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나", arrayListOf("#tag")),
-                DetailPlaceResponse("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나", arrayListOf("#tag")),
-                DetailPlaceResponse("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나", arrayListOf("#tag")),
-                DetailPlaceResponse("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나", arrayListOf("#tag"))
+
+        if(part == "celeb"){ //셀럽 디테일 상세 정보
+            networkManager.requestCelebDetail(id).safeEnqueue(
+                onSuccess = {
+                    GlideApp.with(this).load(it.data.result.celebrity.imageUrl).into(img_search_detail_title)
+                    placeAdapter.initData(it.data.result.places)
+                },
+                onFailure = {},
+                onError = {}
             )
-        )
 
 
-        networkManager.getCelebPhotoReview(id).safeEnqueue(
-            onSuccess = {
-                rv_search_detail_photo_review.apply{
-                    adapter = photoAdapter
-                    addItemDecoration(HorizontalItemDecorator(4))
-                    addItemDecoration(VerticalItemDecorator(4))
+            networkManager.getCelebPhotoReview(id).safeEnqueue(
+                onSuccess = {
+                    rv_search_detail_photo_review.apply{
+                        adapter = photoAdapter
+                        addItemDecoration(HorizontalItemDecorator(4))
+                        addItemDecoration(VerticalItemDecorator(4))
+                    }
+                    if(!it.data.result.reviews.isNullOrEmpty()) {
+                        photoAdapter.initData(it.data.result!!.reviews)
+                    }
+                },
+                onFailure = {
+                    toast("실패")
+                },
+                onError = {
+                    Timber.e("$it")
                 }
-                if(!it.data.result.reviews.isNullOrEmpty()) {
-                    photoAdapter.initData(it.data.result!!.reviews)
+            )
+        } else { //미디어 디테일 상세 정보
+            networkManager.requestMediaDetail(id).safeEnqueue(
+                onSuccess = {
+                    GlideApp.with(this).load(it.data.result.media.imageUrl).into(img_search_detail_title)
+                    placeAdapter.initData(it.data.result.places)
+                },
+                onFailure = {},
+                onError = {}
+            )
+
+
+            networkManager.requestMediaPhotoReview(id).safeEnqueue(
+                onSuccess = {
+                    rv_search_detail_photo_review.apply{
+                        adapter = photoAdapter
+                        addItemDecoration(HorizontalItemDecorator(4))
+                        addItemDecoration(VerticalItemDecorator(4))
+                    }
+                    val data = it.data.result.reviews
+                    data.isNullOrEmpty().let {
+                        photoAdapter.initData(data)
+                    }
+                },
+                onFailure = {
+                    toast("실패")
+                },
+                onError = {
+                    Timber.e("$it")
                 }
-            },
-            onFailure = {
-                toast("실패")
-            },
-            onError = {
-                Timber.e("$it")
-            }
-        )
+            )
+        }
+
+
     }
 }

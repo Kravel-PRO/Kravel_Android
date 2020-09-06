@@ -33,16 +33,18 @@ class SearchDetailPlaceRecyclerview() : RecyclerView.Adapter<SearchDetailPlaceRe
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val img : ImageView = itemView.findViewById(R.id.img_search_detail_place)
-        private val view : View = itemView.findViewById(R.id.gradient)
         private val txtPlace : TextView = itemView.findViewById(R.id.txt_search_detail_place)
         private val txtTag : TextView = itemView.findViewById(R.id.txt_search_detail_place_tag)
 
         fun bind(item: DetailPlaceResponse){
-            GlideApp.with(itemView).load(item.img).into(img)
+            GlideApp.with(itemView).load(item.imageUrl).into(img)
             img.setRound(10.dpToPx().toFloat())
-            view.setRound(10.dpToPx().toFloat())
-            txtPlace.text = item.place
-            txtTag.text = item.tag[0]
+            txtPlace.text = item.title
+            var tags = ""
+            item.celebrities.forEach {
+                tags += "#$it "
+            }
+            txtTag.text = tags
         }
     }
 }

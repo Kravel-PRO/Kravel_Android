@@ -37,6 +37,7 @@ class NetworkManager(authManager: AuthManager) {
     private var kakaoRetrofit = Retrofit.Builder()
         .baseUrl("https://dapi.kakao.com")
         .addConverterFactory(GsonConverterFactory.create())
+        .client(builder)
         .build()
         .create(NetworkService::class.java)
 
@@ -54,6 +55,18 @@ class NetworkManager(authManager: AuthManager) {
     fun requestCelebList() = retrofit.requestCelebList()
 
     fun requestMediaList() = retrofit.requestMediaList()
+
+    fun requestCelebDetail(
+        id: Int
+    ) = retrofit.requestCelebDetail(id)
+
+    fun requestMediaDetail(
+        id: Int
+    ) = retrofit.requestMediaDetail(id)
+
+    fun requestMediaPhotoReview(
+        id: Int
+    ) = retrofit.requestMediaPhotoReview(id)
 
     fun getPlaceList(
         latitude : Double,
@@ -77,6 +90,10 @@ class NetworkManager(authManager: AuthManager) {
     fun getPlaceReview(
         placeId : Int
     ) = retrofit.getPlaceReview(placeId)
+
+    fun requestMyScrap() = retrofit.requestMyScrap()
+
+    fun requestMyPhotoReviews() = retrofit.requestMyPhotoReviews()
 
     fun getMapMarkerList(
         latitude : Double,

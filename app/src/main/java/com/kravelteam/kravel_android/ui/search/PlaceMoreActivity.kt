@@ -1,4 +1,4 @@
-package com.kravelteam.kravel_android.ui.mypage
+package com.kravelteam.kravel_android.ui.search
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -6,50 +6,44 @@ import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.HorizontalItemDecorator
 import com.kravelteam.kravel_android.common.VerticalItemDecorator
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
-import com.kravelteam.kravel_android.data.response.MyScrapData
+import com.kravelteam.kravel_android.data.response.DetailPlaceResponse
 import com.kravelteam.kravel_android.network.NetworkManager
-import com.kravelteam.kravel_android.ui.adapter.ScrapRecyclerview
+import com.kravelteam.kravel_android.ui.adapter.SearchDetailPlaceRecyclerview
 import com.kravelteam.kravel_android.util.safeEnqueue
-import com.kravelteam.kravel_android.util.toast
-import kotlinx.android.synthetic.main.activity_scrap.*
+import kotlinx.android.synthetic.main.activity_place_more.*
 import org.koin.android.ext.android.inject
 
-class ScrapActivity : AppCompatActivity() {
+class PlaceMoreActivity : AppCompatActivity() {
 
-    private val scrapAdapter: ScrapRecyclerview by lazy { ScrapRecyclerview() }
+    private val placeAdapter: SearchDetailPlaceRecyclerview by lazy { SearchDetailPlaceRecyclerview() }
     private val networkManager : NetworkManager by inject()
+
+    private var id : Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_scrap)
+        setContentView(R.layout.activity_place_more)
 
+        id = intent.getIntExtra("id",0)
         initRecycler()
-        initSetting()
-    }
-
-    private fun initSetting(){
-        img_scrap_back.setOnDebounceClickListener {
+        img_place_more_back.setOnDebounceClickListener {
             finish()
         }
     }
 
     private fun initRecycler(){
-        rv_scrap.apply {
-            adapter = scrapAdapter
+        rv_place_more.apply {
+            adapter = placeAdapter
             addItemDecoration(HorizontalItemDecorator(8))
             addItemDecoration(VerticalItemDecorator(16))
         }
 
-        networkManager.requestMyScrap().safeEnqueue(
+        networkManager.requestCelebDetail(id).safeEnqueue(
             onSuccess = {
-                scrapAdapter.initData(it.data.result.content)
+                placeAdapter.initData(it.data.result.places)
             },
-            onFailure = {
-                toast("실패")
-            },
-            onError = {
-                toast("에러")
-            }
+            onFailure = {},
+            onError = {}
         )
     }
 }

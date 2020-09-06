@@ -14,7 +14,7 @@ interface NetworkService {
      */
     @GET("/v2/local/search/keyword.json")
     fun requestSearchAddress(
-        @Header("Authorization")  token : String,
+        @Header("Authorization") token : String,
         @Query("query") query: String
     ) : Call<AddressResponse>
 
@@ -24,7 +24,7 @@ interface NetworkService {
     @POST("/auth/sign-in")
     fun requestLogin(
         @Body data : LoginRequest
-    ) : Call<BaseResponse<LoginResponse>>
+    ) : Call<Unit>
 
     /**
      * 회원가입
@@ -43,6 +43,10 @@ interface NetworkService {
     /**
      * 셀럽 상세
      */
+    @GET("/api/celebrities/{id}")
+    fun requestCelebDetail(
+        @Path("id") id: Int
+    ) : Call<BaseResponse<CelebDetailResponse>>
 
     /**
      * 셀럽 상세 - 포토 리뷰
@@ -57,6 +61,24 @@ interface NetworkService {
      */
     @GET("/api/medias")
     fun requestMediaList() : Call<BaseResponse<List<MediaResponse>>>
+
+    /**
+     * 미디어 상세
+     *
+     */
+    @GET("/api/medias/{id}")
+    fun requestMediaDetail(
+        @Path("id") id: Int
+    ) : Call<BaseResponse<MediaDetailResponse>>
+
+    /**
+     * 미디어 상세 - 포토 리뷰
+     *
+     */
+    @GET("/api/medias/{id}/reviews")
+    fun requestMediaPhotoReview(
+        @Path("id") id: Int
+    ) : Call<BaseResponse<CelebPhotoReviewResponse>>
 
     /**
      * 장소
@@ -116,6 +138,17 @@ interface NetworkService {
         @Query("sort") sort : String
     ) : Call<BaseResponse<PhotoReviewResponse>>
 
+    /**
+     * 내 스크랩 정보
+     */
+    @GET("/api/member/scraps")
+    fun requestMyScrap() : Call<BaseResponse<MyScrapResponse>>
+
+    /**
+     * 내 포토 리뷰
+     */
+    @GET("/api/member/reviews")
+    fun requestMyPhotoReviews() : Call<BaseResponse<MyPhotoReviewResponse>>
     /**
      * 장소 상세 - 스크랩
      */

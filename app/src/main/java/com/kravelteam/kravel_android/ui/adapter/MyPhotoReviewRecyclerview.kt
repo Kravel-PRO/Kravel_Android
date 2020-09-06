@@ -7,12 +7,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.GlideApp
-import com.kravelteam.kravel_android.data.response.MyPhotoReviewResponse
+import com.kravelteam.kravel_android.data.response.MyPhotoReviewData
 import com.kravelteam.kravel_android.util.inflate
 
-class MyPhotoReviewRecyclerview (): RecyclerView.Adapter<MyPhotoReviewRecyclerview.ViewHolder>(){
+class MyPhotoReviewRecyclerview: RecyclerView.Adapter<MyPhotoReviewRecyclerview.ViewHolder>(){
 
-    private var data: List<MyPhotoReviewResponse> = emptyList()
+    private var data: List<MyPhotoReviewData> = emptyList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
             = ViewHolder(parent.inflate(R.layout.item_my_photo_review))
@@ -24,7 +24,7 @@ class MyPhotoReviewRecyclerview (): RecyclerView.Adapter<MyPhotoReviewRecyclervi
         holder.setIsRecyclable(false)
     }
 
-    fun initData(data: List<MyPhotoReviewResponse>){
+    fun initData(data: List<MyPhotoReviewData>){
         this.data = data
         notifyDataSetChanged()
     }
@@ -35,11 +35,11 @@ class MyPhotoReviewRecyclerview (): RecyclerView.Adapter<MyPhotoReviewRecyclervi
         private val txtYear : TextView = itemView.findViewById(R.id.txt_my_photo_review_year)
         private val txtLike : TextView = itemView.findViewById(R.id.txt_my_photo_review_like_count)
 
-        fun bind(item: MyPhotoReviewResponse){
-            GlideApp.with(itemView).load(item.imgUrl).into(img)
-            txtPlaceName.text = item.placeName
+        fun bind(item: MyPhotoReviewData){
+            GlideApp.with(itemView).load(item.imageUrl).into(img)
+            txtPlaceName.text = item.title
             txtYear.text = item.year
-            txtLike.text = item.like.toString()
+            txtLike.text = item.likeCount.toString()
         }
     }
 }

@@ -27,8 +27,7 @@ import com.kravelteam.kravel_android.KravelApplication
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.GlideApp
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
-import com.kravelteam.kravel_android.util.dpToPx
-import com.kravelteam.kravel_android.util.setRound
+import com.kravelteam.kravel_android.util.*
 import kotlinx.android.synthetic.main.activity_camera.*
 import timber.log.Timber
 import java.io.File
@@ -67,6 +66,11 @@ class CameraActivity : AppCompatActivity(){
         cameraExecutor = Executors.newSingleThreadExecutor()
 
         galleryPreview()
+        initSelectConcept()
+
+        img_camera_cancel.setOnDebounceClickListener {
+            finish()
+        }
     }
 
     private fun galleryPreview(){
@@ -190,6 +194,25 @@ class CameraActivity : AppCompatActivity(){
             } catch(exc: Exception) {}
 
         }, ContextCompat.getMainExecutor(this))
+    }
+
+    private fun initSelectConcept(){
+        txt_camera_unselect_basic.setOnDebounceClickListener {
+            txt_camera_unselect_basic.setInvisible()
+            txt_camera_unselect_concept.setVisible()
+            txt_camera_select.text = "일반"
+            img_camera_concept_ill.setGone()
+            cl_camera_concept_example.setGone()
+            txt_camera_concept_example.setGone()
+        }
+        txt_camera_unselect_concept.setOnDebounceClickListener {
+            txt_camera_unselect_concept.setInvisible()
+            txt_camera_unselect_basic.setVisible()
+            txt_camera_select.text = "기생충"
+            img_camera_concept_ill.setVisible()
+            cl_camera_concept_example.setVisible()
+            txt_camera_concept_example.setVisible()
+        }
     }
 
     override fun onRequestPermissionsResult(

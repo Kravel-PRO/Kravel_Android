@@ -182,7 +182,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <TextView
+                    <EditText
                         android:id="@+id/edt_report_place_explain"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -218,7 +218,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <mabbas007.tagsedittext.TagsEditText
+                    <EditText
                         android:id="@+id/edt_report_place_tag"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -232,9 +232,7 @@
                         android:textColorHint="@color/colorDarkGrey"
                         android:textSize="15sp"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/txt_report_place_tag_title"
-                        app:tagsCloseImageRight="@drawable/btn_delete"
-                        app:tagsTextColor="@color/colorBlack" />
+                        app:layout_constraintTop_toBottomOf="@+id/txt_report_place_tag_title" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -302,13 +300,12 @@
                         android:id="@+id/img_report_upload_photo"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
-                        android:layout_marginTop="12dp"
                         android:visibility="gone"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintBottom_toBottomOf="@id/cl_report_img_upload"
                         app:layout_constraintDimensionRatio="1:1"
                         app:layout_constraintEnd_toEndOf="@id/cl_report_img_upload"
                         app:layout_constraintStart_toStartOf="@id/cl_report_img_upload"
-                        app:layout_constraintTop_toBottomOf="@id/txt_report_place_photo_title" />
+                        app:layout_constraintTop_toTopOf="@id/cl_report_img_upload" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

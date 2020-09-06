@@ -17,7 +17,7 @@ import com.kravelteam.kravel_android.network.AuthManager
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.main.MainActivity
 import com.kravelteam.kravel_android.ui.signup.SignUpActivity
-import com.kravelteam.kravel_android.util.safeEnqueue
+import com.kravelteam.kravel_android.util.safeLoginEnqueue
 import com.kravelteam.kravel_android.util.startActivity
 import com.kravelteam.kravel_android.util.toast
 import kotlinx.android.synthetic.main.activity_login.*
@@ -64,9 +64,9 @@ class LoginActivity : AppCompatActivity() {
                 loginEmail = edt_login_email.text.toString(),
                 loginPw = edt_login_pw.text.toString()
             )
-            networkManager.requestLogin(loginData).safeEnqueue(
+            networkManager.requestLogin(loginData).safeLoginEnqueue(
                 onSuccess = {
-                    val token = it.data.result.token
+                    val token = it
                     authManager.apply {
                         this.token = token
                         autoLogin = true

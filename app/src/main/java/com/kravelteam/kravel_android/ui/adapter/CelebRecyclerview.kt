@@ -15,6 +15,7 @@ import com.kravelteam.kravel_android.data.response.CelebResponse
 import com.kravelteam.kravel_android.data.response.MediaResponse
 import com.kravelteam.kravel_android.ui.search.SearchDetailActivity
 import com.kravelteam.kravel_android.util.inflate
+import java.net.URL
 
 class CelebRecyclerview() : RecyclerView.Adapter<CelebRecyclerview.ViewHolder>() {
 
@@ -44,11 +45,12 @@ class CelebRecyclerview() : RecyclerView.Adapter<CelebRecyclerview.ViewHolder>()
             itemView.setOnDebounceClickListener {
                 Intent(KravelApplication.GlobalApp,SearchDetailActivity::class.java).apply {
                     putExtra("id",item.celebrityId)
+                    putExtra("part","celeb")
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 }.run { KravelApplication.GlobalApp.startActivity(this) }
             }
-            //GlideApp.with(itemView).load(item.imgUrl).apply(RequestOptions.circleCropTransform()).into(img)
-            GlideApp.with(itemView).load("https://www.instagram.com/p/B20TsJegiq4/media/?size=l").apply(RequestOptions.circleCropTransform()).into(img)
+            GlideApp.with(itemView).load(item.imageUrl).apply(RequestOptions.circleCropTransform()).into(img)
+
             txtName.text = item.celebrityName
             txtYear.visibility = View.GONE
         }

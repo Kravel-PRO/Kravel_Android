@@ -5,10 +5,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.kravelteam.kravel_android.R
+import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.response.AddressData
 import com.kravelteam.kravel_android.util.inflate
 
-class AddressRecyclerview : RecyclerView.Adapter<AddressRecyclerview.ViewHolder>(){
+class AddressRecyclerview(val onFinish: (address: String) -> Unit) : RecyclerView.Adapter<AddressRecyclerview.ViewHolder>(){
 
     private var data: List<AddressData> = emptyList()
 
@@ -35,6 +36,10 @@ class AddressRecyclerview : RecyclerView.Adapter<AddressRecyclerview.ViewHolder>
         fun bind(item: AddressData){
             txtPlaceName.text = item.place_name
             txtPlaceAddress.text = item.address_name
+
+            itemView.setOnDebounceClickListener {
+                onFinish(item.place_name)
+            }
         }
     }
 
