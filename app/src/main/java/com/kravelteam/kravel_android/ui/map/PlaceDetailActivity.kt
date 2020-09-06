@@ -9,6 +9,7 @@ import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.GlideApp
 import com.kravelteam.kravel_android.common.HorizontalItemDecorator
 import com.kravelteam.kravel_android.common.VerticalItemDecorator
+import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.request.ScrapBody
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.HashTagRecyclerView
@@ -16,6 +17,7 @@ import com.kravelteam.kravel_android.ui.adapter.MapNearPlaceRecyclerview
 import com.kravelteam.kravel_android.ui.adapter.PhotoReviewRecyclerview
 import com.kravelteam.kravel_android.util.networkErrorToast
 import com.kravelteam.kravel_android.util.safeEnqueue
+import com.kravelteam.kravel_android.util.startActivity
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.MapFragment
@@ -50,6 +52,16 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         }
         placeId = intent.getIntExtra("placeId", 0)
         setResult(Activity.RESULT_OK)
+
+        img_photo_review_edit.setOnDebounceClickListener {
+            Intent(GlobalApp,PostReviewActivity::class.java).apply{
+                putExtra("placeId",placeId)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }.run {
+                GlobalApp.startActivity(this)
+            }
+        }
+
         img_map_detail_arrow.setOnClickListener {
             finish()
         }

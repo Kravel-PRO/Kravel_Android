@@ -4,6 +4,7 @@ import com.kravelteam.kravel_android.data.request.LoginRequest
 import com.kravelteam.kravel_android.data.request.ScrapBody
 import com.kravelteam.kravel_android.data.request.SignUpRequest
 import com.kravelteam.kravel_android.data.response.*
+import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -139,6 +140,16 @@ interface NetworkService {
     ) : Call<BaseResponse<PhotoReviewResponse>>
 
     /**
+     * 장소에 대한 포토 리뷰 작성하기
+     */
+    @Multipart
+    @POST("/api/places/{placeId}/reviews")
+    fun requestPostPhotoReview(
+        @Path("placeId") id: Int,
+        @Part file: MultipartBody.Part?
+    ) : Call<BaseResponse<Int>>
+
+    /**
      * 내 스크랩 정보
      */
     @GET("/api/member/scraps")
@@ -149,6 +160,7 @@ interface NetworkService {
      */
     @GET("/api/member/reviews")
     fun requestMyPhotoReviews() : Call<BaseResponse<MyPhotoReviewResponse>>
+
     /**
      * 장소 상세 - 스크랩
      */

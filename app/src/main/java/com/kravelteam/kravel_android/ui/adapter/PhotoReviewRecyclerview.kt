@@ -51,15 +51,15 @@ class PhotoReviewRecyclerview() : RecyclerView.Adapter<PhotoReviewRecyclerview.V
         private val view: View = itemView.findViewById(R.id.view_img_background)
         private val txtMore : TextView = itemView.findViewById(R.id.txt_photo_more)
         fun bind(item: PhotoReviewData){
-            if(!item.imageUrl.isNullOrEmpty()) {
-                GlideApp.with(itemView).load(item.imageUrl).into(img)
+            if(!item.imageURl.isNullOrEmpty()) {
+                GlideApp.with(itemView).load(item.imageURl).into(img)
             }
             txtMore.setGone()
             view.setGone()
         }
         fun bind2(item: PhotoReviewData){
-            if(!item.imageUrl.isNullOrEmpty()) {
-                GlideApp.with(itemView).load(item.imageUrl).into(img)
+            if(!item.imageURl.isNullOrEmpty()) {
+                GlideApp.with(itemView).load(item.imageURl).into(img)
             }
             txtMore.setVisible()
             view.setVisible()

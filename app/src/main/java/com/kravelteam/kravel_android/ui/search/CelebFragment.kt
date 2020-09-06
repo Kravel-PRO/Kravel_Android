@@ -49,9 +49,7 @@ class CelebFragment : Fragment() {
 
         networkManager.requestCelebList().safeEnqueue(
             onSuccess = {
-                Timber.e(it.data.result[0].celebrityName)
-                celebAdapter.initData(it.data.result)
-
+                if(!it.data.result.isNullOrEmpty()) celebAdapter.initData(it.data.result)
             },
             onFailure = {
                 toast("실패")

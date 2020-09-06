@@ -48,7 +48,7 @@ class DramaFragment : Fragment() {
 
         networkManager.requestMediaList().safeEnqueue(
             onSuccess = {
-                dramaAdapter.initData(it.data.result)
+                if(!it.data.result.isNullOrEmpty()) dramaAdapter.initData(it.data.result)
             },
             onFailure = {
                 toast("실패")
@@ -57,14 +57,5 @@ class DramaFragment : Fragment() {
                 Timber.e("$it")
             }
         )
-//        celebAdapter.initData(
-//            listOf(
-//                CelebResponse("https://image.chosun.com/sitedata/image/202006/09/2020060902224_0.jpg","사이코지만 괜찮아",2020),
-//                CelebResponse("https://image.chosun.com/sitedata/image/202006/09/2020060902224_0.jpg","사이코지만 괜찮아",2020),
-//                CelebResponse("https://image.chosun.com/sitedata/image/202006/09/2020060902224_0.jpg","사이코지만 괜찮아",2020),
-//                CelebResponse("https://image.chosun.com/sitedata/image/202006/09/2020060902224_0.jpg","사이코지만 괜찮아",2020),
-//                CelebResponse("https://image.chosun.com/sitedata/image/202006/09/2020060902224_0.jpg","사이코지만 괜찮아",2020)
-//            )
-//        )
     }
 }

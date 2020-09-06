@@ -6,6 +6,7 @@ import com.kravelteam.kravel_android.data.request.ScrapBody
 import com.kravelteam.kravel_android.data.request.SignUpRequest
 import com.kravelteam.kravel_android.data.response.BaseResponse
 import com.kravelteam.kravel_android.data.response.MapResponse
+import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module
@@ -91,6 +92,11 @@ class NetworkManager(authManager: AuthManager) {
         placeId : Int
     ) = retrofit.getPlaceReview(placeId)
 
+    fun requestPostPhotoReview(
+        id: Int,
+        file: MultipartBody.Part?
+    ) = retrofit.requestPostPhotoReview(id,file)
+
     fun requestMyScrap() = retrofit.requestMyScrap()
 
     fun requestMyPhotoReviews() = retrofit.requestMyPhotoReviews()
@@ -106,8 +112,7 @@ class NetworkManager(authManager: AuthManager) {
     ) = retrofit.postScrap(placeId, data)
 
     private companion object {
-        const val BASE_URL ="http://ca0438124735.ngrok.io"
-//        const val BASE_URL = "http://15.164.118.217:8080"
+        const val BASE_URL = "http://15.164.118.217:8080"
 //        const val BASE_URL ="http://noah.is.kakaocorp.com"
     }
 }
