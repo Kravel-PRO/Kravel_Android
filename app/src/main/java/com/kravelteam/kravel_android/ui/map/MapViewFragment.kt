@@ -72,6 +72,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
     private var checkReset : Boolean = false
     private var nearLocation : LatLng? = null
     private var checkBottomSheet : Boolean = false
+    private var checkFirst : Boolean = true
     private val networkManager : NetworkManager by inject()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -675,8 +676,22 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
     override fun onMapReady(naverMap: NaverMap) {
         this.naverMap = naverMap
         naverMap.locationSource = locationSource
-        naverMap.locationTrackingMode = Follow
-        nearLocation = LatLng(naverMap.cameraPosition.target.latitude ,naverMap.cameraPosition.target.longitude)
+        naverMap.locationTrackingMode = NoFollow
+
+        naverMap.addOnLocationChangeListener {
+            if(checkFirst) {
+                if(checkArea(it.latitude,it.longitude)) {
+                    naverMap.locationTrackingMode = Follow
+                    Timber.e("제발")
+                }
+                else {
+                    nearLocation = LatLng(naverMap.cameraPosition.target.latitude ,naverMap.cameraPosition.target.longitude)
+                    initMarker(nearLocation!!.latitude,nearLocation!!.longitude)
+                    initRecycler(nearLocation!!.latitude,nearLocation!!.longitude)
+                }
+                checkFirst = false
+            }
+        }
 
         val locationOverlay = naverMap.locationOverlay
         locationOverlay.isVisible = true
@@ -692,12 +707,17 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
                 trackingmode = false
             }
             if(reason == CameraUpdate.REASON_LOCATION){
-                togglebtn_gps.isChecked = false
                 mLatitude = locationSource.lastLocation!!.latitude
                 mLongitude = locationSource.lastLocation!!.longitude
-                initMarker(mLatitude,mLongitude)
-                initRecycler(mLatitude,mLongitude)
-                trackingmode = false
+                if(checkArea(mLatitude,mLongitude)) {
+                    togglebtn_gps.isChecked = false
+                    initMarker(mLatitude,mLongitude)
+                    initRecycler(mLatitude,mLongitude)
+                    trackingmode = false
+                } else {
+                    naverMap.locationTrackingMode = None
+                }
+
             }
 
             if(reason == CameraUpdate.REASON_GESTURE || reason == CameraUpdate.REASON_LOCATION) {
