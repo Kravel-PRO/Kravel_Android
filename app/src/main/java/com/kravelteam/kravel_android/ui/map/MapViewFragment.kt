@@ -1,15 +1,9 @@
 package com.kravelteam.kravel_android.ui.map
 
-import android.annotation.SuppressLint
-import android.app.Activity
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
-import android.content.res.Resources
 import android.graphics.Color
-import android.graphics.Color.*
 import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
 import android.location.LocationManager
 import android.os.*
 import android.provider.Settings
@@ -19,13 +13,9 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.airbnb.lottie.LottieAnimationView
-import com.bumptech.glide.load.engine.Resource
-import com.bumptech.glide.load.engine.bitmap_recycle.IntegerArrayAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.kravelteam.kravel_android.KravelApplication
 import com.kravelteam.kravel_android.KravelApplication.Companion.GlobalApp
 import com.kravelteam.kravel_android.R
@@ -33,11 +23,7 @@ import com.kravelteam.kravel_android.common.GlideApp
 import com.kravelteam.kravel_android.common.HorizontalItemDecorator
 import com.kravelteam.kravel_android.common.VerticalItemDecorator
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
-import com.kravelteam.kravel_android.data.mock.HashTagData
-import com.kravelteam.kravel_android.data.mock.MapNearPlaceData
-import com.kravelteam.kravel_android.data.mock.NearPlaceData
-import com.kravelteam.kravel_android.data.mock.PlaceInformationData
-import com.kravelteam.kravel_android.data.response.PhotoResponse
+import com.kravelteam.kravel_android.data.request.ScrapBody
 import com.kravelteam.kravel_android.data.response.PlaceContentResponse
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.*
@@ -45,21 +31,19 @@ import com.kravelteam.kravel_android.util.*
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.LocationTrackingMode.*
-import com.naver.maps.map.overlay.LocationOverlay
 import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_place_detail.*
 import kotlinx.android.synthetic.main.bottom_sheet_place.*
 import kotlinx.android.synthetic.main.bottom_sheet_place.view.*
 import kotlinx.android.synthetic.main.dialog_gps_permission.view.*
 import kotlinx.android.synthetic.main.dialog_service_warning.view.*
-import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.rv_home_photo_review
 import kotlinx.android.synthetic.main.fragment_map.*
 import kotlinx.android.synthetic.main.fragment_map_info.*
-import kotlinx.android.synthetic.main.fragment_user.*
+import kotlinx.android.synthetic.main.fragment_map_info.view.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 import java.net.URL
@@ -69,7 +53,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
     private lateinit var locationSource : FusedLocationSource
     private lateinit var mapFragment: MapFragment
     private var trackingmode : Boolean = false
-    private var markerClick : Boolean = false
+    private var preMarker : Marker? = null
     private lateinit var naverMap : NaverMap
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var bottomSheetDetailBehavior : BottomSheetBehavior<ConstraintLayout>
@@ -77,14 +61,13 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
     private lateinit var root: View
     private  var mLatitude : Double = 0.0
     private var mLongitude : Double = 0.0
-
-    private var markerList = mutableListOf<MarkerClick>()
+    private var markerList = mutableListOf<TagMarkerData>()
     private val nearplaceAdapter : MapNearPlaceRecyclerview by lazy { MapNearPlaceRecyclerview() } //BottomSheet_Detail
     private val photoAdapter : PhotoReviewRecyclerview by lazy { PhotoReviewRecyclerview() } //BottomSheet
     private val hashtagAdapter : HashTagRecyclerView by lazy { HashTagRecyclerView() } //BottomSheet
-
-
     private val nearAdapter: MapPlaceRecyclerview by lazy { MapPlaceRecyclerview() }
+    private var checkScrap : Boolean = false // BottomSheet
+    private var checkScrapD : Boolean = false //BottomSheet_Detail
 
     private val networkManager : NetworkManager by inject()
     override fun onCreateView(
@@ -158,7 +141,13 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
             show()
         }
     }
-    private fun initBottomSheet(marker: Marker, placeId : Int) {
+    private fun initBottomSheet(marker: Marker) {
+
+        val markerInfo : TagMarkerData = marker!!.tag as TagMarkerData
+        val placeId =  markerInfo.placeId
+
+        Timber.e("marker place ID :::::::::::::${markerInfo.placeId}")
+        Timber.e("marker place clickable :::::::::::::${markerInfo.markerClick}")
 
         networkManager.getPlaceDetailList(placeId).safeEnqueue (
             onSuccess = {
@@ -177,6 +166,10 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
                 }
                 hashtagAdapter.initData(it.data.result.tags)
                 initPhotoReview("BOTTOM",it.data.result.placeId)
+                checkScrap = it.data.result.scrap
+                if(checkScrap) {
+                    GlideApp.with(KravelApplication.GlobalApp).load(R.drawable.ic_scrap_fill).into(cl_bottom_seat_place.img_user_scrap)
+                }
 
             },
             onFailure = {
@@ -199,7 +192,8 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
                     BottomSheetBehavior.STATE_HIDDEN -> {
                         mapFragment.getMapAsync{naverMap ->
                             rv_map_near_place.setVisible()
-                            markerClick = false
+                            markerInfo.markerClick = false
+                            preMarker = null
                             marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_default)
                             cl_bottom_seat_place.setGone()
                             togglebtn_gps.setVisible()
@@ -225,6 +219,40 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
             }
         })
+
+        cl_bottom_seat_place.img_user_scrap.setOnDebounceClickListener {
+            if(checkScrap) {
+                Timber.e("checkScrap true -> false")
+                //checkScrap == TRUE
+                networkManager.postScrap(placeId, ScrapBody(false) ).safeEnqueue (
+                    onSuccess = {
+                        checkScrap = false
+                        GlideApp.with(GlobalApp).load(R.drawable.ic_scrap).into(cl_bottom_seat_place.img_user_scrap)
+                    }, onFailure = {
+                        Timber.e("실패")
+
+                    },
+                    onError = {
+                        networkErrorToast()
+                    })
+
+
+            } else {
+                Timber.e("checkScrap false -> true")
+                networkManager.postScrap(placeId, ScrapBody(true)).safeEnqueue (
+                    onSuccess = {
+                        checkScrap = true
+                        GlideApp.with(KravelApplication.GlobalApp).load(R.drawable.ic_scrap_fill).into(cl_bottom_seat_place.img_user_scrap)
+
+                    }, onFailure = {
+                        Timber.e("실패")
+
+                    },
+                    onError = {
+                        networkErrorToast()
+                    })
+            }
+        }
 
     }
 
@@ -271,7 +299,6 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
 
         cl_bottom_seat_place.setGone()
         cl_bottom_sheet_map_detail.setVisible()
-        bottomSheetDetailBehavior.setPeekHeight(Resources.getSystem().displayMetrics.heightPixels)
         bottomSheetDetailBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         bottomSheetDetailBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -279,7 +306,12 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
 
                 when(newState) {
                     BottomSheetBehavior.STATE_DRAGGING -> {}
-                    BottomSheetBehavior.STATE_COLLAPSED -> {}
+                    BottomSheetBehavior.STATE_COLLAPSED -> {
+                        cl_bottom_seat_place.setVisible()
+                        activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+                        (activity as AppCompatActivity).cl_main_bottom?.setVisible()
+                        cl_bottom_sheet_map_detail.setGone()
+                    }
                     BottomSheetBehavior.STATE_HALF_EXPANDED -> {
                         cl_bottom_seat_place.setVisible()
                         activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
@@ -313,6 +345,11 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
                 initPhotoReview("BOTTOM_D",placeId)
                 initNearPlaceRecycler(it.data.result.latitude,it.data.result.longitude)
 
+                checkScrapD = it.data.result.scrap
+                if(checkScrapD) {
+                    GlideApp.with(KravelApplication.GlobalApp).load(R.drawable.ic_scrap_fill).into(cl_bottom_sheet_map_detail.img_map_detail_scrap)
+                }
+
             },
             onFailure = {
                 Timber.e("실패")
@@ -322,6 +359,40 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
                 networkErrorToast()
             }
         )
+
+        cl_bottom_sheet_map_detail.img_map_detail_scrap.setOnDebounceClickListener {
+            if(checkScrapD) {
+                Timber.e("checkScrap true -> false")
+                //checkScrap == TRUE
+                networkManager.postScrap(placeId, ScrapBody(false) ).safeEnqueue (
+                    onSuccess = {
+                        checkScrapD = false
+                        GlideApp.with(GlobalApp).load(R.drawable.ic_scrap).into(cl_bottom_sheet_map_detail.img_map_detail_scrap)
+                    }, onFailure = {
+                        Timber.e("실패")
+
+                    },
+                    onError = {
+                        networkErrorToast()
+                    })
+
+
+            } else {
+                Timber.e("checkScrap false -> true")
+                networkManager.postScrap(placeId, ScrapBody(true)).safeEnqueue (
+                    onSuccess = {
+                        checkScrapD = true
+                        GlideApp.with(KravelApplication.GlobalApp).load(R.drawable.ic_scrap_fill).into(cl_bottom_sheet_map_detail.img_map_detail_scrap)
+
+                    }, onFailure = {
+                        Timber.e("실패")
+
+                    },
+                    onError = {
+                        networkErrorToast()
+                    })
+            }
+        }
     }
     private fun initNearPlaceRecycler(latitude: Double, longitude: Double) {
         cl_bottom_sheet_map_detail.rv_map_detail_near_place.apply {
@@ -385,7 +456,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
                     marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_focus)
 
                 }
-
+                return
             }
             "BOTTOM_D" -> {
                 val mapBottomFragment = fm.findFragmentById(R.id.place_detail_map) as MapFragment?
@@ -401,6 +472,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
                     marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_focus)
 
                 }
+                return
             }
         }
 
@@ -507,26 +579,43 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
                     val marker = com.naver.maps.map.overlay.Marker()
                     marker.position = LatLng(it.data.result.get(i).latitude, it.data.result.get(i).longitude)
                     marker.map = naverMap
+                    marker.tag = TagMarkerData(it.data.result.get(i).placeId, false)
+                   // Timber.e("marker.tag ::: ${marker.tag}")
                     marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_default)
-                    markerList.add(MarkerClick(i,marker,false))
+                    val listener = Overlay.OnClickListener { overlay ->
 
-                    marker.setOnClickListener { overlay ->
-                        if(!markerClick) {
-                            marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_focus)
-                            rv_map_near_place.setGone()
-                            initBottomSheet(marker,markerList.get(i).markerId)
-                            markerClick = true
+                        val markerData = marker.tag!! as TagMarkerData
+
+                        if(preMarker== null){
+                            if(!markerData.markerClick) {
+                                markerData.markerClick = true
+                                preMarker = marker
+                                marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_focus)
+                                rv_map_near_place.setGone()
+                                initBottomSheet(marker)
+                            }
                         } else {
-                            markerClick = false
-                            rv_map_near_place.setVisible()
-                            cl_bottom_seat_place.setGone()
-                            togglebtn_gps.setVisible()
-                            img_reset.setVisible()
-                            marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_default)
+                            if (preMarker == marker) {
+                                markerData.markerClick = false
+                                preMarker = null
+                                marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_default)
+                                rv_map_near_place.setVisible()
+                                cl_bottom_seat_place.setGone()
+                            } else {
+                                val preMarkerData = preMarker!!.tag!! as TagMarkerData
+                                preMarkerData.markerClick = false
+                                preMarker!!.icon =
+                                    OverlayImage.fromResource(R.drawable.ic_mark_default)
+                                markerData.markerClick = true
+                                marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_focus)
+                                preMarker = marker
+                                rv_map_near_place.setGone()
+                                initBottomSheet(marker)
+                            }
                         }
-
                         true
                     }
+                    marker.onClickListener = listener
 
                 }
 
@@ -544,10 +633,11 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
 
 
         naverMap.setOnMapClickListener { pointF, latLng ->
-            if(markerClick) {
-                markerClick = false
+            if(preMarker != null) {
+                preMarker!!.icon = OverlayImage.fromResource(R.drawable.ic_mark_default)
+                val preMarkerData = preMarker!!.tag as TagMarkerData
+                preMarkerData.markerClick = false
                 rv_map_near_place.setVisible()
-               // marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_default)
                 cl_bottom_seat_place.setGone()
                 togglebtn_gps.setVisible()
                 img_reset.setVisible()
@@ -570,5 +660,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
     }
 
 }
+
+
 
 
