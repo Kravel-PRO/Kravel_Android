@@ -38,7 +38,6 @@ class NetworkManager(authManager: AuthManager) {
     private var kakaoRetrofit = Retrofit.Builder()
         .baseUrl("https://dapi.kakao.com")
         .addConverterFactory(GsonConverterFactory.create())
-        .client(builder)
         .build()
         .create(NetworkService::class.java)
 
