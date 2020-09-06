@@ -27,16 +27,14 @@
         <activity android:name=".ui.search.PlaceMoreActivity"></activity>
         <activity android:name=".ui.mypage.AddressActivity" />
         <activity android:name=".ui.main.SplashActivity">
-
-        </activity>
-        <activity android:name=".ui.map.PostReviewActivity" />
-        <activity android:name=".ui.mypage.ScrapActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.map.PostReviewActivity" />
+        <activity android:name=".ui.mypage.ScrapActivity" />
         <activity android:name=".ui.mypage.MyPhotoReviewActivity" />
         <activity android:name=".ui.map.PlaceDetailActivity" />
         <activity android:name=".ui.mypage.ReportActivity" />

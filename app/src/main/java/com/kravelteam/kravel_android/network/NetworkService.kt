@@ -134,4 +134,10 @@ interface NetworkService {
     @GET("/api/member/scraps")
     fun requestMyScrap() : Call<BaseResponse<MyScrapResponse>>
 
+    /**
+     * 내 포토 리뷰
+     */
+    @GET("/api/member/reviews")
+    fun requestMyPhotoReviews() : Call<BaseResponse<MyPhotoReviewResponse>>
+
 }
