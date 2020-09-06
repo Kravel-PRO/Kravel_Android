@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.graphics.translationMatrix
 import androidx.fragment.app.Fragment
 import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -49,7 +50,7 @@ import timber.log.Timber
 import java.net.URL
 
 
-class MapViewFragment : Fragment(),OnMapReadyCallback{
+class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
     private lateinit var locationSource : FusedLocationSource
     private lateinit var mapFragment: MapFragment
     private var trackingmode : Boolean = false
@@ -68,7 +69,9 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
     private var checkScrap : Boolean = false // BottomSheet
     private var checkScrapD : Boolean = false //BottomSheet_Detail
     private var mapMarker : Marker? = null
-
+    private var checkReset : Boolean = false
+    private var nearLocation : LatLng? = null
+    private var checkBottomSheet : Boolean = false
     private val networkManager : NetworkManager by inject()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -106,15 +109,29 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
         }
 
         togglebtn_gps.setOnDebounceClickListener {
-            if(!trackingmode) {
-                trackingmode = true
-                naverMap.locationTrackingMode = Follow
+            if(checkArea(mLatitude,mLongitude)) {
+                if (!trackingmode) {
+                    trackingmode = true
+                    naverMap.locationTrackingMode = Follow
 
+                } else {
+                    trackingmode = false
+                    naverMap.locationTrackingMode = NoFollow
+                }
             } else {
-                trackingmode = false
-                naverMap.locationTrackingMode = NoFollow
+                togglebtn_gps.isChecked = false
+                initAreaWarningDailog()
             }
         }
+
+        img_reset.setOnClickListener {
+            if(!checkReset) {
+                Timber.e("CameraMove?")
+                initRecycler(nearLocation!!.latitude,nearLocation!!.longitude)
+                checkReset = true
+            }
+        }
+
 
 
         img_bottom_photo.setOnClickListener {
@@ -123,9 +140,24 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
         }
 
         init()
-        //initAreaWarningDailog()
-        initRecycler()
 
+    }
+    private fun checkArea(latitude: Double, longitude: Double) : Boolean {
+        var checkAreaBool = false
+        var checkLat = false
+        var checkLng = false
+        if(latitude in 33.0..43.0) {
+            checkLat = true
+        }
+        if(longitude in 124.0..132.0) {
+            checkLng = true
+        }
+
+        if(checkLat && checkLng) {
+            checkAreaBool = true
+        }
+
+        return checkAreaBool
     }
     private fun init() {
         cl_bottom_sheet_map_detail.rv_map_detail_hashtag.apply {
@@ -150,8 +182,10 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
             addItemDecoration(HorizontalItemDecorator(4))
         }
 
-
-
+        rv_map_near_place.apply {
+            adapter = nearAdapter
+            addItemDecoration(HorizontalItemDecorator(16))
+        }
 
     }
 
@@ -161,6 +195,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
         view.cl_area_warning_background.setBackgroundColor(Color.TRANSPARENT)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         view.btn_area_warning_ok setOnDebounceClickListener {
+            dialog.cancel()
         }
 
         dialog.apply {
@@ -170,15 +205,12 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
         }
     }
     private fun initBottomSheet(marker: Marker) {
-
         val markerInfo : TagMarkerData = marker!!.tag as TagMarkerData
         val placeId =  markerInfo.placeId
-
-        Timber.e("marker place ID :::::::::::::${markerInfo.placeId}")
-        Timber.e("marker place clickable :::::::::::::${markerInfo.markerClick}")
         if(mapMarker?.map !=null) {
             mapMarker?.map = null
         }
+        Timber.e("BottomSheetClick!!")
         networkManager.getPlaceDetailList(placeId).safeEnqueue (
             onSuccess = {
                 txt_bottom_title.text = it.data.result.title
@@ -186,6 +218,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
                 if(!it.data.result.imageUrl.isNullOrBlank()) {
                     GlideApp.with(img_bottom_place).load(it.data.result.imageUrl).into(img_bottom_place)
                 }
+                Timber.e("BottomSheetServer Connection!!")
                 // Round값 물어보기
                 img_bottom_place.setRound(10.dpToPx().toFloat())
 
@@ -251,6 +284,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
                         initAnimation()
                         activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
                         (activity as AppCompatActivity).cl_main_bottom?.setGone()
+                        checkBottomSheet = true
                         Handler().postDelayed({
                             initBottomSheetDetail(placeId)
                         }, 1500)
@@ -335,6 +369,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
     }
     private fun initBottomSheetDetail(placeId : Int) {
 
+
         if(mapMarker?.map !=null) {
             mapMarker?.map = null
         }
@@ -348,12 +383,14 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
                 when(newState) {
                     BottomSheetBehavior.STATE_DRAGGING -> {}
                     BottomSheetBehavior.STATE_COLLAPSED -> {
+                        checkBottomSheet = false
                         cl_bottom_seat_place.setVisible()
                         activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
                         (activity as AppCompatActivity).cl_main_bottom?.setVisible()
                         cl_bottom_sheet_map_detail.setGone()
                     }
                     BottomSheetBehavior.STATE_HALF_EXPANDED -> {
+                        checkBottomSheet = false
                         cl_bottom_seat_place.setVisible()
                         activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
                         (activity as AppCompatActivity).cl_main_bottom?.setVisible()
@@ -498,6 +535,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
 
     private fun initAnimation() {
 
+        img_bottom_bar.setGone()
         animMapInfo.apply {
             setAnimation("loading_map.json")
             playAnimation()
@@ -507,7 +545,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
         animMapInfoLottie.setVisible()
     }
 
-    private fun initRecycler() {
+    private fun initRecycler(latitude: Double, longitude: Double) {
         nearAdapter.setOnItemClickListener(object : MapPlaceRecyclerview.OnItemClickListener {
             override fun onItemClick(v: View, data: PlaceContentResponse, pos: Int) {
                 Intent(GlobalApp,PlaceDetailActivity::class.java).apply {
@@ -518,12 +556,9 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
             }
 
         })
-        networkManager.getPlaceList(mLatitude,mLongitude).safeEnqueue (
+        networkManager.getPlaceList(latitude, longitude).safeEnqueue (
             onSuccess = {
-                rv_map_near_place.apply {
-                    adapter = nearAdapter
-                    addItemDecoration(HorizontalItemDecorator(16))
-                }
+
 
                 nearAdapter.initData(it.data!!.result!!.content)
             },
@@ -536,78 +571,16 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
             }
         )
     }
-    /*
-    핸드폰 gps 가 꺼져있을 시 , gps를 키기위한 함수
-     */
-    private fun buildAlterMessageNoGPS() {
-        val dialog = androidx.appcompat.app.AlertDialog.Builder(requireActivity()).create()
-        val view = LayoutInflater.from(GlobalApp).inflate(R.layout.dialog_gps_permission, null)
-        view.cl_gps_transparent.setBackgroundColor(Color.TRANSPARENT)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        view.btn_gps_yes.setOnDebounceClickListener {
-            startActivityForResult(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS),11)
-        }
-        view.btn_gps_no.setOnDebounceClickListener {
-            dialog.cancel()
-        }
 
-        dialog.apply {
-            setView(view)
-            setCancelable(false)
-            show()
-        }
-
-    }
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-       if(locationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
-
-           mLatitude = locationSource.lastLocation!!.latitude
-           mLongitude = locationSource.lastLocation!!.longitude
-           if(!locationSource.isActivated) {
-               naverMap.locationTrackingMode = None
-           }
-           return
-       }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-    }
-
-
-
-
-    override fun onMapReady(naverMap: NaverMap) {
-        this.naverMap = naverMap
-        naverMap.locationSource = locationSource
-        naverMap.locationTrackingMode = Follow
-        val locationOverlay = naverMap.locationOverlay
-        locationOverlay.isVisible = true
-
-        val uiSettings = naverMap.uiSettings
-        uiSettings.isZoomControlEnabled = false
-
-
-
-        naverMap.addOnCameraChangeListener{reason,animated ->
-            if(reason == CameraUpdate.REASON_GESTURE) {
-                togglebtn_gps.isChecked = false
-                trackingmode = false
-//                Timber.e("CAMERAPOSITION:::latitude ${naverMap.cameraPosition.target.latitude}")
-//                Timber.e("CAMERAPOSITION:::longitude ${naverMap.cameraPosition.target.longitude}")
-
-            }
-        }
-
-        networkManager.getMapMarkerList(mLatitude,mLongitude).safeEnqueue (
+    private fun initMarker(latitude: Double, longitude: Double) {
+        networkManager.getMapMarkerList(latitude,longitude).safeEnqueue (
             onSuccess = {
                 for(i in 0..it.data.result.size-1) {
                     val marker = com.naver.maps.map.overlay.Marker()
                     marker.position = LatLng(it.data.result.get(i).latitude, it.data.result.get(i).longitude)
                     marker.map = naverMap
                     marker.tag = TagMarkerData(it.data.result.get(i).placeId, false)
-                   // Timber.e("marker.tag ::: ${marker.tag}")
+                    // Timber.e("marker.tag ::: ${marker.tag}")
                     marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_default)
                     val listener = Overlay.OnClickListener { overlay ->
 
@@ -656,7 +629,83 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
             }
 
         )
+    }
+    /*
+    핸드폰 gps 가 꺼져있을 시 , gps를 키기위한 함수
+     */
+    private fun buildAlterMessageNoGPS() {
+        val dialog = androidx.appcompat.app.AlertDialog.Builder(requireActivity()).create()
+        val view = LayoutInflater.from(GlobalApp).inflate(R.layout.dialog_gps_permission, null)
+        view.cl_gps_transparent.setBackgroundColor(Color.TRANSPARENT)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        view.btn_gps_yes.setOnDebounceClickListener {
+            startActivityForResult(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS),11)
+        }
+        view.btn_gps_no.setOnDebounceClickListener {
+            dialog.cancel()
+        }
 
+        dialog.apply {
+            setView(view)
+            setCancelable(false)
+            show()
+        }
+
+    }
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+       if(locationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
+
+           mLatitude = locationSource.lastLocation!!.latitude!!
+           mLongitude = locationSource.lastLocation!!.longitude!!
+           if(!locationSource.isActivated) {
+               naverMap.locationTrackingMode = None
+           }
+           return
+       }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+
+
+
+    override fun onMapReady(naverMap: NaverMap) {
+        this.naverMap = naverMap
+        naverMap.locationSource = locationSource
+        naverMap.locationTrackingMode = Follow
+        nearLocation = LatLng(naverMap.cameraPosition.target.latitude ,naverMap.cameraPosition.target.longitude)
+
+        val locationOverlay = naverMap.locationOverlay
+        locationOverlay.isVisible = true
+
+        val uiSettings = naverMap.uiSettings
+        uiSettings.isZoomControlEnabled = false
+
+        naverMap.addOnCameraChangeListener{reason,animated ->
+            if(reason == CameraUpdate.REASON_GESTURE) {
+                togglebtn_gps.isChecked = false
+                mLatitude = locationSource.lastLocation!!.latitude
+                mLongitude = locationSource.lastLocation!!.longitude
+                trackingmode = false
+            }
+            if(reason == CameraUpdate.REASON_LOCATION){
+                togglebtn_gps.isChecked = false
+                mLatitude = locationSource.lastLocation!!.latitude
+                mLongitude = locationSource.lastLocation!!.longitude
+                initMarker(mLatitude,mLongitude)
+                initRecycler(mLatitude,mLongitude)
+                trackingmode = false
+            }
+
+            if(reason == CameraUpdate.REASON_GESTURE || reason == CameraUpdate.REASON_LOCATION) {
+                nearLocation = LatLng(naverMap.cameraPosition.target.latitude ,naverMap.cameraPosition.target.longitude)
+                initMarker(nearLocation!!.latitude,nearLocation!!.longitude)
+                checkReset = false
+            }
+        }
 
 
         naverMap.setOnMapClickListener { pointF, latLng ->
@@ -684,8 +733,23 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         root.setVisible()
         animMapInfo.setGone()
+        img_bottom_bar.setVisible()
 
     }
+
+    override fun onBackPressed(): Boolean {
+        return if (checkBottomSheet) {
+            cl_bottom_seat_place.setVisible()
+            activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            (activity as AppCompatActivity).cl_main_bottom?.setVisible()
+            cl_bottom_sheet_map_detail.setGone()
+            checkBottomSheet = false
+            true
+        } else {
+            false
+        }
+    }
+
 
 }
 

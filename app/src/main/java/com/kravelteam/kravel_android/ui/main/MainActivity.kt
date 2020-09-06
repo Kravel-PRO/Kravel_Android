@@ -12,6 +12,7 @@ import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.ui.home.HomeFragment
 import com.kravelteam.kravel_android.ui.map.MapViewFragment
+import com.kravelteam.kravel_android.ui.map.fragmentBackPressed
 import com.kravelteam.kravel_android.ui.mypage.UserFragment
 import com.kravelteam.kravel_android.ui.search.SearchFragment
 import kotlinx.android.synthetic.main.activity_main.*
@@ -79,6 +80,14 @@ class MainActivity : AppCompatActivity() {
             fragment.onActivityResult(requestCode, resultCode, data)
         }
 
+    }
+
+    override fun onBackPressed() {
+
+        val fragment = this.supportFragmentManager.findFragmentById(R.id.fl_main)
+        (fragment as? fragmentBackPressed)?.onBackPressed()?.not()?.let {
+            super.onBackPressed()
+        }
     }
 
 }
