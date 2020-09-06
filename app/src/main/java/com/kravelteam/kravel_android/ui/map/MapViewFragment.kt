@@ -460,13 +460,24 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
             addItemDecoration(HorizontalItemDecorator(12))
         }
 
+        val local = "eng"
+        var url : URL? = null
+        if(local == "kor") {
+            url= URL(
+                "http://api.visitkorea.or.kr/openapi/service/rest/KorService/locationBasedList?&MobileOS=AND&MobileApp=Kravel&radius=1000"
+                        + "&ServiceKey=" + resources.getString(R.string.open_api_kor_place)
+                        + "&mapX=${longitude}&mapY=${latitude}"
+            )
+
+        } else {
+            url = URL(
+                "http://api.visitkorea.or.kr/openapi/service/rest/EngService/locationBasedList?&MobileOS=AND&MobileApp=Kravel&radius=1000"
+                        + "&ServiceKey=" + resources.getString(R.string.open_api_eng_place)
+                        + "&mapX=${longitude}&mapY=${latitude}")
+        }
+
         val handler: Handler = object : Handler() {
             override fun handleMessage(msg: Message?) {
-                var url: URL = URL(
-                    "http://api.visitkorea.or.kr/openapi/service/rest/KorService/locationBasedList?&MobileOS=AND&MobileApp=Kravel&radius=1000"
-                            + "&ServiceKey=" + resources.getString(R.string.open_api_kor_place)
-                            + "&mapX=${longitude}&mapY=${latitude}"
-                )
 
                 val parserHandler = XmlPullParserHandler()
                 val neardatas = parserHandler.parse(url.openStream())

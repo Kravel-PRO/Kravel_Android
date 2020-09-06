@@ -35,7 +35,13 @@ class PopularRecyclerview() : RecyclerView.Adapter<PopularRecyclerview.ViewHolde
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
         = ViewHolder(parent.inflate(R.layout.item_home_popular_place))
 
-    override fun getItemCount(): Int = data.size
+    override fun getItemCount(): Int {
+        return if(data.size>5) {
+            5
+        } else {
+            data.size
+        }
+    }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.setIsRecyclable(false)
