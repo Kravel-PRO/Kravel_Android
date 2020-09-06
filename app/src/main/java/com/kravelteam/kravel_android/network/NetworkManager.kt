@@ -87,6 +87,8 @@ class NetworkManager(authManager: AuthManager) {
         placeId : Int
     ) = retrofit.getPlaceReview(placeId)
 
+    fun requestMyScrap() = retrofit.requestMyScrap()
+
     private companion object {
         const val BASE_URL = "http://15.164.118.217:8080"
 //        const val BASE_URL ="http://noah.is.kakaocorp.com"

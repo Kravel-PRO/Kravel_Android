@@ -7,16 +7,16 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.GlideApp
-import com.kravelteam.kravel_android.data.response.ScrapResponse
+import com.kravelteam.kravel_android.data.response.MyScrapData
 import com.kravelteam.kravel_android.util.dpToPx
 import com.kravelteam.kravel_android.util.inflate
 import com.kravelteam.kravel_android.util.setRound
 
 class ScrapRecyclerview(): RecyclerView.Adapter<ScrapRecyclerview.ViewHolder>(){
 
-    private var data: List<ScrapResponse> = emptyList()
+    private var data: List<MyScrapData> = emptyList()
 
-    fun initData(data: List<ScrapResponse>){
+    fun initData(data: List<MyScrapData>){
         this.data = data
         notifyDataSetChanged()
     }
@@ -36,10 +36,10 @@ class ScrapRecyclerview(): RecyclerView.Adapter<ScrapRecyclerview.ViewHolder>(){
         private val img: ImageView = itemView.findViewById(R.id.img_scrap_place)
         private val txtPlaceName: TextView = itemView.findViewById(R.id.txt_scrap_place)
 
-        fun bind(item: ScrapResponse){
-            GlideApp.with(itemView).load(item.imgUrl).into(img)
+        fun bind(item: MyScrapData){
+            GlideApp.with(itemView).load(item.imageUrl).into(img)
             img.setRound(10.dpToPx().toFloat())
-            txtPlaceName.text = item.placeName
+            txtPlaceName.text = item.title
         }
     }
 }

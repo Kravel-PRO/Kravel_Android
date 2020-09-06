@@ -128,4 +128,10 @@ interface NetworkService {
         @Query("sort") sort : String
     ) : Call<BaseResponse<PhotoReviewResponse>>
 
+    /**
+     * 내 스크랩 정보
+     */
+    @GET("/api/member/scraps")
+    fun requestMyScrap() : Call<BaseResponse<MyScrapResponse>>
+
 }

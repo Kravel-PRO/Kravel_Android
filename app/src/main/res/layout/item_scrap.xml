@@ -19,6 +19,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:text="장소"
+        android:maxLines="1"
+        android:ellipsize="end"
         android:textColor="@color/colorBlack"
         android:textSize="15sp"
         android:fontFamily="@font/notosans_cjk_kr_bold"
