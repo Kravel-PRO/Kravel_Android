@@ -130,7 +130,7 @@
                     android:id="@+id/img_map_detail_scrap"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/selector_scrap"
+                    android:src="@drawable/ic_scrap"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintLeft_toRightOf="@id/view_map_detail_half"
                     app:layout_constraintTop_toTopOf="parent"

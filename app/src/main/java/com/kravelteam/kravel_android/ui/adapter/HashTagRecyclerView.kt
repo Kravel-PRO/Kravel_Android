@@ -20,7 +20,12 @@ class HashTagRecyclerView() : RecyclerView.Adapter<HashTagRecyclerView.ViewHolde
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
             = ViewHolder(parent.inflate(R.layout.item_hashtag))
 
-    override fun getItemCount(): Int = data!!.size
+    override fun getItemCount() : Int {
+        if (!data.isNullOrEmpty()) {
+            return data!!.size
+        }
+        return 0
+    }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(data!!.get(position))

@@ -9,6 +9,7 @@ import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.GlideApp
 import com.kravelteam.kravel_android.common.HorizontalItemDecorator
 import com.kravelteam.kravel_android.common.VerticalItemDecorator
+import com.kravelteam.kravel_android.data.request.ScrapBody
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.HashTagRecyclerView
 import com.kravelteam.kravel_android.ui.adapter.MapNearPlaceRecyclerview
@@ -37,6 +38,7 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
     private val networkManager : NetworkManager by inject()
     private var latitude : Double = 0.0
     private var longitude : Double = 0.0
+    private var checkScrap : Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,11 +53,46 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         img_map_detail_arrow.setOnClickListener {
             finish()
         }
+
+        initSetting()
         img_map_detail_photo.setOnClickListener {
                Intent(GlobalApp, CameraActivity::class.java).run {
                    GlobalApp.startActivity(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
         }
-        initSetting()
+
+        img_map_detail_scrap.setOnClickListener {
+            if(checkScrap) {
+                Timber.e("checkScrap true -> false")
+                //checkScrap == TRUE
+                networkManager.postScrap(placeId, ScrapBody(false) ).safeEnqueue (
+                        onSuccess = {
+                            checkScrap = false
+                            GlideApp.with(img_map_detail_scrap).load(R.drawable.ic_scrap).into(img_map_detail_scrap)
+                        }, onFailure = {
+                        Timber.e("실패")
+
+                    },
+                        onError = {
+                            networkErrorToast()
+                    })
+
+
+            } else {
+                Timber.e("checkScrap false -> true")
+                networkManager.postScrap(placeId, ScrapBody(true)).safeEnqueue (
+                    onSuccess = {
+                        checkScrap = true
+                        GlideApp.with(img_map_detail_scrap).load(R.drawable.ic_scrap_fill).into(img_map_detail_scrap)
+
+                    }, onFailure = {
+                        Timber.e("실패")
+
+                    },
+                    onError = {
+                        networkErrorToast()
+                    })
+            }
+        }
 
     }
     private fun initSetting() {
@@ -73,6 +110,16 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                 txt_map_detail_bus_content.text = it.data.result.bus
                 txt_map_detail_subway_content.text = it.data.result.subway
 
+                initNearPlaceRecycler(it.data.result.latitude, it.data.result.longitude)
+
+                checkScrap = it.data.result.scrap
+
+                Timber.e("PlaceID ::::::::::::::::::::::::::::::::::::::::::::::::${it.data.result.placeId}")
+                Timber.e("checkScrap ::::::::::::::::::::::::::::::::::::::::::::: ${it.data.result.scrap}")
+                if(checkScrap) {
+                    GlideApp.with(applicationContext).load(R.drawable.ic_scrap_fill).into(img_map_detail_scrap)
+                }
+
                 initMap()
                 initHashTag(it.data.result.tags)
 
@@ -87,9 +134,8 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         )
 
-        initNearPlaceRecycler(latitude, longitude)
-        initPhotoRecycler()
 
+        initPhotoRecycler()
     }
     private fun initNearPlaceRecycler(latitude: Double, longitude: Double) {
         rv_map_detail_near_place.apply {
@@ -102,9 +148,9 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                 var url: URL = URL(
                     "http://api.visitkorea.or.kr/openapi/service/rest/KorService/locationBasedList?&MobileOS=AND&MobileApp=Kravel&radius=1000"
                             + "&ServiceKey=" + resources.getString(R.string.open_api_kor_place)
-                            + "&mapX=126.981611&mapY=37.568477"
+                            + "&mapX=${longitude}&mapY=${latitude}"
                 )
-                //                + "&mapX="+longitude.toString()+"&mapY="+latitude.toString())
+
 
                 val parserHandler = XmlPullParserHandler()
                 val neardatas = parserHandler.parse(url.openStream())

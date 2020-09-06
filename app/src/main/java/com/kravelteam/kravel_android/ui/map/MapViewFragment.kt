@@ -11,9 +11,7 @@ import android.graphics.Color.*
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.location.LocationManager
-import android.os.Bundle
-import android.os.Handler
-import android.os.Message
+import android.os.*
 import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
@@ -77,7 +75,10 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
     private lateinit var bottomSheetDetailBehavior : BottomSheetBehavior<ConstraintLayout>
     private lateinit var animMapInfo: LottieAnimationView
     private lateinit var root: View
+    private  var mLatitude : Double = 0.0
+    private var mLongitude : Double = 0.0
 
+    private var markerList = mutableListOf<MarkerClick>()
     private val nearplaceAdapter : MapNearPlaceRecyclerview by lazy { MapNearPlaceRecyclerview() } //BottomSheet_Detail
     private val photoAdapter : PhotoReviewRecyclerview by lazy { PhotoReviewRecyclerview() } //BottomSheet
     private val hashtagAdapter : HashTagRecyclerView by lazy { HashTagRecyclerView() } //BottomSheet
@@ -97,7 +98,10 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        if (Build.VERSION.SDK_INT > 9) {
+            val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
+            StrictMode.setThreadPolicy(policy)
+        }
         val fm = childFragmentManager
         mapFragment = fm.findFragmentById(R.id.map) as MapFragment?
             ?: MapFragment.newInstance().also {
@@ -320,10 +324,6 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
         )
     }
     private fun initNearPlaceRecycler(latitude: Double, longitude: Double) {
-        /**
-         * latitude, longitude 로 바꿔주기
-         */
-
         cl_bottom_sheet_map_detail.rv_map_detail_near_place.apply {
             adapter = nearplaceAdapter
             addItemDecoration(HorizontalItemDecorator(12))
@@ -334,9 +334,8 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
                 var url: URL = URL(
                     "http://api.visitkorea.or.kr/openapi/service/rest/KorService/locationBasedList?&MobileOS=AND&MobileApp=Kravel&radius=1000"
                             + "&ServiceKey=" + resources.getString(R.string.open_api_kor_place)
-                            + "&mapX=126.981611&mapY=37.568477"
+                            + "&mapX=${longitude}&mapY=${latitude}"
                 )
-                //                + "&mapX="+longitude.toString()+"&mapY="+latitude.toString())
 
                 val parserHandler = XmlPullParserHandler()
                 val neardatas = parserHandler.parse(url.openStream())
@@ -410,10 +409,6 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
 
     }
     private fun initRecycler() {
-
-        /**
-         * latitude,longitude 바꿔줘야함!
-         */
         nearAdapter.setOnItemClickListener(object : MapPlaceRecyclerview.OnItemClickListener {
             override fun onItemClick(v: View, data: PlaceContentResponse, pos: Int) {
                 Intent(GlobalApp,PlaceDetailActivity::class.java).apply {
@@ -424,7 +419,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
             }
 
         })
-        networkManager.getPlaceList(1.0,1.0).safeEnqueue (
+        networkManager.getPlaceList(mLatitude,mLongitude).safeEnqueue (
             onSuccess = {
                 rv_map_near_place.apply {
                     adapter = nearAdapter
@@ -470,6 +465,9 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
         grantResults: IntArray
     ) {
        if(locationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
+
+           mLatitude = locationSource.lastLocation!!.latitude
+           mLongitude = locationSource.lastLocation!!.longitude
            if(!locationSource.isActivated) {
                naverMap.locationTrackingMode = None
            }
@@ -497,37 +495,59 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
             if(reason == CameraUpdate.REASON_GESTURE) {
                 togglebtn_gps.isChecked = false
                 trackingmode = false
+                Timber.e("CAMERAPOSITION:::latitude ${naverMap.cameraPosition.target.latitude}")
+                Timber.e("CAMERAPOSITION:::longitude ${naverMap.cameraPosition.target.longitude}")
+
             }
         }
 
-        val placeId = 1
-        val marker = com.naver.maps.map.overlay.Marker()
-        marker.position = LatLng(37.5606311, 126.9936153)
-        marker.map = naverMap
-        marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_default)
-        marker.setOnClickListener { overlay ->
-            if(!markerClick) {
-                marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_focus)
-                rv_map_near_place.setGone()
-                initBottomSheet(marker,placeId)
-                markerClick = true
-            } else {
-                markerClick = false
-                rv_map_near_place.setVisible()
-                cl_bottom_seat_place.setGone()
-                togglebtn_gps.setVisible()
-                img_reset.setVisible()
-                marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_default)
+        networkManager.getMapMarkerList(mLatitude,mLongitude).safeEnqueue (
+            onSuccess = {
+                for(i in 0..it.data.result.size-1) {
+                    val marker = com.naver.maps.map.overlay.Marker()
+                    marker.position = LatLng(it.data.result.get(i).latitude, it.data.result.get(i).longitude)
+                    marker.map = naverMap
+                    marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_default)
+                    markerList.add(MarkerClick(i,marker,false))
+
+                    marker.setOnClickListener { overlay ->
+                        if(!markerClick) {
+                            marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_focus)
+                            rv_map_near_place.setGone()
+                            initBottomSheet(marker,markerList.get(i).markerId)
+                            markerClick = true
+                        } else {
+                            markerClick = false
+                            rv_map_near_place.setVisible()
+                            cl_bottom_seat_place.setGone()
+                            togglebtn_gps.setVisible()
+                            img_reset.setVisible()
+                            marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_default)
+                        }
+
+                        true
+                    }
+
+                }
+
+            },
+            onFailure = {
+                Timber.e("실패")
+
+            },
+            onError = {
+                networkErrorToast()
             }
 
-            true
-        }
+        )
+
+
 
         naverMap.setOnMapClickListener { pointF, latLng ->
             if(markerClick) {
                 markerClick = false
                 rv_map_near_place.setVisible()
-                marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_default)
+               // marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_default)
                 cl_bottom_seat_place.setGone()
                 togglebtn_gps.setVisible()
                 img_reset.setVisible()

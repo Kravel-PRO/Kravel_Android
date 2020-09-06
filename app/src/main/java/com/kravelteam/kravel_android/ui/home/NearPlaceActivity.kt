@@ -23,8 +23,8 @@ import timber.log.Timber
 class NearPlaceActivity : AppCompatActivity() {
 
     private val placeAdapter : NearPlaceDetailRecyclerview by lazy { NearPlaceDetailRecyclerview() }
-    private var latitude : Double? = null
-    private var longitude : Double? = null
+    private var latitude : Double = 0.0
+    private var longitude : Double = 0.0
     private val networkManager : NetworkManager by inject()
 
 
@@ -53,7 +53,7 @@ class NearPlaceActivity : AppCompatActivity() {
             }
 
         })
-        networkManager.getPlaceList(1.0,1.0).safeEnqueue(
+        networkManager.getPlaceList(latitude,longitude).safeEnqueue(
             onSuccess = {
                 rv_near_place.apply {
                     adapter = placeAdapter

@@ -1,6 +1,7 @@
 package com.kravelteam.kravel_android.network
 
 import com.kravelteam.kravel_android.data.request.LoginRequest
+import com.kravelteam.kravel_android.data.request.ScrapBody
 import com.kravelteam.kravel_android.data.request.SignUpRequest
 import com.kravelteam.kravel_android.data.response.*
 import retrofit2.Call
@@ -84,6 +85,15 @@ interface NetworkService {
      */
 
     /**
+     * 지도 마커
+     */
+    @GET("/api/places/map")
+    fun getMapMarkerList(
+        @Query("latitude") latitude : Double,
+        @Query("longitude") longitude : Double
+    ) : Call<BaseResponse<List<MapResponse>>>
+
+    /**
      *  장소
      */
     @GET("/api/places")
@@ -139,5 +149,13 @@ interface NetworkService {
      */
     @GET("/api/member/reviews")
     fun requestMyPhotoReviews() : Call<BaseResponse<MyPhotoReviewResponse>>
+    /**
+     * 장소 상세 - 스크랩
+     */
+    @POST("/api/places/{placeId}/scrap")
+    fun postScrap(
+        @Path("placeId") placeId : Int,
+        @Body data : ScrapBody
+    ) : Call<BaseResponse<Int>>
 
 }

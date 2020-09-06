@@ -2,10 +2,14 @@ package com.kravelteam.kravel_android.network
 
 import com.kravelteam.kravel_android.common.HeaderInterceptor
 import com.kravelteam.kravel_android.data.request.LoginRequest
+import com.kravelteam.kravel_android.data.request.ScrapBody
 import com.kravelteam.kravel_android.data.request.SignUpRequest
+import com.kravelteam.kravel_android.data.response.BaseResponse
+import com.kravelteam.kravel_android.data.response.MapResponse
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module
+import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
@@ -91,8 +95,19 @@ class NetworkManager(authManager: AuthManager) {
 
     fun requestMyPhotoReviews() = retrofit.requestMyPhotoReviews()
 
+    fun getMapMarkerList(
+        latitude : Double,
+        longitude : Double
+    ) = retrofit.getMapMarkerList(latitude, longitude)
+
+    fun postScrap(
+        placeId: Int,
+        data : ScrapBody
+    ) = retrofit.postScrap(placeId, data)
+
     private companion object {
-        const val BASE_URL = "http://15.164.118.217:8080"
+        const val BASE_URL ="http://ca0438124735.ngrok.io"
+//        const val BASE_URL = "http://15.164.118.217:8080"
 //        const val BASE_URL ="http://noah.is.kakaocorp.com"
     }
 }

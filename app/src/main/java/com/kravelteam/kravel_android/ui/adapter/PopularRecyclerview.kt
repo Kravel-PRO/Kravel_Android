@@ -13,6 +13,7 @@ import com.kravelteam.kravel_android.data.response.PlaceContentResponse
 import com.kravelteam.kravel_android.util.dpToPx
 import com.kravelteam.kravel_android.util.inflate
 import com.kravelteam.kravel_android.util.setRound
+import timber.log.Timber
 
 class PopularRecyclerview() : RecyclerView.Adapter<PopularRecyclerview.ViewHolder>() {
 
@@ -57,14 +58,16 @@ class PopularRecyclerview() : RecyclerView.Adapter<PopularRecyclerview.ViewHolde
             txtPlace.text = item.title
 
             var str : String = ""
-            for(i in 0 until item.tags!!.size) {
-                str = str+"#"+item.tags!!.get(i)
+            if(!item.tags.isNullOrEmpty()) {
+                for (i in 0 until item.tags!!.size) {
+                    str = str + "#" + item.tags!!.get(i)
 
-                if(i!=item.tags!!.size-1) {
-                    str = str+" "
+                    if (i != item.tags!!.size - 1) {
+                        str = str + " "
+                    }
                 }
+                txtTag.text = str
             }
-            txtTag.text = str
             txtPhohoNum.text = item.reviewCount.toString()
 
             val pos = adapterPosition

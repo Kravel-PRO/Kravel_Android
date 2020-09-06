@@ -13,6 +13,7 @@ data class PlaceDetailResponse(
     val mediaId : Int,
     val mediaName : String,
     val reviewCount : Int,
+    var scrap : Boolean,
     val bus : String,
     val subway : String?,
     val tags : Array<String>?,

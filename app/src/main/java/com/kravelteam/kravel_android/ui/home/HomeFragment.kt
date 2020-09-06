@@ -49,10 +49,11 @@ class HomeFragment : Fragment() {
     private var mFusedLocationProviderClient: FusedLocationProviderClient? = null
     lateinit var mLastLocation: Location
     internal lateinit var mLocationRequest: LocationRequest
+    private var latitude : Double? = null
+    private var longitude : Double?=null
     private val popularAdapter : PopularRecyclerview by lazy { PopularRecyclerview() }
     private val photoAdapter : PhotoReviewRecyclerview by lazy { PhotoReviewRecyclerview() }
     private val nearAdapter : NearPlaceRecyclerview by lazy { NearPlaceRecyclerview() }
-
     private val networkManager : NetworkManager by inject()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -73,13 +74,15 @@ class HomeFragment : Fragment() {
 
         if(checkPermissionForLocation(requireContext())) {
             startLocationUpdates()
+
         }
+
 
 
         init()
         initPopularRecycler()
         initPhotoRecycler()
-        initNearRecycler()
+
     }
     /*
   핸드폰 gps 가 꺼져있을 시 , gps를 키기위한 함수
@@ -113,9 +116,9 @@ class HomeFragment : Fragment() {
                }
         }
     }
-    private fun initNearRecycler() {
+    private fun initNearRecycler(latitude : Double?, longitude : Double?) {
 
-
+        stoplocationUpdates()
         nearAdapter.setOnItemClickListener(object : NearPlaceRecyclerview.OnItemClickListener {
             override fun onItemClick(v: View, data: PlaceContentResponse, pos: Int) {
                 Intent(GlobalApp,PlaceDetailActivity::class.java).apply {
@@ -126,7 +129,7 @@ class HomeFragment : Fragment() {
             }
 
         })
-        networkManager.getPlaceList(1.0,1.0).safeEnqueue (
+        networkManager.getPlaceList(latitude!!,longitude!!).safeEnqueue (
             onSuccess = {
                 rv_near_place.apply {
                     adapter = nearAdapter
@@ -135,7 +138,6 @@ class HomeFragment : Fragment() {
                 nearAdapter.initData(it.data!!.result.content)
                 if(it.data!!.result.content.isEmpty()) {
                     cl_home_near_place.setGone()
-
                 }
             },
             onFailure = {
@@ -213,14 +215,10 @@ class HomeFragment : Fragment() {
     }
 
     protected fun startLocationUpdates() {
-
-        // Create the location request to start receiving updates
-
         mLocationRequest!!.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         mLocationRequest!!.setInterval(INTERVAL)
         mLocationRequest!!.setFastestInterval(FASTEST_INTERVAL)
 
-        // Create LocationSettingsRequest object using location request
         val builder = LocationSettingsRequest.Builder()
         builder.addLocationRequest(mLocationRequest!!)
         val locationSettingsRequest = builder.build()
@@ -229,10 +227,7 @@ class HomeFragment : Fragment() {
         settingsClient.checkLocationSettings(locationSettingsRequest)
 
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
-        // new Google API SDK v11 uses getFusedLocationProviderClient(this)
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-
             return
         }
         mFusedLocationProviderClient!!.requestLocationUpdates(mLocationRequest, mLocationCallback,
@@ -241,23 +236,23 @@ class HomeFragment : Fragment() {
 
     private val mLocationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
-            // do work here
-            locationResult.lastLocation
+            mLastLocation= locationResult.lastLocation
+            latitude = mLastLocation.latitude
+            longitude = mLastLocation.longitude
             onLocationChanged(locationResult.lastLocation)
+
+
         }
     }
 
     fun onLocationChanged(location: Location) {
-        // New location has now been determined
-
         mLastLocation = location
-        if(mLastLocation != location) {
-            Timber.e("mLocationLat ${mLastLocation.latitude}")
-            Timber.e("mLocationLng ${mLastLocation.longitude}")
+        Timber.e("latitude : ${latitude}")
+        Timber.e("longitude : ${longitude}")
+        if(latitude!=null && longitude!=null) {
+            initNearRecycler(latitude, longitude)
+
         }
-
-
-
     }
 
     private fun stoplocationUpdates() {
