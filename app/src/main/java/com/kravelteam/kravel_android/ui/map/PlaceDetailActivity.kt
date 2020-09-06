@@ -113,9 +113,6 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                 initNearPlaceRecycler(it.data.result.latitude, it.data.result.longitude)
 
                 checkScrap = it.data.result.scrap
-
-                Timber.e("PlaceID ::::::::::::::::::::::::::::::::::::::::::::::::${it.data.result.placeId}")
-                Timber.e("checkScrap ::::::::::::::::::::::::::::::::::::::::::::: ${it.data.result.scrap}")
                 if(checkScrap) {
                     GlideApp.with(applicationContext).load(R.drawable.ic_scrap_fill).into(img_map_detail_scrap)
                 }
