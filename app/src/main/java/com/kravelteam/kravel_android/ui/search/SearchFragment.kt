@@ -11,8 +11,12 @@ import android.view.inputmethod.EditorInfo
 import com.google.android.material.tabs.TabLayout
 import com.kravelteam.kravel_android.KravelApplication
 import com.kravelteam.kravel_android.R
+import com.kravelteam.kravel_android.common.HorizontalItemDecorator
+import com.kravelteam.kravel_android.common.VerticalItemDecorator
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.common.SearchWord
+import com.kravelteam.kravel_android.data.response.CelebResponse
+import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.CelebRecyclerview
 import com.kravelteam.kravel_android.ui.adapter.SearchViewPagerAdapter
 import com.kravelteam.kravel_android.ui.adapter.SearchWordRecyclerview
@@ -21,9 +25,11 @@ import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 
 class SearchFragment : Fragment() {
 
+    private val networkManager : NetworkManager by inject()
     private lateinit var wordAdapter : SearchWordRecyclerview
     private val searchResultAdapter : CelebRecyclerview by lazy { CelebRecyclerview() }
 
@@ -72,7 +78,7 @@ class SearchFragment : Fragment() {
             cl_search_recent_word.setGone()
             rv_search_recent.setGone()
 
-            //엔터 누를시 최근 검색어가 없습니다 지우기
+            //엔터 누를시 최근 검색어가 없습니다 보이기
             cl_search_recent_word_empty.setVisible()
         } else {
             //엔터 누를시 최근 검색어 내역 보이기
@@ -120,6 +126,10 @@ class SearchFragment : Fragment() {
             cl_search_tab.setVisible()
             cl_search_recent.setGone()
             img_search_back.setGone()
+
+            txt_search_recent_title.text = "최근 검색어"
+            view_search_line.setGone()
+            rv_search_recent_result.setGone()
         }
     }
 
@@ -151,7 +161,46 @@ class SearchFragment : Fragment() {
                     KravelApplication.db.searchWordDao().insertWord(word)
                 }
 
-                initVisibleRecentWord()
+                networkManager.requestSearchResult("펭귄").safeEnqueue(
+                    onSuccess = {
+                        rv_search_recent.setGone()
+                        txt_search_recent_title.text = "검색 결과"
+                        view_search_line.setVisible()
+                        //리사이클러 초기화
+                        rv_search_recent_result.apply {
+                            adapter = searchResultAdapter
+                            addItemDecoration(HorizontalItemDecorator(24))
+                            addItemDecoration(VerticalItemDecorator(36))
+                        }
+
+                        //데이터가 빈 것이 있는지 확인
+                        if(it.data.result.celebrities.isNullOrEmpty() and it.data.result.medias.isNullOrEmpty()){
+                            txt_search_recent_empty.setVisible()
+                        } else {
+                            var searchData = mutableListOf<CelebResponse>()
+                            if(!it.data.result.celebrities.isNullOrEmpty()) {
+                                it.data.result.celebrities.forEach {
+                                    searchData.add(it)
+                                }
+                            }
+                            if(!it.data.result.medias.isNullOrEmpty()) {
+                                it.data.result.medias.forEach {
+                                    searchData.add(CelebResponse(it.mediaId, it.title, it.imageUrl))
+                                }
+                            }
+                            txt_search_recent_empty.setGone()
+                            rv_search_recent_result.setVisible()
+
+                            searchResultAdapter.initData(searchData)
+                        }
+                    },
+                    onFailure = {
+                        toast("검색어 입력을 확인해주세요")
+                    },
+                    onError = {
+                        toast("검색어 입력을 확인해주세요")
+                    }
+                )
             }
             true
         }

@@ -36,6 +36,14 @@ interface NetworkService {
     ) : Call<BaseResponse<Int>>
 
     /**
+     * 셀럽/미디어 검색 결과
+     */
+    @GET("/api/search")
+    fun requestSearchResult(
+        @Query("search") search: String
+    ) : Call<BaseResponse<SearchResultResponse>>
+
+    /**
      * 셀럽 리스트
      */
     @GET("/api/celebrities")

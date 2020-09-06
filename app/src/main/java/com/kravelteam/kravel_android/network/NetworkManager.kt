@@ -52,6 +52,10 @@ class NetworkManager(authManager: AuthManager) {
     fun requestSignUp(data: SignUpRequest)
             = retrofit.requestSignUp(data)
 
+    fun requestSearchResult(
+        search: String
+    ) = retrofit.requestSearchResult(search)
+
     fun requestCelebList() = retrofit.requestCelebList()
 
     fun requestMediaList() = retrofit.requestMediaList()
