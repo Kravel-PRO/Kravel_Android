@@ -5,8 +5,7 @@ data class PhotoReviewResponse(
 )
 data class PhotoReviewData (
     val reviewId : Int,
-    val imageUrl : String,
-    val grade : Double,
+    val imageURl : String,
     val likeCount : Int
 
 )

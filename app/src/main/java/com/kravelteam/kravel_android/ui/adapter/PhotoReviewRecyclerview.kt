@@ -16,6 +16,7 @@ import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.response.PhotoResponse
 import com.kravelteam.kravel_android.data.response.PhotoReviewData
 import com.kravelteam.kravel_android.ui.home.PhotoReviewActivity
+import com.kravelteam.kravel_android.ui.mypage.MyPhotoReviewActivity
 import com.kravelteam.kravel_android.util.inflate
 import com.kravelteam.kravel_android.util.setGone
 import com.kravelteam.kravel_android.util.setVisible
@@ -30,12 +31,22 @@ class PhotoReviewRecyclerview() : RecyclerView.Adapter<PhotoReviewRecyclerview.V
         notifyDataSetChanged()
     }
 
-    override fun getItemCount(): Int = data.size
+    override fun getItemCount(): Int {
+        return if(data.size > 6){
+            6
+        } else {
+            data.size
+        }
+    }
 
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if(position == data.size){
-            holder.bind2(data[position])
+        if(data.size > 6){
+            if(position == 5){
+                holder.bind2(data[position])
+            } else {
+                holder.bind(data[position])
+            }
         } else {
             holder.bind(data[position])
         }
@@ -51,20 +62,20 @@ class PhotoReviewRecyclerview() : RecyclerView.Adapter<PhotoReviewRecyclerview.V
         private val view: View = itemView.findViewById(R.id.view_img_background)
         private val txtMore : TextView = itemView.findViewById(R.id.txt_photo_more)
         fun bind(item: PhotoReviewData){
-            if(!item.imageUrl.isNullOrEmpty()) {
-                GlideApp.with(itemView).load(item.imageUrl).into(img)
+            if(!item.imageURl.isNullOrEmpty()) {
+                GlideApp.with(itemView).load(item.imageURl).into(img)
             }
             txtMore.setGone()
             view.setGone()
         }
         fun bind2(item: PhotoReviewData){
-            if(!item.imageUrl.isNullOrEmpty()) {
-                GlideApp.with(itemView).load(item.imageUrl).into(img)
+            if(!item.imageURl.isNullOrEmpty()) {
+                GlideApp.with(itemView).load(item.imageURl).into(img)
             }
             txtMore.setVisible()
             view.setVisible()
             img.setOnDebounceClickListener {
-                Intent(GlobalApp, PhotoReviewActivity::class.java).apply {
+                Intent(GlobalApp, MyPhotoReviewActivity::class.java).apply {
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 }.run { GlobalApp.startActivity(this)
                 }

@@ -9,10 +9,7 @@ import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.network.NetworkService
 import com.kravelteam.kravel_android.ui.adapter.AddressRecyclerview
-import com.kravelteam.kravel_android.util.onTextChangeListener
-import com.kravelteam.kravel_android.util.safeEnqueue
-import com.kravelteam.kravel_android.util.setGone
-import com.kravelteam.kravel_android.util.setVisible
+import com.kravelteam.kravel_android.util.*
 import kotlinx.android.synthetic.main.activity_address.*
 import org.koin.android.ext.android.inject
 import retrofit2.Retrofit
@@ -75,7 +72,7 @@ class AddressActivity : AppCompatActivity() {
 
     private fun initSearchAddress(){
         val query = edt_address_search.text.toString()
-        val token = "KakaoAK " + resources.getString(R.string.kakao_api_key)
+        val token = resources.getString(R.string.kakao_api_key)
 
         Timber.e("검색22")
 
@@ -94,10 +91,10 @@ class AddressActivity : AppCompatActivity() {
                 }
             },
             onFailure = {
-                Timber.e("실패")
+                toast("실패")
             },
             onError = {
-                Timber.e("$it")
+                toast("에러")
             }
         )
     }

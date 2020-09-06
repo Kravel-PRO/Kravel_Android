@@ -38,7 +38,7 @@ class MyPhotoReviewRecyclerview: RecyclerView.Adapter<MyPhotoReviewRecyclerview.
         fun bind(item: MyPhotoReviewData){
             GlideApp.with(itemView).load(item.imageUrl).into(img)
             txtPlaceName.text = item.title
-            txtYear.text = item.year
+            txtYear.text = item.createdDate
             txtLike.text = item.likeCount.toString()
         }
     }

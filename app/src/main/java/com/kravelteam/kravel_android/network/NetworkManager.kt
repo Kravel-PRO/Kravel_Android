@@ -6,6 +6,7 @@ import com.kravelteam.kravel_android.data.request.ScrapBody
 import com.kravelteam.kravel_android.data.request.SignUpRequest
 import com.kravelteam.kravel_android.data.response.BaseResponse
 import com.kravelteam.kravel_android.data.response.MapResponse
+import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module
@@ -37,7 +38,6 @@ class NetworkManager(authManager: AuthManager) {
     private var kakaoRetrofit = Retrofit.Builder()
         .baseUrl("https://dapi.kakao.com")
         .addConverterFactory(GsonConverterFactory.create())
-        .client(builder)
         .build()
         .create(NetworkService::class.java)
 
@@ -90,6 +90,11 @@ class NetworkManager(authManager: AuthManager) {
     fun getPlaceReview(
         placeId : Int
     ) = retrofit.getPlaceReview(placeId)
+
+    fun requestPostPhotoReview(
+        id: Int,
+        file: MultipartBody.Part?
+    ) = retrofit.requestPostPhotoReview(id,file)
 
     fun requestMyScrap() = retrofit.requestMyScrap()
 
