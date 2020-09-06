@@ -52,15 +52,16 @@ class NearPlaceRecyclerview() : RecyclerView.Adapter<NearPlaceRecyclerview.ViewH
             txtPlace.text = item.title
 
             var str : String = ""
-            for(i in 0 until item.tags!!.size) {
-                str = str+"#"+item.tags!!.get(i)
+            if(!item.tags.isNullOrEmpty()) {
+                for (i in 0 until item.tags!!.size) {
+                    str = str + "#" + item.tags!!.get(i)
 
-                if(i!=item.tags!!.size-1) {
-                    str = str+" "
+                    if (i != item.tags!!.size - 1) {
+                        str = str + " "
+                    }
                 }
+                txtTag.text = str
             }
-            txtTag.text = str
-
             val pos = adapterPosition
             if(pos!= RecyclerView.NO_POSITION)
             {
