@@ -61,13 +61,13 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
     private lateinit var root: View
     private  var mLatitude : Double = 0.0
     private var mLongitude : Double = 0.0
-    private var markerList = mutableListOf<TagMarkerData>()
     private val nearplaceAdapter : MapNearPlaceRecyclerview by lazy { MapNearPlaceRecyclerview() } //BottomSheet_Detail
     private val photoAdapter : PhotoReviewRecyclerview by lazy { PhotoReviewRecyclerview() } //BottomSheet
     private val hashtagAdapter : HashTagRecyclerView by lazy { HashTagRecyclerView() } //BottomSheet
     private val nearAdapter: MapPlaceRecyclerview by lazy { MapPlaceRecyclerview() }
     private var checkScrap : Boolean = false // BottomSheet
     private var checkScrapD : Boolean = false //BottomSheet_Detail
+    private var mapMarker : Marker? = null
 
     private val networkManager : NetworkManager by inject()
     override fun onCreateView(
@@ -122,8 +122,36 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
                  GlobalApp.startActivity(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
         }
 
+        init()
         //initAreaWarningDailog()
         initRecycler()
+
+    }
+    private fun init() {
+        cl_bottom_sheet_map_detail.rv_map_detail_hashtag.apply {
+            adapter = hashtagAdapter
+            addItemDecoration(HorizontalItemDecorator(4))
+        }
+
+        cl_bottom_sheet_map_detail.rv_map_detail_photo.apply {
+            adapter = photoAdapter
+            addItemDecoration(VerticalItemDecorator(4))
+            addItemDecoration(HorizontalItemDecorator(4))
+        }
+
+        cl_bottom_seat_place.rv_home_photo_review.apply {
+            adapter = photoAdapter
+            addItemDecoration(VerticalItemDecorator(4))
+            addItemDecoration(HorizontalItemDecorator(4))
+        }
+
+        rv_map_hashtag.apply {
+            adapter = hashtagAdapter
+            addItemDecoration(HorizontalItemDecorator(4))
+        }
+
+
+
 
     }
 
@@ -148,7 +176,9 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
 
         Timber.e("marker place ID :::::::::::::${markerInfo.placeId}")
         Timber.e("marker place clickable :::::::::::::${markerInfo.markerClick}")
-
+        if(mapMarker?.map !=null) {
+            mapMarker?.map = null
+        }
         networkManager.getPlaceDetailList(placeId).safeEnqueue (
             onSuccess = {
                 txt_bottom_title.text = it.data.result.title
@@ -159,16 +189,32 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
                 // Round값 물어보기
                 img_bottom_place.setRound(10.dpToPx().toFloat())
 
-                initMap("BOTTOM",it.data.result.latitude,it.data.result.longitude)
-                rv_map_hashtag.apply {
-                    adapter = hashtagAdapter
-                    addItemDecoration(HorizontalItemDecorator(4))
+                val fm = childFragmentManager
+                val map2Fragment = fm.findFragmentById(R.id.mapView) as MapFragment?
+                    ?: MapFragment.newInstance().also {
+                        fm.beginTransaction().add(R.id.mapView, it).commit()
+                    }
+
+                map2Fragment.getMapAsync{naver1Map ->
+                    mapMarker = Marker()
+                    mapMarker!!.position = marker.position
+                    naver1Map!!.moveCamera(CameraUpdate.scrollTo(marker!!.position))
+                    mapMarker!!.map = naver1Map
+                    mapMarker!!.icon = OverlayImage.fromResource(R.drawable.ic_mark_focus)
                 }
                 hashtagAdapter.initData(it.data.result.tags)
                 initPhotoReview("BOTTOM",it.data.result.placeId)
                 checkScrap = it.data.result.scrap
                 if(checkScrap) {
                     GlideApp.with(KravelApplication.GlobalApp).load(R.drawable.ic_scrap_fill).into(cl_bottom_seat_place.img_user_scrap)
+                }
+                cl_bottom_seat_place.img_bottom_photo_edit.setOnDebounceClickListener {
+                    Intent(GlobalApp,PostReviewActivity::class.java).apply{
+                        putExtra("placeId",placeId)
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    }.run {
+                        GlobalApp.startActivity(this)
+                    }
                 }
 
             },
@@ -261,24 +307,16 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
             onSuccess = {
                 when(mode) {
                     "BOTTOM" -> {
-                        rv_home_photo_review.apply {
-                            adapter = photoAdapter
-                            addItemDecoration(VerticalItemDecorator(4))
-                            addItemDecoration(HorizontalItemDecorator(4))
-                        }
                         if(!it.data.result.content.isNullOrEmpty()) {
                             photoAdapter.initData(it.data.result.content)
                         }
+                        return@safeEnqueue
                     }
                     "BOTTOM_D" -> {
-                        cl_bottom_sheet_map_detail.rv_map_detail_photo.apply {
-                            adapter = photoAdapter
-                            addItemDecoration(VerticalItemDecorator(4))
-                            addItemDecoration(HorizontalItemDecorator(4))
-                        }
                         if(!it.data.result.content.isNullOrEmpty()) {
                             photoAdapter.initData(it.data.result.content)
                         }
+                        return@safeEnqueue
 
                     }
                 }
@@ -297,6 +335,9 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
     }
     private fun initBottomSheetDetail(placeId : Int) {
 
+        if(mapMarker?.map !=null) {
+            mapMarker?.map = null
+        }
         cl_bottom_seat_place.setGone()
         cl_bottom_sheet_map_detail.setVisible()
         bottomSheetDetailBehavior.state = BottomSheetBehavior.STATE_EXPANDED
@@ -333,11 +374,21 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
                     GlideApp.with(cl_bottom_sheet_map_detail.img_map_detail_place).load(it.data.result.imageUrl).into(cl_bottom_sheet_map_detail.img_map_detail_place)
                 }
 
-                initMap("BOTTOM_D",it.data.result.latitude,it.data.result.longitude)
-                cl_bottom_sheet_map_detail.rv_map_detail_hashtag.apply {
-                    adapter = hashtagAdapter
-                    addItemDecoration(HorizontalItemDecorator(4))
+                val fm = childFragmentManager
+                val mapBottomFragment = fm.findFragmentById(R.id.place_detail_map) as MapFragment?
+                    ?:MapFragment.newInstance().also {
+                        fm.beginTransaction().add(R.id.place_detail_map,it).commit()
+                    }
+
+                mapBottomFragment.getMapAsync{naver2Map ->
+                    mapMarker = Marker()
+                    mapMarker!!.position = LatLng(it.data.result.latitude,it.data.result.longitude)
+                    naver2Map.moveCamera(CameraUpdate.scrollTo(mapMarker!!.position))
+                    mapMarker!!.map = naver2Map
+                    mapMarker!!.icon = OverlayImage.fromResource(R.drawable.ic_mark_focus)
+
                 }
+
                 hashtagAdapter.initData(it.data.result.tags)
 
                 cl_bottom_sheet_map_detail.txt_map_detail_bus_content.text = it.data.result.bus
@@ -348,6 +399,15 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
                 checkScrapD = it.data.result.scrap
                 if(checkScrapD) {
                     GlideApp.with(KravelApplication.GlobalApp).load(R.drawable.ic_scrap_fill).into(cl_bottom_sheet_map_detail.img_map_detail_scrap)
+                }
+
+                cl_bottom_sheet_map_detail.img_photo_review_edit.setOnDebounceClickListener {
+                    Intent(GlobalApp,PostReviewActivity::class.java).apply{
+                        putExtra("placeId",placeId)
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    }.run {
+                        GlobalApp.startActivity(this)
+                    }
                 }
 
             },
@@ -436,50 +496,6 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
         animMapInfoLottie.setVisible()
     }
 
-    /**
-     * BottomSheet 안의 Map 띄우기
-     */
-    private fun initMap(mode:String,latitude : Double, longitude : Double) {
-        val fm = childFragmentManager
-        when(mode) {
-            "BOTTOM" -> {
-                val map2Fragment = fm.findFragmentById(R.id.mapView) as MapFragment?
-                    ?: MapFragment.newInstance().also {
-                        fm.beginTransaction().add(R.id.mapView, it).commit()
-                    }
-
-                map2Fragment.getMapAsync{naverMap ->
-                    val marker = Marker()
-                    marker.position = LatLng(latitude,longitude)
-                    naverMap.moveCamera(CameraUpdate.scrollTo(marker.position))
-                    marker.map = naverMap
-                    marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_focus)
-
-                }
-                return
-            }
-            "BOTTOM_D" -> {
-                val mapBottomFragment = fm.findFragmentById(R.id.place_detail_map) as MapFragment?
-                    ?:MapFragment.newInstance().also {
-                        fm.beginTransaction().add(R.id.place_detail_map,it).commit()
-                    }
-
-                mapBottomFragment.getMapAsync{naverMap ->
-                    val marker = Marker()
-                    marker.position = LatLng(latitude,longitude)
-                    naverMap.moveCamera(CameraUpdate.scrollTo(marker.position))
-                    marker.map = naverMap
-                    marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_focus)
-
-                }
-                return
-            }
-        }
-
-
-
-
-    }
     private fun initRecycler() {
         nearAdapter.setOnItemClickListener(object : MapPlaceRecyclerview.OnItemClickListener {
             override fun onItemClick(v: View, data: PlaceContentResponse, pos: Int) {
@@ -567,8 +583,8 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
             if(reason == CameraUpdate.REASON_GESTURE) {
                 togglebtn_gps.isChecked = false
                 trackingmode = false
-                Timber.e("CAMERAPOSITION:::latitude ${naverMap.cameraPosition.target.latitude}")
-                Timber.e("CAMERAPOSITION:::longitude ${naverMap.cameraPosition.target.longitude}")
+//                Timber.e("CAMERAPOSITION:::latitude ${naverMap.cameraPosition.target.latitude}")
+//                Timber.e("CAMERAPOSITION:::longitude ${naverMap.cameraPosition.target.longitude}")
 
             }
         }
@@ -637,6 +653,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback{
                 preMarker!!.icon = OverlayImage.fromResource(R.drawable.ic_mark_default)
                 val preMarkerData = preMarker!!.tag as TagMarkerData
                 preMarkerData.markerClick = false
+                preMarker = null
                 rv_map_near_place.setVisible()
                 cl_bottom_seat_place.setGone()
                 togglebtn_gps.setVisible()
