@@ -29,7 +29,7 @@
         app:layout_constraintVertical_bias="1.0"/>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:id="@+id/txt_home_near_place_title"
         android:textSize="16sp"
@@ -37,21 +37,27 @@
         android:fontFamily="@font/notosans_cjk_kr_bold"
         app:layout_constraintVertical_bias="0.85"
         android:layout_marginLeft="16dp"
+        android:maxLines="1"
+        android:ellipsize="end"
         android:textColor="@color/colorWhite"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:id="@+id/txt_home_near_place_tag1"
         android:textSize="12sp"
         tools:text="호텔 세느장"
+        android:maxLines="1"
+        android:ellipsize="end"
         android:fontFamily="@font/notosans_cjk_kr_regular"
         android:layout_marginLeft="16dp"
         android:textColor="@color/colorWhite"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/txt_home_near_place_title" />
 

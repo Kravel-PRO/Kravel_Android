@@ -19,7 +19,6 @@ import java.io.InputStream
 
      fun parse(inputStream : InputStream) : List<MapNearPlaceData> {
          try {
-             Timber.e("ddd")
              val factory = XmlPullParserFactory.newInstance()
              val parser = factory.newPullParser()
              parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, true)
