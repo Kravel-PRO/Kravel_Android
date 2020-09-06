@@ -106,8 +106,7 @@ class NetworkManager(authManager: AuthManager) {
     ) = retrofit.postScrap(placeId, data)
 
     private companion object {
-        const val BASE_URL ="http://ca0438124735.ngrok.io"
-//        const val BASE_URL = "http://15.164.118.217:8080"
+        const val BASE_URL = "http://15.164.118.217:8080"
 //        const val BASE_URL ="http://noah.is.kakaocorp.com"
     }
 }

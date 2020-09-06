@@ -74,15 +74,9 @@ class HomeFragment : Fragment() {
 
         if(checkPermissionForLocation(requireContext())) {
             startLocationUpdates()
-
         }
-
-
-
-        init()
         initPopularRecycler()
         initPhotoRecycler()
-
     }
     /*
   핸드폰 gps 가 꺼져있을 시 , gps를 키기위한 함수
@@ -106,16 +100,6 @@ class HomeFragment : Fragment() {
         }
 
     }
-    private fun init() {
-        txt_home_near_place_more.setOnDebounceClickListener {
-               Intent(GlobalApp,NearPlaceActivity::class.java).apply {
-                   putExtra("latitude",mLastLocation.latitude)
-                   putExtra("longitude",mLastLocation.longitude)
-               }.run {
-                   GlobalApp.startActivity(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-               }
-        }
-    }
     private fun initNearRecycler(latitude : Double?, longitude : Double?) {
 
         stoplocationUpdates()
@@ -138,6 +122,16 @@ class HomeFragment : Fragment() {
                 nearAdapter.initData(it.data!!.result.content)
                 if(it.data!!.result.content.isEmpty()) {
                     cl_home_near_place.setGone()
+                }
+
+
+                txt_home_near_place_more.setOnDebounceClickListener {
+                    Intent(GlobalApp, NearPlaceActivity::class.java).apply {
+                        putExtra("latitude", latitude!!)
+                        putExtra("longitude", longitude!!)
+                    }.run {
+                        GlobalApp.startActivity(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                    }
                 }
             },
             onFailure = {
