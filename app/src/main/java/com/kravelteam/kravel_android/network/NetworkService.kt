@@ -63,7 +63,7 @@ interface NetworkService {
     @GET("/api/celebrities/{id}/reviews")
     fun getCelebPhotoReview(
         @Path("id") id : Int
-    ) : Call<BaseResponse<CelebPhotoReviewResponse>>
+    ) : Call<BaseResponse<PhotoReviewResponse>>
 
     /**
      * 미디어 리스트
@@ -87,7 +87,7 @@ interface NetworkService {
     @GET("/api/medias/{id}/reviews")
     fun requestMediaPhotoReview(
         @Path("id") id: Int
-    ) : Call<BaseResponse<CelebPhotoReviewResponse>>
+    ) : Call<BaseResponse<PhotoReviewResponse>>
 
     /**
      * 장소
