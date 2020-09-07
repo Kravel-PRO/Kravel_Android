@@ -3,6 +3,7 @@ package com.kravelteam.kravel_android.ui.search
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
+import android.text.Editable
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -130,6 +131,8 @@ class SearchFragment : Fragment() {
             txt_search_recent_title.text = "최근 검색어"
             view_search_line.setGone()
             rv_search_recent_result.setGone()
+
+            edt_search_word.text = Editable.Factory.getInstance().newEditable("")
         }
     }
 
@@ -138,6 +141,8 @@ class SearchFragment : Fragment() {
             if(actionId == EditorInfo.IME_ACTION_SEARCH){
                 val edt_word = edt_search_word.text.toString()
                 val word = SearchWord(word = edt_word)
+
+                hideKeyboard()
 
                 var find: SearchWord? = null
                 CoroutineScope(Dispatchers.IO).launch {
@@ -161,7 +166,7 @@ class SearchFragment : Fragment() {
                     KravelApplication.db.searchWordDao().insertWord(word)
                 }
 
-                networkManager.requestSearchResult("펭귄").safeEnqueue(
+                networkManager.requestSearchResult("펭").safeEnqueue(
                     onSuccess = {
                         rv_search_recent.setGone()
                         txt_search_recent_title.text = "검색 결과"

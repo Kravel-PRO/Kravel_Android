@@ -3,8 +3,10 @@ package com.kravelteam.kravel_android.network
 import com.kravelteam.kravel_android.data.request.LoginRequest
 import com.kravelteam.kravel_android.data.request.ScrapBody
 import com.kravelteam.kravel_android.data.request.SignUpRequest
+import com.kravelteam.kravel_android.data.request.UpdateInfo
 import com.kravelteam.kravel_android.data.response.*
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -18,6 +20,20 @@ interface NetworkService {
         @Header("Authorization") token : String,
         @Query("query") query: String
     ) : Call<AddressResponse>
+
+    /**
+     * 제보하기
+     */
+    @Multipart
+    @POST("/api/member/inquires")
+    fun requestReport(
+        @Part files : ArrayList<MultipartBody.Part?>,
+        @Part("title") title: RequestBody,
+        @Part("contents") contents: RequestBody,
+        @Part("address") address: RequestBody,
+        @Part("tags") tags: RequestBody,
+        @Part("inquireCategory") inquireCategory: RequestBody
+    ) : Call<BaseResponse<Int>>
 
     /**
      * 로그인
@@ -34,6 +50,15 @@ interface NetworkService {
     fun requestSignUp(
         @Body data: SignUpRequest
     ) : Call<BaseResponse<Int>>
+
+    /**
+     * 내 정보 수정/비밀번호 수정
+     */
+    @PUT("/api/member")
+    fun requestUpdateInfo(
+        @Query("type") type: String,
+        @Body data: UpdateInfo
+    ) : Call<BaseResponse<Unit>>
 
     /**
      * 셀럽/미디어 검색 결과
