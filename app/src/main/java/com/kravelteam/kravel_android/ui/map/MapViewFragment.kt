@@ -685,6 +685,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
                     Timber.e("제발")
                 }
                 else {
+                    naverMap.locationTrackingMode = None
                     nearLocation = LatLng(naverMap.cameraPosition.target.latitude ,naverMap.cameraPosition.target.longitude)
                     initMarker(nearLocation!!.latitude,nearLocation!!.longitude)
                     initRecycler(nearLocation!!.latitude,nearLocation!!.longitude)
