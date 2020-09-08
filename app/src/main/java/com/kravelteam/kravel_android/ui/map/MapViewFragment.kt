@@ -703,8 +703,6 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
         naverMap.addOnCameraChangeListener{reason,animated ->
             if(reason == CameraUpdate.REASON_GESTURE) {
                 togglebtn_gps.isChecked = false
-                mLatitude = locationSource.lastLocation!!.latitude
-                mLongitude = locationSource.lastLocation!!.longitude
                 trackingmode = false
             }
             if(reason == CameraUpdate.REASON_LOCATION){

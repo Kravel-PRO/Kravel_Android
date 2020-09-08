@@ -66,7 +66,7 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             finish()
         }
 
-        initSetting()
+
         img_map_detail_photo.setOnClickListener {
                Intent(GlobalApp, CameraActivity::class.java).run {
                    GlobalApp.startActivity(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
@@ -243,6 +243,11 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         marker.map = naverMap
         marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_focus)
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        initSetting()
     }
 
 }
