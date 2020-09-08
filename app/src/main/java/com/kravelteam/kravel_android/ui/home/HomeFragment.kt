@@ -52,7 +52,7 @@ class HomeFragment : Fragment() {
     private var latitude : Double? = null
     private var longitude : Double?=null
     private val popularAdapter : PopularRecyclerview by lazy { PopularRecyclerview() }
-    private val photoAdapter : PhotoReviewRecyclerview by lazy { PhotoReviewRecyclerview() }
+    private lateinit var photoAdapter : PhotoReviewRecyclerview
     private val nearAdapter : NearPlaceRecyclerview by lazy { NearPlaceRecyclerview() }
     private val networkManager : NetworkManager by inject()
     override fun onCreateView(
@@ -65,6 +65,8 @@ class HomeFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        photoAdapter = PhotoReviewRecyclerview("new","", -1)
 
         mLocationRequest = LocationRequest()
         val locationManager = requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager

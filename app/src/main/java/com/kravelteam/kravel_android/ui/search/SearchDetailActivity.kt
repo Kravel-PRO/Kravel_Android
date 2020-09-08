@@ -25,7 +25,7 @@ import java.net.URL
 class SearchDetailActivity : AppCompatActivity() {
 
     private val placeAdapter: SearchDetailPlaceRecyclerview by lazy { SearchDetailPlaceRecyclerview() }
-    private val photoAdapter: PhotoReviewRecyclerview by lazy { PhotoReviewRecyclerview() }
+    private lateinit var photoAdapter: PhotoReviewRecyclerview
     private val networkManager : NetworkManager by inject()
 
     private var id : Int = 0
@@ -36,6 +36,7 @@ class SearchDetailActivity : AppCompatActivity() {
 
         id = intent.getIntExtra("id",0)
         part = intent.getStringExtra("part")
+        photoAdapter = PhotoReviewRecyclerview("default",part,id)
 
         initRecycler()
         initPlaceMoreBtn()

@@ -20,13 +20,6 @@
             app:layout_constraintVertical_weight="2.3">
 
             <TextView
-                android:id="@+id/txt_example"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="dkdkdkdkdkk"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
                 android:id="@+id/txt_user_nickname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -33,7 +33,7 @@ import java.net.URL
 
 class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
     private val hashtagAdapter : HashTagRecyclerView by lazy { HashTagRecyclerView() }
-    private val photoAdapter : PhotoReviewRecyclerview by lazy {PhotoReviewRecyclerview()}
+    private lateinit var photoAdapter : PhotoReviewRecyclerview
     private val nearplaceAdapter : MapNearPlaceRecyclerview by lazy { MapNearPlaceRecyclerview() } //BottomSheet
     private var placeId : Int = 0
     private lateinit var naverMap: NaverMap
@@ -41,6 +41,7 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
     private var latitude : Double = 0.0
     private var longitude : Double = 0.0
     private var checkScrap : Boolean = false
+    private var part: String = "place"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,9 +54,12 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         placeId = intent.getIntExtra("placeId", 0)
         setResult(Activity.RESULT_OK)
 
+        photoAdapter = PhotoReviewRecyclerview("default",part,placeId)
+
         img_photo_review_edit.setOnDebounceClickListener {
             Intent(GlobalApp,PostReviewActivity::class.java).apply{
                 putExtra("placeId",placeId)
+                putExtra("part",part)
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }.run {
                 GlobalApp.startActivity(this)

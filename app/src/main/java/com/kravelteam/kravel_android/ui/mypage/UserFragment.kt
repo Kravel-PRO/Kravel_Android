@@ -1,6 +1,7 @@
 package com.kravelteam.kravel_android.ui.mypage
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -8,6 +9,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.kravelteam.kravel_android.KravelApplication
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.network.AuthManager
@@ -41,12 +43,11 @@ class UserFragment : Fragment() {
     }
 
     private fun initSetting(){
-        //삭제해야함
-        txt_example.setOnDebounceClickListener {
-            startActivity(CameraActivity::class)
-        }
         cl_user_photo.setOnDebounceClickListener {
-            startActivity(MyPhotoReviewActivity::class)
+            Intent(KravelApplication.GlobalApp, MyPhotoReviewActivity::class.java).apply {
+                putExtra("review", "my")
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }.run { KravelApplication.GlobalApp.startActivity(this) }
         }
         cl_user_scrap.setOnDebounceClickListener {
             startActivity(ScrapActivity::class)
