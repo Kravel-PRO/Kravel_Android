@@ -9,8 +9,10 @@ import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.GlideApp
 import com.kravelteam.kravel_android.data.response.MyPhotoReviewData
 import com.kravelteam.kravel_android.util.inflate
+import com.kravelteam.kravel_android.util.setGone
+import com.kravelteam.kravel_android.util.setVisible
 
-class MyPhotoReviewRecyclerview: RecyclerView.Adapter<MyPhotoReviewRecyclerview.ViewHolder>(){
+class MyPhotoReviewRecyclerview(val checkReview: String): RecyclerView.Adapter<MyPhotoReviewRecyclerview.ViewHolder>(){
 
     private var data: List<MyPhotoReviewData> = emptyList()
 
@@ -36,8 +38,13 @@ class MyPhotoReviewRecyclerview: RecyclerView.Adapter<MyPhotoReviewRecyclerview.
         private val txtLike : TextView = itemView.findViewById(R.id.txt_my_photo_review_like_count)
 
         fun bind(item: MyPhotoReviewData){
+            if(checkReview == "my"){
+                txtPlaceName.setVisible()
+                txtPlaceName.text = item.title
+            } else if(checkReview == "default"){
+                txtPlaceName.setGone()
+            }
             GlideApp.with(itemView).load(item.imageUrl).into(img)
-            txtPlaceName.text = item.title
             txtYear.text = item.createdDate
             txtLike.text = item.likeCount.toString()
         }

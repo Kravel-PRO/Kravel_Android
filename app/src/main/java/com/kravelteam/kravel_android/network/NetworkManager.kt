@@ -4,10 +4,12 @@ import com.kravelteam.kravel_android.common.HeaderInterceptor
 import com.kravelteam.kravel_android.data.request.LoginRequest
 import com.kravelteam.kravel_android.data.request.ScrapBody
 import com.kravelteam.kravel_android.data.request.SignUpRequest
+import com.kravelteam.kravel_android.data.request.UpdateInfo
 import com.kravelteam.kravel_android.data.response.BaseResponse
 import com.kravelteam.kravel_android.data.response.MapResponse
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
+import okhttp3.RequestBody
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module
 import retrofit2.Call
@@ -46,11 +48,31 @@ class NetworkManager(authManager: AuthManager) {
         query: String
     ) = kakaoRetrofit.requestSearchAddress(token,query)
 
+    fun requestReport(
+        files : ArrayList<MultipartBody.Part?>,
+        title : RequestBody,
+        contents : RequestBody,
+        address : RequestBody,
+        tags : RequestBody,
+        inquireCategory: RequestBody
+    ) = retrofit.requestReport(files, title, contents, address, tags, inquireCategory)
+
     fun requestLogin(data : LoginRequest)
             = retrofit.requestLogin(data)
 
     fun requestSignUp(data: SignUpRequest)
             = retrofit.requestSignUp(data)
+
+    fun requestUserInfo() = retrofit.requestUserInfo()
+
+    fun requestUpdateInfo(
+        type: String,
+        data: UpdateInfo
+    ) = retrofit.requestUpdateInfo(type, data)
+
+    fun requestSearchResult(
+        search: String
+    ) = retrofit.requestSearchResult(search)
 
     fun requestCelebList() = retrofit.requestCelebList()
 

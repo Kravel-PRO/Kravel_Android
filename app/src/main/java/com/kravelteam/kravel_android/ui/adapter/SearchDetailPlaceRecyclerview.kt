@@ -41,7 +41,7 @@ class SearchDetailPlaceRecyclerview() : RecyclerView.Adapter<SearchDetailPlaceRe
             img.setRound(10.dpToPx().toFloat())
             txtPlace.text = item.title
             var tags = ""
-            item.celebrities.forEach {
+            item.tags?.forEach {
                 tags += "#$it "
             }
             txtTag.text = tags

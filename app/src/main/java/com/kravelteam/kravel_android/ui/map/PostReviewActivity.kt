@@ -9,6 +9,7 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
+import com.kravelteam.kravel_android.KravelApplication
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.GlideApp
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
@@ -33,6 +34,7 @@ class PostReviewActivity : AppCompatActivity() {
     private var selectedPicUri : Uri? = null
     private var selectImg: Boolean = false
     private var placeId: Int = 0
+    private var part: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +42,7 @@ class PostReviewActivity : AppCompatActivity() {
 
 
         placeId = intent.getIntExtra("placeId",0)
+        part = intent.getStringExtra("part")!!
 
         setImg()
         enableBtn()
@@ -79,7 +82,13 @@ class PostReviewActivity : AppCompatActivity() {
             networkManager.requestPostPhotoReview(placeId,picture).safeEnqueue(
                 onSuccess = {
                     toast("성공")
-                    startActivity(MyPhotoReviewActivity::class,true)
+                    Intent(KravelApplication.GlobalApp, MyPhotoReviewActivity::class.java).apply {
+                        putExtra("review", "default")
+                        putExtra("part",part)
+                        putExtra("id", placeId)
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    }.run { KravelApplication.GlobalApp.startActivity(this) }
+                    finish()
                 },
                 onFailure = {
                     toast("이미지 업로드에 실패했습니다. 다시 시도 부탁드립니다.")

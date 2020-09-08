@@ -13,6 +13,7 @@ import com.kravelteam.kravel_android.KravelApplication.Companion.GlobalApp
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.GlideApp
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
+import com.kravelteam.kravel_android.data.mock.NewPhotoReview
 import com.kravelteam.kravel_android.data.response.PhotoResponse
 import com.kravelteam.kravel_android.data.response.PhotoReviewData
 import com.kravelteam.kravel_android.ui.home.PhotoReviewActivity
@@ -22,7 +23,7 @@ import com.kravelteam.kravel_android.util.setGone
 import com.kravelteam.kravel_android.util.setVisible
 import org.koin.core.context.GlobalContext
 
-class PhotoReviewRecyclerview() : RecyclerView.Adapter<PhotoReviewRecyclerview.ViewHolder>(){
+class PhotoReviewRecyclerview(val review: String, val part: String?, val id: Int?) : RecyclerView.Adapter<PhotoReviewRecyclerview.ViewHolder>(){
 
     private var data: List<PhotoReviewData> = emptyList()
 
@@ -75,10 +76,19 @@ class PhotoReviewRecyclerview() : RecyclerView.Adapter<PhotoReviewRecyclerview.V
             txtMore.setVisible()
             view.setVisible()
             img.setOnDebounceClickListener {
-                Intent(GlobalApp, MyPhotoReviewActivity::class.java).apply {
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                }.run { GlobalApp.startActivity(this)
+                if((review == "my") or (review == "default")) {
+                    Intent(GlobalApp, MyPhotoReviewActivity::class.java).apply {
+                        putExtra("review", review)
+                        putExtra("part",part)
+                        putExtra("id",id)
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    }.run { GlobalApp.startActivity(this) }
+                } else if (review == "new") {
+                    Intent(GlobalApp, PhotoReviewActivity::class.java).apply {
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    }.run { GlobalApp.startActivity(this) }
                 }
+
             }
         }
     }

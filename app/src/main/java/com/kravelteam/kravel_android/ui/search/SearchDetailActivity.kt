@@ -25,7 +25,7 @@ import java.net.URL
 class SearchDetailActivity : AppCompatActivity() {
 
     private val placeAdapter: SearchDetailPlaceRecyclerview by lazy { SearchDetailPlaceRecyclerview() }
-    private val photoAdapter: PhotoReviewRecyclerview by lazy { PhotoReviewRecyclerview() }
+    private lateinit var photoAdapter: PhotoReviewRecyclerview
     private val networkManager : NetworkManager by inject()
 
     private var id : Int = 0
@@ -36,6 +36,7 @@ class SearchDetailActivity : AppCompatActivity() {
 
         id = intent.getIntExtra("id",0)
         part = intent.getStringExtra("part")
+        photoAdapter = PhotoReviewRecyclerview("default",part,id)
 
         initRecycler()
         initPlaceMoreBtn()
@@ -84,8 +85,8 @@ class SearchDetailActivity : AppCompatActivity() {
                         addItemDecoration(HorizontalItemDecorator(4))
                         addItemDecoration(VerticalItemDecorator(4))
                     }
-                    if(!it.data.result.reviews.isNullOrEmpty()) {
-                        photoAdapter.initData(it.data.result!!.reviews)
+                    if(!it.data.result.content.isNullOrEmpty()) {
+                        photoAdapter.initData(it.data.result.content)
                     }
                 },
                 onFailure = {
@@ -98,7 +99,7 @@ class SearchDetailActivity : AppCompatActivity() {
         } else { //미디어 디테일 상세 정보
             networkManager.requestMediaDetail(id).safeEnqueue(
                 onSuccess = {
-                    GlideApp.with(this).load(it.data.result.media.imageUrl).into(img_search_detail_title)
+                    GlideApp.with(this).load(it.data.result.imageUrl).into(img_search_detail_title)
                     placeAdapter.initData(it.data.result.places)
                 },
                 onFailure = {},
@@ -113,7 +114,7 @@ class SearchDetailActivity : AppCompatActivity() {
                         addItemDecoration(HorizontalItemDecorator(4))
                         addItemDecoration(VerticalItemDecorator(4))
                     }
-                    val data = it.data.result.reviews
+                    val data = it.data.result.content
                     data.isNullOrEmpty().let {
                         photoAdapter.initData(data)
                     }
