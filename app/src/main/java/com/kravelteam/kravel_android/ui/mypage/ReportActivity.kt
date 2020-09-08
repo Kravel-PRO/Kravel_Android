@@ -161,6 +161,7 @@ class ReportActivity : AppCompatActivity() {
             networkManager.requestReport(pictureList, title, contents, address, tags, inquireCategory).safeEnqueue(
                 onSuccess = {
                     toast("제보가 완료되었습니다! 감사합니다!")
+                    finish()
                 },
                 onFailure = {
                     toast("네트워크 에러 발생")
