@@ -38,7 +38,7 @@ class AddressRecyclerview(val onFinish: (address: String) -> Unit) : RecyclerVie
             txtPlaceAddress.text = item.address_name
 
             itemView.setOnDebounceClickListener {
-                onFinish(item.place_name)
+                onFinish(item.address_name)
             }
         }
     }

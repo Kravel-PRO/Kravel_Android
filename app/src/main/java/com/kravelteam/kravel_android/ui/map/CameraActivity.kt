@@ -5,7 +5,6 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.hardware.Camera
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.media.MediaScannerConnection
@@ -23,7 +22,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.net.toFile
 import com.google.common.util.concurrent.ListenableFuture
-import com.kravelteam.kravel_android.KravelApplication
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.GlideApp
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
@@ -60,8 +58,21 @@ class CameraActivity : AppCompatActivity(){
             ActivityCompat.requestPermissions(
                 this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
         }
+        //갤러리 퍼미션
+        if (!allStoragePermissionsGranted()){
+            ActivityCompat.requestPermissions(
+                this, REQUIRED_STORAGE_PERMISSIONS, REQUEST_CODE_STORAGE_PERMISSIONS)
+        }
 
-        btn_camera_capture.setOnClickListener { takePhoto() }
+        btn_camera_capture.setOnClickListener {
+            //갤러리 퍼미션
+            if (!allStoragePermissionsGranted()){
+                ActivityCompat.requestPermissions(
+                    this, REQUIRED_STORAGE_PERMISSIONS, REQUEST_CODE_STORAGE_PERMISSIONS)
+            } else {
+                takePhoto()
+            }
+        }
 
         cameraExecutor = Executors.newSingleThreadExecutor()
 
@@ -167,6 +178,11 @@ class CameraActivity : AppCompatActivity(){
             baseContext, it) == PackageManager.PERMISSION_GRANTED
     }
 
+    private fun allStoragePermissionsGranted() = REQUIRED_STORAGE_PERMISSIONS.all {
+        ContextCompat.checkSelfPermission(
+            baseContext, it ) == PackageManager.PERMISSION_GRANTED
+    }
+
     @SuppressLint("RestrictedApi")
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
@@ -223,12 +239,19 @@ class CameraActivity : AppCompatActivity(){
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
             if (allPermissionsGranted()) {
+                cl_no_access_camera.setGone()
                 startCamera()
             } else {
                 Toast.makeText(this,
                     "카메라 권한 설정을 해주세요",
                     Toast.LENGTH_SHORT).show()
-                finish()
+                cl_no_access_camera.setVisible()
+            }
+        } else if (requestCode == REQUEST_CODE_STORAGE_PERMISSIONS) {
+            if(!allStoragePermissionsGranted()){
+                Toast.makeText(this,
+                    "갤러리 접근 권한 설정을 해주세요",
+                    Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -243,6 +266,8 @@ class CameraActivity : AppCompatActivity(){
         private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
         private const val REQUEST_CODE_PERMISSIONS = 10
         private val REQUIRED_PERMISSIONS = arrayOf(android.Manifest.permission.CAMERA)
+        private const val REQUEST_CODE_STORAGE_PERMISSIONS = 11
+        private val REQUIRED_STORAGE_PERMISSIONS = arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.READ_EXTERNAL_STORAGE)
     }
 
 }

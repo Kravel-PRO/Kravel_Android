@@ -60,11 +60,10 @@
             android:id="@+id/txt_update_pw_explan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="68dp"
+            android:layout_marginTop="18dp"
             android:text="본인 확인을 위해 비밀번호를 입력해주세요."
             android:textColor="@color/colorBlack"
             android:textSize="15sp"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -76,48 +75,19 @@
             android:hint="6자리 이상으로 입력해주세요."
             android:textColor="@color/colorBlack"
             android:textSize="15sp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@+id/txt_update_pw_explan" />
-
-
-        <TextView
-            android:id="@+id/btn_update_pw_check"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/selector_btn_enable_background"
-            android:fontFamily="@font/notosans_cjk_kr_bold"
-            android:gravity="center"
-            android:paddingTop="17dp"
-            android:paddingBottom="16dp"
-            android:text="본인 확인하기"
-            android:textColor="@color/colorWhite"
-            android:textSize="15sp"
-            android:layout_marginHorizontal="20dp"
-            app:layout_constraintBottom_toBottomOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_update_pw_content2"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="24dp"
-        app:layout_constraintTop_toBottomOf="@id/cl_update_pw_toolbar"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_weight="8.89"
-        android:visibility="invisible">
 
         <TextView
             android:id="@+id/txt_update_pw_change"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="24dp"
             android:text="변경할 비밀번호를 입력해주세요."
             android:textColor="@color/colorBlack"
             android:textSize="15sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/edt_update_pw_content" />
 
         <EditText
             android:id="@+id/edt_update_pw_change"

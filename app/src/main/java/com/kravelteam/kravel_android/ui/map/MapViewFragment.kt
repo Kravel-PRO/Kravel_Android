@@ -63,7 +63,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
     private  var mLatitude : Double = 0.0
     private var mLongitude : Double = 0.0
     private val nearplaceAdapter : MapNearPlaceRecyclerview by lazy { MapNearPlaceRecyclerview() } //BottomSheet_Detail
-    private val photoAdapter : PhotoReviewRecyclerview by lazy { PhotoReviewRecyclerview() } //BottomSheet
+    private lateinit var photoAdapter : PhotoReviewRecyclerview //BottomSheet
     private val hashtagAdapter : HashTagRecyclerView by lazy { HashTagRecyclerView() } //BottomSheet
     private val nearAdapter: MapPlaceRecyclerview by lazy { MapPlaceRecyclerview() }
     private var checkScrap : Boolean = false // BottomSheet
@@ -338,6 +338,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
     }
 
     private fun initPhotoReview(mode : String,placeId: Int) {
+        photoAdapter = PhotoReviewRecyclerview("default","place",placeId)
         networkManager.getPlaceReview(placeId).safeEnqueue(
             onSuccess = {
                 when(mode) {

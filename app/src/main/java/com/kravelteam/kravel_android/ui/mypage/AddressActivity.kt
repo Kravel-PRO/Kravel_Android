@@ -74,11 +74,8 @@ class AddressActivity : AppCompatActivity() {
         val query = edt_address_search.text.toString()
         val token = resources.getString(R.string.kakao_api_key)
 
-        Timber.e("검색22")
-
         networkManager.requestSearchAddress(token, query).safeEnqueue(
             onSuccess = {
-                Timber.e("검색")
                 if(it.documents.isNullOrEmpty()){
                     rv_address.setGone()
                     img_no_empty_result.setVisible()
