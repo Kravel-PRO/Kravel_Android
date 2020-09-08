@@ -73,6 +73,8 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         img_map_detail_scrap.setOnClickListener {
+            Timber.e("placeID //////${placeId}")
+            Timber.e("scrap ////////${checkScrap}")
             if(checkScrap) {
                 Timber.e("checkScrap true -> false")
                 //checkScrap == TRUE
