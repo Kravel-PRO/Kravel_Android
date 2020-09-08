@@ -52,6 +52,12 @@ interface NetworkService {
     ) : Call<BaseResponse<Int>>
 
     /**
+     * 내 정보 가져오기
+     */
+    @GET("/api/members/me")
+    fun requestUserInfo() : Call<BaseResponse<UserInfoResponse>>
+
+    /**
      * 내 정보 수정/비밀번호 수정
      */
     @PUT("/api/member")

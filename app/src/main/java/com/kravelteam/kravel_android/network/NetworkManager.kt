@@ -63,6 +63,8 @@ class NetworkManager(authManager: AuthManager) {
     fun requestSignUp(data: SignUpRequest)
             = retrofit.requestSignUp(data)
 
+    fun requestUserInfo() = retrofit.requestUserInfo()
+
     fun requestUpdateInfo(
         type: String,
         data: UpdateInfo

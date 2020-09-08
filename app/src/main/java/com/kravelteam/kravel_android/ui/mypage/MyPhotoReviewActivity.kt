@@ -60,7 +60,6 @@ class MyPhotoReviewActivity : AppCompatActivity() {
             }
 
         }
-        Timber.e("${checkReview}, ${checkPart}, $id")
 
         initSetting()
     }
