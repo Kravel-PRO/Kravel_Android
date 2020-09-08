@@ -79,6 +79,8 @@ class HomeFragment : Fragment() {
         }
         initPopularRecycler()
         initPhotoRecycler()
+        cl_home_near_place.setGone()
+
     }
     /*
   핸드폰 gps 가 꺼져있을 시 , gps를 키기위한 함수
@@ -121,11 +123,11 @@ class HomeFragment : Fragment() {
                     adapter = nearAdapter
                     addItemDecoration(HorizontalItemDecorator(16))
                 }
-                nearAdapter.initData(it.data!!.result.content)
-                if(it.data!!.result.content.isEmpty()) {
-                    cl_home_near_place.setGone()
-                }
 
+                if(!it.data!!.result.content.isNullOrEmpty()) {
+                    nearAdapter.initData(it.data!!.result.content)
+                    cl_home_near_place.setVisible()
+                }
 
                 txt_home_near_place_more.setOnDebounceClickListener {
                     Intent(GlobalApp, NearPlaceActivity::class.java).apply {
@@ -185,7 +187,7 @@ class HomeFragment : Fragment() {
     }
     private fun initPhotoRecycler() {
 
-        networkManager.getPhotoReview(0,6,"reviewLikes,desc").safeEnqueue (
+        networkManager.getPhotoReview(0,7,"reviewLikes,desc").safeEnqueue (
             onSuccess = {
                 rv_home_photo_review.apply {
                     adapter = photoAdapter
@@ -248,11 +250,14 @@ class HomeFragment : Fragment() {
         if(latitude!=null && longitude!=null) {
             initNearRecycler(latitude, longitude)
 
+
         }
     }
 
     private fun stoplocationUpdates() {
-        mFusedLocationProviderClient!!.removeLocationUpdates(mLocationCallback)
+        if(mFusedLocationProviderClient != null) {
+            mFusedLocationProviderClient!!.removeLocationUpdates(mLocationCallback)
+        }
     }
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         if (requestCode == REQUEST_PERMISSION_LOCATION) {
@@ -278,11 +283,6 @@ class HomeFragment : Fragment() {
         } else {
             true
         }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        stoplocationUpdates()
     }
 
 

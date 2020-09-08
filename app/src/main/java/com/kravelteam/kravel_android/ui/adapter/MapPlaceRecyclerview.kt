@@ -37,7 +37,13 @@ class MapPlaceRecyclerview() : RecyclerView.Adapter<MapPlaceRecyclerview.ViewHol
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
             = ViewHolder(parent.inflate(R.layout.item_map_near_place))
 
-    override fun getItemCount(): Int = data.size
+    override fun getItemCount(): Int {
+        return if(data.size>10) {
+            10
+        } else {
+            data.size
+        }
+    }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(data[position],listener)

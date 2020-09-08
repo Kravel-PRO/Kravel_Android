@@ -187,11 +187,23 @@
                     android:includeFontPadding="false"
                     />
 
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/img_bottom_photo_edit"
+                    android:src="@drawable/ic_write"
+                    app:layout_constraintTop_toTopOf="@id/txt_bottom_photo_title"
+                    app:layout_constraintBottom_toBottomOf="@id/txt_bottom_photo_title"
+                    app:layout_constraintRight_toRightOf="parent"/>
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_home_photo_review"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="12dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/txt_bottom_photo_title"
                     app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                     app:spanCount="3"
