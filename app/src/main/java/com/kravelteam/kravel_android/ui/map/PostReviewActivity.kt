@@ -42,7 +42,9 @@ class PostReviewActivity : AppCompatActivity() {
 
 
         placeId = intent.getIntExtra("placeId",0)
-        part = intent.getStringExtra("part")!!
+        if(!intent.getStringExtra("part").isNullOrEmpty()) {
+            part = intent.getStringExtra("part")!!
+        }
 
         setImg()
         enableBtn()

@@ -55,6 +55,11 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         setResult(Activity.RESULT_OK)
 
         photoAdapter = PhotoReviewRecyclerview("default",part,placeId)
+        rv_map_detail_photo.apply {
+            adapter = photoAdapter
+            addItemDecoration(VerticalItemDecorator(4))
+            addItemDecoration(HorizontalItemDecorator(4))
+        }
 
         img_photo_review_edit.setOnDebounceClickListener {
             Intent(GlobalApp,PostReviewActivity::class.java).apply{
@@ -216,11 +221,7 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
         networkManager.getPlaceReview(placeId).safeEnqueue(
             onSuccess = {
-                rv_map_detail_photo.apply {
-                    adapter = photoAdapter
-                    addItemDecoration(VerticalItemDecorator(4))
-                    addItemDecoration(HorizontalItemDecorator(4))
-                }
+
 
                 if (!it.data.result.content.isNullOrEmpty()) {
                     photoAdapter.initData(it.data.result.content)
@@ -250,8 +251,8 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onResume() {
-        super.onResume()
         initSetting()
+        super.onResume()
     }
 
 }

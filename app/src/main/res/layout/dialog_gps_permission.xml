@@ -34,18 +34,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
+        <Button
             android:id="@+id/btn_gps_no"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="7dp"
             android:background="@drawable/grey_round_background"
             android:gravity="center"
-            android:paddingVertical="13dp"
+            android:textAlignment="center"
             android:text="@string/no"
             android:textColor="@color/colorDarkGrey"
-            android:textSize="15sp"
+            android:textSize="14sp"
             android:fontFamily="@font/notosans_cjk_kr_bold"
             android:layout_marginBottom="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -53,18 +53,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txt_logout_title" />
 
-        <TextView
+        <Button
             android:id="@+id/btn_gps_yes"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_marginLeft="7dp"
-            android:layout_marginRight="16dp"
             android:background="@drawable/selector_btn_enable_background"
             android:gravity="center"
-            android:paddingVertical="13dp"
             android:text="@string/yes"
+            android:textAlignment="center"
             android:textColor="@color/colorWhite"
-            android:textSize="15sp"
+            android:textSize="14sp"
             android:fontFamily="@font/notosans_cjk_kr_bold"
             app:layout_constraintBottom_toBottomOf="@+id/btn_gps_no"
             app:layout_constraintEnd_toEndOf="parent"

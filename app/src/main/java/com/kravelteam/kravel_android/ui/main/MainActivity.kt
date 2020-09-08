@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
@@ -15,6 +16,7 @@ import com.kravelteam.kravel_android.ui.map.MapViewFragment
 import com.kravelteam.kravel_android.ui.map.fragmentBackPressed
 import com.kravelteam.kravel_android.ui.mypage.UserFragment
 import com.kravelteam.kravel_android.ui.search.SearchFragment
+import com.kravelteam.kravel_android.util.toast
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -66,6 +68,7 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fl_main, list[tabNum].fragment)
             .commitAllowingStateLoss()
+        checkFragment = false
     }
 
     data class Menus(
@@ -81,13 +84,28 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+    companion object{
+        private var backKeyPressedTime : Long = 0
+        private var checkFragment : Boolean = false
+    }
 
     override fun onBackPressed() {
-
+      //  super.onBackPressed()
         val fragment = this.supportFragmentManager.findFragmentById(R.id.fl_main)
         (fragment as? fragmentBackPressed)?.onBackPressed()?.not()?.let {
-            super.onBackPressed()
+            checkFragment = true
         }
+        if(!checkFragment) {
+            if (System.currentTimeMillis() > backKeyPressedTime + 2000) {
+                backKeyPressedTime = System.currentTimeMillis()
+                this.toast("뒤로 버튼을 한번 더 누르시면 종료됩니다.")
+                return
+            } else {
+                this.finish()
+            }
+        }
+
+
     }
 
 }
