@@ -55,6 +55,11 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         setResult(Activity.RESULT_OK)
 
         photoAdapter = PhotoReviewRecyclerview("default",part,placeId)
+        rv_map_detail_photo.apply {
+            adapter = photoAdapter
+            addItemDecoration(VerticalItemDecorator(4))
+            addItemDecoration(HorizontalItemDecorator(4))
+        }
 
         img_photo_review_edit.setOnDebounceClickListener {
             Intent(GlobalApp,PostReviewActivity::class.java).apply{
@@ -70,7 +75,7 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             finish()
         }
 
-        initSetting()
+
         img_map_detail_photo.setOnClickListener {
                Intent(GlobalApp, CameraActivity::class.java).run {
                    GlobalApp.startActivity(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
@@ -216,11 +221,7 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
         networkManager.getPlaceReview(placeId).safeEnqueue(
             onSuccess = {
-                rv_map_detail_photo.apply {
-                    adapter = photoAdapter
-                    addItemDecoration(VerticalItemDecorator(4))
-                    addItemDecoration(HorizontalItemDecorator(4))
-                }
+
 
                 if (!it.data.result.content.isNullOrEmpty()) {
                     photoAdapter.initData(it.data.result.content)
@@ -247,6 +248,11 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         marker.map = naverMap
         marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_focus)
 
+    }
+
+    override fun onResume() {
+        initSetting()
+        super.onResume()
     }
 
 }
