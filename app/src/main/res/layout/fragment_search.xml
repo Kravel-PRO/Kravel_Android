@@ -40,7 +40,7 @@
                 android:hint="연예인, 드라마 등을 검색해주세요"
                 android:inputType="textPersonName"
                 android:paddingLeft="12dp"
-                android:paddingRight="30dp"
+                android:paddingRight="45dp"
                 android:textColor="@color/colorBlack"
                 android:textSize="15sp"
                 android:imeOptions="actionSearch"
@@ -48,6 +48,16 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/img_search_back"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/img_search_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/btn_search"
+                android:layout_marginEnd="20dp"
+                app:layout_constraintBottom_toBottomOf="@+id/edt_search_word"
+                app:layout_constraintEnd_toEndOf="@+id/edt_search_word"
+                app:layout_constraintTop_toTopOf="@+id/edt_search_word" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

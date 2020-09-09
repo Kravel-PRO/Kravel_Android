@@ -104,7 +104,7 @@
 
                     <EditText
                         android:id="@+id/edt_report_place_name"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="16dp"

@@ -46,6 +46,8 @@ class PostReviewActivity : AppCompatActivity() {
             part = intent.getStringExtra("part")!!
         }
 
+        img_post_review_back.setOnDebounceClickListener { finish() }
+
         setImg()
         enableBtn()
         postPhotoReview()
