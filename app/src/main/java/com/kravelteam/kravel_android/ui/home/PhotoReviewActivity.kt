@@ -8,12 +8,20 @@ import com.kravelteam.kravel_android.common.VerticalItemDecorator
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.mock.NewPhotoReview
 import com.kravelteam.kravel_android.data.mock.PopularPlaceData
+import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.CelebRecyclerview
 import com.kravelteam.kravel_android.ui.adapter.NewPhotoReviewRecyclerview
+import com.kravelteam.kravel_android.ui.adapter.PopularRecyclerview
+import com.kravelteam.kravel_android.util.networkErrorToast
+import com.kravelteam.kravel_android.util.safeEnqueue
+import com.kravelteam.kravel_android.util.setGone
 import kotlinx.android.synthetic.main.activity_photo_review.*
 import kotlinx.android.synthetic.main.fragment_home.*
+import org.koin.android.ext.android.inject
+import timber.log.Timber
 
 class PhotoReviewActivity : AppCompatActivity() {
+    private val networkManager : NetworkManager by inject()
     private val photoAdapter : NewPhotoReviewRecyclerview by lazy { NewPhotoReviewRecyclerview() }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,11 +33,27 @@ class PhotoReviewActivity : AppCompatActivity() {
         }
     }
     private fun initPhotoReivew() {
-        rv_photo_review.apply {
-            adapter = photoAdapter
-            addItemDecoration(VerticalItemDecorator(18))
-            addItemDecoration(HorizontalItemDecorator(8))
-        }
+        networkManager.getPhotoReview( offset= 0, size = 20 , sort ="reviewLikes,desc").safeEnqueue (
+            onSuccess = {
+//                rv_home_photo_review.apply {
+//                    adapter = photoAdapter
+//                    addItemDecoration(VerticalItemDecorator(4))
+//                    addItemDecoration(HorizontalItemDecorator(4))
+//                }
+
+//                photoAdapter.initData(it.data.result.content)
+                if(it.data.result.content.isNullOrEmpty()) {
+                    txt_home_photo1.setGone()
+                    txt_home_photo2.setGone()
+                }
+            },
+            onFailure = {
+                Timber.e("실패")
+            },
+            onError = {
+                networkErrorToast()
+            }
+        )
 
         photoAdapter.initData(
             listOf(
