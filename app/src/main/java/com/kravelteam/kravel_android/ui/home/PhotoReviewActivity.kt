@@ -33,7 +33,7 @@ class PhotoReviewActivity : AppCompatActivity() {
         }
     }
     private fun initPhotoReivew() {
-        networkManager.getPhotoReview( offset= 0, size = 20 , sort ="reviewLikes,desc").safeEnqueue (
+        networkManager.getPhotoReview( page= 0, size = 20 , sort ="reviewLikes,desc").safeEnqueue (
             onSuccess = {
 //                rv_home_photo_review.apply {
 //                    adapter = photoAdapter
