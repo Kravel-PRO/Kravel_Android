@@ -2,6 +2,8 @@ package com.kravelteam.kravel_android.ui.adapter
 
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
+import android.widget.ImageSwitcher
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -9,15 +11,17 @@ import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.GlideApp
 import com.kravelteam.kravel_android.data.mock.NewPhotoReview
 import com.kravelteam.kravel_android.data.response.PhotoResponse
+import com.kravelteam.kravel_android.data.response.PhotoReviewData
+import com.kravelteam.kravel_android.data.response.PhotoReviewResponse
 import com.kravelteam.kravel_android.util.*
 import org.w3c.dom.Text
 import timber.log.Timber
 
 class NewPhotoReviewRecyclerview() : RecyclerView.Adapter<NewPhotoReviewRecyclerview.ViewHolder>(){
 
-    private var data: List<NewPhotoReview> = emptyList()
+    private var data: List<PhotoReviewData> = emptyList()
 
-    fun initData(data: List<NewPhotoReview>){
+    fun initData(data: List<PhotoReviewData>){
         this.data = data
         notifyDataSetChanged()
     }
@@ -40,20 +44,18 @@ class NewPhotoReviewRecyclerview() : RecyclerView.Adapter<NewPhotoReviewRecycler
         private val img : ImageView = itemView.findViewById(R.id.img_rv_photo)
         private val txtPlace : TextView = itemView.findViewById(R.id.txt_rv_photo_title)
         private val txtTag : TextView = itemView.findViewById(R.id.txt_rv_photo_tag)
-        fun bind(item: NewPhotoReview){
-            GlideApp.with(itemView).load(item.img).into(img)
+        private val txtPhotoLike : TextView = itemView.findViewById(R.id.txt_rv_photo_like)
+        private val imgPhotoLike : ImageButton = itemView.findViewById(R.id.img_rv_photo_like)
+        fun bind(item: PhotoReviewData){
+            GlideApp.with(itemView).load(item.imageURl).into(img)
             img.setRound(10.dpToPx().toFloat())
-            txtPlace.text = item.place
-
-            var str : String = ""
-            for(i in 0 until item.tag.size) {
-                str = str+"#"+item.tag.get(i)
-
-                if(i!=item.tag.size-1) {
-                    str = str+" "
-                }
+            txtPlace.text = item.pageTitle
+            if(item.like) {
+                imgPhotoLike.isSelected = true
             }
-            txtTag.text = str
+
+            txtPhotoLike.text = item.likeCount.toString()
+
         }
     }
 }
