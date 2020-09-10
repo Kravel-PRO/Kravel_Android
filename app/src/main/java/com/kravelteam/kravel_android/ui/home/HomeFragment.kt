@@ -187,7 +187,7 @@ class HomeFragment : Fragment() {
     }
     private fun initPhotoRecycler() {
 
-        networkManager.getPhotoReview(1,7,"reviewLikes,desc").safeEnqueue (
+        networkManager.getPhotoReview(0,7,"createdDate,desc").safeEnqueue (
             onSuccess = {
                 Timber.e("사진리뷰")
                 rv_home_photo_review.apply {
