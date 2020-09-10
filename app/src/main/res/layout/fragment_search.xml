@@ -15,38 +15,23 @@
             android:id="@+id/cl_search_edit_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingHorizontal="16dp"
             app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:id="@+id/img_search_back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/btn_back"
-                android:layout_marginLeft="16dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:visibility="gone"/>
-
-            <EditText
-                android:id="@+id/edt_search_word"
+            <TextView
+                android:id="@+id/edt_search_word_area"
                 android:layout_width="0dp"
                 android:layout_height="52dp"
                 android:layout_marginVertical="16dp"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="16dp"
-                app:layout_goneMarginLeft="16dp"
                 android:background="@drawable/signup_btn_style"
-                android:hint="연예인, 드라마 등을 검색해주세요"
-                android:inputType="textPersonName"
-                android:paddingLeft="12dp"
-                android:paddingRight="45dp"
-                android:textColor="@color/colorBlack"
+                android:text="연예인, 드라마 등을 검색해주세요"
+                android:textColor="@color/colorOpacity30Black"
                 android:textSize="15sp"
-                android:imeOptions="actionSearch"
+                android:gravity="left|center"
+                android:paddingStart="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/img_search_back"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
@@ -55,9 +40,9 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/btn_search"
                 android:layout_marginEnd="20dp"
-                app:layout_constraintBottom_toBottomOf="@+id/edt_search_word"
-                app:layout_constraintEnd_toEndOf="@+id/edt_search_word"
-                app:layout_constraintTop_toTopOf="@+id/edt_search_word" />
+                app:layout_constraintBottom_toBottomOf="@+id/edt_search_word_area"
+                app:layout_constraintEnd_toEndOf="@+id/edt_search_word_area"
+                app:layout_constraintTop_toTopOf="@+id/edt_search_word_area" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -88,129 +73,6 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_search_recent"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@id/cl_search_edit_search"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:visibility="gone">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_search_recent_word_empty"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cl_search_recent_word_empty_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toTopOf="@id/cl_search_recent_word_empty_background"
-                    app:layout_constraintVertical_weight="3.8">
-
-                    <TextView
-                        android:id="@+id/txt_search_recent_word_empty"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="최근 검색어 내역이 없습니다."
-                        android:textColor="@color/colorDarkGrey"
-                        android:textSize="15sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cl_search_recent_word_empty_background"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:background="@color/colorOpacityWhiteGrey"
-                    app:layout_constraintTop_toBottomOf="@id/cl_search_recent_word_empty_text"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintVertical_weight="4.9">
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_search_recent_word"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:visibility="gone">
-
-                <TextView
-                    android:id="@+id/txt_search_recent_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="최근 검색어"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginLeft="16dp"
-                    android:textColor="@color/colorDarkGrey"
-                    android:textSize="12sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_search_recent"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="16dp"
-                    android:paddingHorizontal="16dp"
-                    android:orientation="vertical"
-                    app:layout_constraintTop_toBottomOf="@id/txt_search_recent_title"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:listitem="@layout/item_search_word"
-                    android:visibility="gone"/>
-                
-                <View
-                    android:id="@+id/view_search_line"
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:background="@color/colorGrey"
-                    android:layout_marginTop="11dp"
-                    app:layout_constraintTop_toBottomOf="@id/txt_search_recent_title"
-                    android:visibility="gone"/>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_search_recent_result"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="16dp"
-                    android:paddingHorizontal="16dp"
-                    android:background="@color/colorOpacity20WhiteGrey"
-                    app:layout_constraintTop_toBottomOf="@id/view_search_line"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:spanCount="3"
-                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                    tools:listitem="@layout/item_celeb_title"
-                    android:visibility="gone"/>
-
-                <TextView
-                    android:id="@+id/txt_search_recent_empty"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="검색어가 없습니다.\n검색어를 다시 한 번 확인해주세요."
-                    android:textColor="@color/colorDarkGrey"
-                    android:textSize="15sp"
-                    android:gravity="center"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:visibility="gone"/>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
