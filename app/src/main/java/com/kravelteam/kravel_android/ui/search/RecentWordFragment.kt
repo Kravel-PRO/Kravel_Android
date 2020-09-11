@@ -50,7 +50,9 @@ class RecentWordFragment : Fragment() {
 
         lifecycleScope.launch(Dispatchers.IO) {
             val data = KravelApplication.db.searchWordDao().getAll()
-            wordAdapter.initData(data)
+            val order = data.reversed().toMutableList()
+
+            wordAdapter.initData(order)
             dataSize = data.size
 
             if (dataSize > 0) {
