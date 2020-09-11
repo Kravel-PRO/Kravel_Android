@@ -15,6 +15,7 @@ class SetLanguageActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_set_language)
 
+
         initCheckRadioBtn()
         initEnableBtn()
     }
