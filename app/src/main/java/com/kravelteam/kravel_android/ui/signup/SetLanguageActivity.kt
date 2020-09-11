@@ -32,7 +32,7 @@ class SetLanguageActivity : AppCompatActivity() {
 
         rb_set_language_chinese.setOnCheckedChangeListener { _, isChecked ->
             if(isChecked) {
-                rb_set_language_chinese.setTextColor(resources.getColor(R.color.colorCoral))
+                rb_set_language_chinese.setTextColor(resources.getColor(R.color.colorDarkGrey))
                 checkLang = true
                 initEnableBtn()
             } else {
