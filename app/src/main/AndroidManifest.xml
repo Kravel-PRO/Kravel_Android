@@ -36,7 +36,7 @@
         </activity>
         <activity android:name=".ui.map.PostReviewActivity" />
         <activity android:name=".ui.mypage.ScrapActivity" />
-        <activity android:name=".ui.mypage.MyPhotoReviewActivity" />
+        <activity android:name=".ui.mypage.AllPhotoReviewActivity" />
         <activity android:name=".ui.map.PlaceDetailActivity" />
         <activity android:name=".ui.mypage.ReportActivity" />
         <activity android:name=".ui.mypage.UpdatePwActivity" />

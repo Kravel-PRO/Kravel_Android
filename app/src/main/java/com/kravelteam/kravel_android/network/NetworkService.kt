@@ -205,7 +205,7 @@ interface NetworkService {
      * 내 포토 리뷰
      */
     @GET("/api/member/reviews")
-    fun requestMyPhotoReviews() : Call<BaseResponse<MyPhotoReviewResponse>>
+    fun requestMyPhotoReviews() : Call<BaseResponse<PhotoReviewResponse>>
 
     /**
      * 장소 상세 - 스크랩

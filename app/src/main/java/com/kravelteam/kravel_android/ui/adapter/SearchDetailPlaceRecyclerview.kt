@@ -24,7 +24,13 @@ class SearchDetailPlaceRecyclerview() : RecyclerView.Adapter<SearchDetailPlaceRe
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
             = ViewHolder(parent.inflate(R.layout.item_search_detail_place))
 
-    override fun getItemCount(): Int = data.size
+    override fun getItemCount(): Int {
+        return if (data.size > 6) {
+            6
+        } else {
+            data.size
+        }
+    }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(data[position])
@@ -41,7 +47,7 @@ class SearchDetailPlaceRecyclerview() : RecyclerView.Adapter<SearchDetailPlaceRe
             img.setRound(10.dpToPx().toFloat())
             txtPlace.text = item.title
             var tags = ""
-            item.tags?.forEach {
+            item.tags?.split(",")?.forEach {
                 tags += "#$it "
             }
             txtTag.text = tags

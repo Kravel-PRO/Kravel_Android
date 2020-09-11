@@ -7,14 +7,14 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.GlideApp
-import com.kravelteam.kravel_android.data.response.MyPhotoReviewData
+import com.kravelteam.kravel_android.data.response.PhotoReviewData
 import com.kravelteam.kravel_android.util.inflate
 import com.kravelteam.kravel_android.util.setGone
 import com.kravelteam.kravel_android.util.setVisible
 
-class MyPhotoReviewRecyclerview(val checkReview: String): RecyclerView.Adapter<MyPhotoReviewRecyclerview.ViewHolder>(){
+class AllPhotoReviewRecyclerview(val checkReview: String): RecyclerView.Adapter<AllPhotoReviewRecyclerview.ViewHolder>(){
 
-    private var data: List<MyPhotoReviewData> = emptyList()
+    private var data: List<PhotoReviewData> = emptyList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
             = ViewHolder(parent.inflate(R.layout.item_my_photo_review))
@@ -26,7 +26,7 @@ class MyPhotoReviewRecyclerview(val checkReview: String): RecyclerView.Adapter<M
         holder.setIsRecyclable(false)
     }
 
-    fun initData(data: List<MyPhotoReviewData>){
+    fun initData(data: List<PhotoReviewData>){
         this.data = data
         notifyDataSetChanged()
     }
@@ -37,10 +37,10 @@ class MyPhotoReviewRecyclerview(val checkReview: String): RecyclerView.Adapter<M
         private val txtYear : TextView = itemView.findViewById(R.id.txt_my_photo_review_year)
         private val txtLike : TextView = itemView.findViewById(R.id.txt_my_photo_review_like_count)
 
-        fun bind(item: MyPhotoReviewData){
+        fun bind(item: PhotoReviewData){
             if(checkReview == "my"){
                 txtPlaceName.setVisible()
-                txtPlaceName.text = item.title
+                txtPlaceName.text = item.place.title
             } else if(checkReview == "default"){
                 txtPlaceName.setGone()
             }

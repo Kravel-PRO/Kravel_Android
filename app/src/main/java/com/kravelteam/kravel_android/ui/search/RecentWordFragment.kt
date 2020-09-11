@@ -21,7 +21,6 @@ import timber.log.Timber
 class RecentWordFragment : Fragment() {
 
     private lateinit var wordAdapter : SearchWordRecyclerview
-    private var dataSize = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,16 +51,15 @@ class RecentWordFragment : Fragment() {
             val data = KravelApplication.db.searchWordDao().getAll()
             val order = data.reversed().toMutableList()
 
-            wordAdapter.initData(order)
-            dataSize = data.size
-
-            if (dataSize > 0) {
+            if (data.size > 0) {
                 cl_search_recent_word_empty.setGone()
                 cl_search_recent_word_list.setVisible()
             } else {
                 cl_search_recent_word_empty.setVisible()
                 cl_search_recent_word_list.setGone()
             }
+
+            wordAdapter.initData(order)
         }
     }
 }
