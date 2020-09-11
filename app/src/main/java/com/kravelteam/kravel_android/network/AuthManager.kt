@@ -1,8 +1,11 @@
 package com.kravelteam.kravel_android.network
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.core.content.edit
 import org.koin.dsl.module
+import timber.log.Timber
+import java.util.*
 
 class AuthManager(context: Context) {
 
@@ -31,11 +34,22 @@ class AuthManager(context: Context) {
             }
         }
 
+    var setLang : String
+        get() {
+            return preferences.getString(LANGUAGE_KEY,null).orEmpty()
+        }
+        set(value) {
+            preferences.edit{
+                putString(LANGUAGE_KEY,value)
+            }
+        }
+
 
     private companion object {
         const val AUTH_PREFERENCES = "auth"
         const val TOKEN_KEY = "token"
         const val AUTO_LOGIN_KEY = "auto"
+        const val LANGUAGE_KEY = "lang"
     }
 }
 

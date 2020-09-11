@@ -57,20 +57,6 @@
             android:textColor="@color/colorDarkGrey"
             android:textSize="15sp" />
 
-        <RadioButton
-            android:id="@+id/rb_set_language_chinese"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/selector_radio_round_background"
-            android:button="@android:color/transparent"
-            android:fontFamily="@font/notosans_cjk_kr_bold"
-            android:gravity="center"
-            android:text="你好吗"
-            android:paddingTop="18dp"
-            android:paddingBottom="17dp"
-            android:layout_marginVertical="10dp"
-            android:textColor="@color/colorDarkGrey"
-            android:textSize="15sp" />
 
         <RadioButton
             android:id="@+id/rb_set_language_english"
