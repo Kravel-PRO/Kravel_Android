@@ -387,6 +387,15 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
         if(mapMarker?.map !=null) {
             mapMarker?.map = null
         }
+
+        cl_bottom_sheet_map_detail.img_map_detail_arrow.setOnDebounceClickListener {
+            checkBottomSheet = false
+            checkBottomSheetDetailClick =false
+            cl_bottom_seat_place.setVisible()
+            (activity as AppCompatActivity).cl_main_bottom?.setVisible()
+            cl_bottom_sheet_map_detail.setGone()
+            mapFragment_Bottom.onDestroy()
+        }
         cl_bottom_seat_place.setGone()
         cl_bottom_sheet_map_detail.setVisible()
         bottomSheetDetailBehavior.state = BottomSheetBehavior.STATE_EXPANDED

@@ -2,7 +2,9 @@ package com.kravelteam.kravel_android.ui.main
 
 import android.R.attr
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.Toast
@@ -18,10 +20,10 @@ import com.kravelteam.kravel_android.ui.mypage.UserFragment
 import com.kravelteam.kravel_android.ui.search.SearchFragment
 import com.kravelteam.kravel_android.util.toast
 import kotlinx.android.synthetic.main.activity_main.*
+import timber.log.Timber
 
 
 class MainActivity : AppCompatActivity() {
-
     private val list : List<Menus> by lazy {
         listOf(
             Menus(cl_main_home, img_main_home, HomeFragment()),
