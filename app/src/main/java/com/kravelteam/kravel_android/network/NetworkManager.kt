@@ -1,10 +1,7 @@
 package com.kravelteam.kravel_android.network
 
 import com.kravelteam.kravel_android.common.HeaderInterceptor
-import com.kravelteam.kravel_android.data.request.LoginRequest
-import com.kravelteam.kravel_android.data.request.ScrapBody
-import com.kravelteam.kravel_android.data.request.SignUpRequest
-import com.kravelteam.kravel_android.data.request.UpdateInfo
+import com.kravelteam.kravel_android.data.request.*
 import com.kravelteam.kravel_android.data.response.BaseResponse
 import com.kravelteam.kravel_android.data.response.MapResponse
 import okhttp3.MultipartBody
@@ -131,6 +128,12 @@ class NetworkManager(authManager: AuthManager) {
         placeId: Int,
         data : ScrapBody
     ) = retrofit.postScrap(placeId, data)
+
+    fun postLikes(
+        placeId: Int,
+        reviewId : Int,
+        data : ReviewLikeBody
+    ) = retrofit.postLikes(placeId, reviewId, data)
 
     private companion object {
         const val BASE_URL = "http://15.164.118.217:8080"

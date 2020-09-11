@@ -1,9 +1,6 @@
 package com.kravelteam.kravel_android.network
 
-import com.kravelteam.kravel_android.data.request.LoginRequest
-import com.kravelteam.kravel_android.data.request.ScrapBody
-import com.kravelteam.kravel_android.data.request.SignUpRequest
-import com.kravelteam.kravel_android.data.request.UpdateInfo
+import com.kravelteam.kravel_android.data.request.*
 import com.kravelteam.kravel_android.data.response.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -177,6 +174,16 @@ interface NetworkService {
         @Query("size") size : Int,
         @Query("sort") sort : String
     ) : Call<BaseResponse<PhotoReviewResponse>>
+
+    /**
+     * Home - Photo Review Detail - 좋아요
+     */
+    @POST("/api/places/{placeId}/reviews/{reviewId}/likes")
+    fun postLikes(
+        @Path("placeId") placeId : Int,
+        @Path("reviewId") reviewId : Int,
+        @Body data : ReviewLikeBody
+    ) : Call<BaseResponse<Int>>
 
     /**
      * 장소에 대한 포토 리뷰 작성하기
