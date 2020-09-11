@@ -39,7 +39,8 @@ fun Fragment.showKeyboard() {
 
 fun AppCompatActivity.showKeyboard() {
     val inputMethodManager = this.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-    inputMethodManager.showSoftInput(this.currentFocus, 0)
+//    inputMethodManager.showSoftInput(this.currentFocus, 0)
+    inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED,InputMethodManager.HIDE_IMPLICIT_ONLY)
 }
 
 fun ScrollView.isViewVisible(view: View): Boolean {

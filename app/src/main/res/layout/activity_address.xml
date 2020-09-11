@@ -78,13 +78,17 @@
                 android:id="@+id/edt_address_search"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/signup_edit_style"
                 android:hint="예 ) 녹사평대로 195 6호선 녹사평역"
+                android:lines="1"
                 android:textColor="@color/colorBlack"
                 android:textColorHint="@color/colorDarkGrey"
                 android:textSize="15sp"
-                android:layout_marginTop="8dp"
+                android:paddingRight="40dp"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/txt_address_title" />
 
             <ImageView
@@ -111,8 +115,7 @@
                 android:id="@+id/cl_address_sample_space"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingHorizontal="16dp"
-                android:visibility="gone">
+                android:paddingHorizontal="16dp">
 
                 <TextView
                     android:id="@+id/txt_address_sample1"
@@ -185,7 +188,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_address_result_space"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/txt_address_result_title"

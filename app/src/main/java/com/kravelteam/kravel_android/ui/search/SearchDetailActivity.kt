@@ -14,9 +14,7 @@ import com.kravelteam.kravel_android.data.response.PhotoResponse
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.PhotoReviewRecyclerview
 import com.kravelteam.kravel_android.ui.adapter.SearchDetailPlaceRecyclerview
-import com.kravelteam.kravel_android.util.safeEnqueue
-import com.kravelteam.kravel_android.util.startActivity
-import com.kravelteam.kravel_android.util.toast
+import com.kravelteam.kravel_android.util.*
 import kotlinx.android.synthetic.main.activity_search_detail.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
@@ -69,9 +67,17 @@ class SearchDetailActivity : AppCompatActivity() {
 
         if(part == "celeb"){ //셀럽 디테일 상세 정보
             networkManager.requestCelebDetail(id).safeEnqueue(
-                onSuccess = {
-                    GlideApp.with(this).load(it.data.result.celebrity.imageUrl).into(img_search_detail_title)
-                    placeAdapter.initData(it.data.result.places)
+                onSuccess = {it ->
+                    it.data.result.let {
+                        GlideApp.with(this).load(it.celebrity.imageUrl).into(img_search_detail_title)
+                        txt_search_detail_title.text = it.celebrity.celebrityName
+                        placeAdapter.initData(it.places)
+                        if( it.places.size == 7 ){
+                            btn_search_detail_more.setVisible()
+                        } else {
+                            btn_search_detail_more.setGone()
+                        }
+                    }
                 },
                 onFailure = {},
                 onError = {}
@@ -98,9 +104,17 @@ class SearchDetailActivity : AppCompatActivity() {
             )
         } else { //미디어 디테일 상세 정보
             networkManager.requestMediaDetail(id).safeEnqueue(
-                onSuccess = {
-                    GlideApp.with(this).load(it.data.result.imageUrl).into(img_search_detail_title)
-                    placeAdapter.initData(it.data.result.places)
+                onSuccess = { it ->
+                    it.data.result.let {
+                        GlideApp.with(this).load(it.imageUrl).into(img_search_detail_title)
+                        txt_search_detail_title.text = it.title
+                        placeAdapter.initData(it.places)
+                        if( it.places.size == 7 ){
+                            btn_search_detail_more.setVisible()
+                        } else {
+                            btn_search_detail_more.setGone()
+                        }
+                    }
                 },
                 onFailure = {},
                 onError = {}

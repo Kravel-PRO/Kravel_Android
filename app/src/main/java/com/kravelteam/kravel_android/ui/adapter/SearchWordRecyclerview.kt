@@ -16,42 +16,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class SearchWordRecyclerview(val onUpdateSize: () -> Unit) : RecyclerView.Adapter<SearchWordRecyclerview.ViewHolder>(){
+class SearchWordRecyclerview(val onAllDelete: () -> Unit): RecyclerView.Adapter<SearchWordRecyclerview.ViewHolder>(){
 
     private var data = mutableListOf<SearchWord>()
 
     fun initData(data: MutableList<SearchWord>){
         this.data = data
         notifyDataSetChanged()
-    }
-
-    fun addData(item: SearchWord){
-        data.add(item)
-        notifyDataSetChanged()
-        Timber.e("$data")
-    }
-
-    fun deleteFirstData(){
-        CoroutineScope(Dispatchers.IO).launch {
-            KravelApplication.db.searchWordDao().deleteWord(data[0].word)
-        }
-        Handler().postDelayed({
-            data.removeAt(0)
-            notifyDataSetChanged()
-            Timber.e("$data")
-        },200)
-    }
-
-    fun deleteData(word: String){
-        var position = 0
-        data.forEach {
-            if(it.word == word){
-                position = it.id
-            }
-        }
-        data.removeAt(position)
-        notifyDataSetChanged()
-        Timber.e("$data")
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
@@ -72,15 +43,16 @@ class SearchWordRecyclerview(val onUpdateSize: () -> Unit) : RecyclerView.Adapte
             txtWord.text = item.word
             imgDelete.setOnDebounceClickListener {
                 CoroutineScope(Dispatchers.IO).launch {
+                    if(data.size == 1){
+                        onAllDelete()
+                    }
                     KravelApplication.db.searchWordDao().deleteWord(data[adapterPosition].word)
                 }
                 Handler().postDelayed({
-                    onUpdateSize()
                     data.removeAt(adapterPosition)
                     notifyItemRemoved(adapterPosition)
                     notifyDataSetChanged()
-                    Timber.e("$data")
-                },200)
+                },150)
             }
         }
     }

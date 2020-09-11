@@ -148,8 +148,9 @@
                 android:background="@drawable/grey_round_background"
                 android:hint="@string/emailExplain"
                 android:inputType="textPersonName"
+                android:textColorHint="@color/colorDarkGrey"
                 android:padding="16dp"
-                android:textColor="@color/colorDarkGrey"
+                android:textColor="@color/colorBlack"
                 android:textSize="15sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/txt_login_email_title" />
@@ -187,7 +188,8 @@
                 android:hint="@string/pwExplain"
                 android:inputType="textPassword"
                 android:padding="16dp"
-                android:textColor="@color/colorDarkGrey"
+                android:textColorHint="@color/colorDarkGrey"
+                android:textColor="@color/colorBlack"
                 android:textSize="15sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/txt_login_pw_title" />

@@ -7,19 +7,16 @@ import android.view.inputmethod.EditorInfo
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.network.NetworkManager
-import com.kravelteam.kravel_android.network.NetworkService
 import com.kravelteam.kravel_android.ui.adapter.AddressRecyclerview
 import com.kravelteam.kravel_android.util.*
 import kotlinx.android.synthetic.main.activity_address.*
 import org.koin.android.ext.android.inject
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import timber.log.Timber
 
 class AddressActivity : AppCompatActivity() {
 
     private val networkManager : NetworkManager by inject()
     private lateinit var addressAdapter: AddressRecyclerview
+    private var query = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,8 +24,9 @@ class AddressActivity : AppCompatActivity() {
 
 
         img_address_back.setOnDebounceClickListener { finish() }
+        cl_address_sample_space.setVisible()
+        cl_address_result_space.setGone()
 
-        initRecycler()
         initSearch()
         initChangeEdit()
     }
@@ -57,9 +55,14 @@ class AddressActivity : AppCompatActivity() {
             initSearchAddress()
         }
     }
+    private fun initSearchAddress(){
+        cl_address_sample_space.setGone()
+        cl_address_result_space.setVisible()
+        query = edt_address_search.text.toString()
+        val token = resources.getString(R.string.kakao_api_key)
 
-    private fun initRecycler(){
         addressAdapter = AddressRecyclerview (
+            query,
             onFinish = {
                 val intent = intent
                 intent.putExtra("address", it)
@@ -68,11 +71,6 @@ class AddressActivity : AppCompatActivity() {
             }
         )
         rv_address.adapter = addressAdapter
-    }
-
-    private fun initSearchAddress(){
-        val query = edt_address_search.text.toString()
-        val token = resources.getString(R.string.kakao_api_key)
 
         networkManager.requestSearchAddress(token, query).safeEnqueue(
             onSuccess = {
