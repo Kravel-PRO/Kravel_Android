@@ -15,7 +15,7 @@
         android:scaleType="centerCrop"
         tools:src="@drawable/ic_photo"/>
 
-    <ImageButton
+    <ImageView
         android:id="@+id/img_rv_photo_like"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -27,11 +27,14 @@
 
     <TextView
         android:id="@+id/txt_rv_photo_title"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         tools:text="호텔 세느장"
         android:textSize="15sp"
+        app:layout_constraintRight_toLeftOf="@id/img_heart_icon"
         android:layout_marginTop="4dp"
+        android:maxLines="1"
+        android:ellipsize="end"
         android:textColor="@color/colorBlack"
         android:fontFamily="@font/notosans_cjk_kr_bold"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -51,6 +54,7 @@
         tools:text ="100"/>
 
     <ImageView
+        android:id="@+id/img_heart_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_small_heart"
