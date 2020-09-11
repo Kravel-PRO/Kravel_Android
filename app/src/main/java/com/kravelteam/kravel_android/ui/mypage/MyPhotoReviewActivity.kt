@@ -11,7 +11,6 @@ import com.kravelteam.kravel_android.util.safeEnqueue
 import com.kravelteam.kravel_android.util.toast
 import kotlinx.android.synthetic.main.activity_my_photo_review.*
 import org.koin.android.ext.android.inject
-import timber.log.Timber
 
 class MyPhotoReviewActivity : AppCompatActivity() {
 

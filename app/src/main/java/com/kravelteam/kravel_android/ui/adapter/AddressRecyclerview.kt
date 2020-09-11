@@ -4,12 +4,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.kravelteam.kravel_android.KravelApplication
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.response.AddressData
 import com.kravelteam.kravel_android.util.inflate
+import com.kravelteam.kravel_android.util.setTextColorSubString
+import timber.log.Timber
 
-class AddressRecyclerview(val onFinish: (address: String) -> Unit) : RecyclerView.Adapter<AddressRecyclerview.ViewHolder>(){
+class AddressRecyclerview(val search: String, val onFinish: (address: String) -> Unit) : RecyclerView.Adapter<AddressRecyclerview.ViewHolder>(){
 
     private var data: List<AddressData> = emptyList()
 
@@ -40,6 +43,8 @@ class AddressRecyclerview(val onFinish: (address: String) -> Unit) : RecyclerVie
             itemView.setOnDebounceClickListener {
                 onFinish(item.address_name)
             }
+            txtPlaceAddress.text = item.address_name.setTextColorSubString(search,KravelApplication.GlobalApp.resources.getColor(R.color.colorBlue))
+            txtPlaceName.text = item.place_name.setTextColorSubString(search,KravelApplication.GlobalApp.resources.getColor(R.color.colorBlue))
         }
     }
 

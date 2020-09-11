@@ -24,7 +24,17 @@ class UpdateInfoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_update_info)
 
+        initSetting()
+        initCheckEditText()
+        initCheckRadioBtn()
+        initChangeEditText()
+        initEnableBtn()
+        initUpdateUserInfo()
 
+        img_update_info_back.setOnDebounceClickListener { finish() }
+    }
+
+    private fun initSetting(){
         edt_update_info_nickname.text = Editable.Factory.getInstance().newEditable(intent.getStringExtra("nickname"))
         val gender = intent.getStringExtra("gender")
         if(gender == "MAN"){
@@ -34,12 +44,6 @@ class UpdateInfoActivity : AppCompatActivity() {
             rb_update_info_woman.isChecked = true
             rb_update_info_woman.setTextColor(resources.getColor(R.color.colorCoral))
         }
-
-        initCheckEditText()
-        initCheckRadioBtn()
-        initChangeEditText()
-        initEnableBtn()
-        initUpdateUserInfo()
     }
 
     private fun initCheckRadioBtn(){

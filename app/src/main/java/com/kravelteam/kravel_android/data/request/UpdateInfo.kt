@@ -4,7 +4,7 @@ import java.io.Serializable
 
 data class UpdateInfo(
     val loginPw: String,
-    val compareLoginPw: String,
+    val modifyLoginPw: String,
     val gender: String,
     val nickName: String
 ) : Serializable

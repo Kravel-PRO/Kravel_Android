@@ -47,7 +47,7 @@ class UpdatePwActivity : AppCompatActivity() {
         edt_update_pw_change_check.onTextChangeListener(
             onTextChanged = {
                 if(!edt_update_pw_change_check.text.isNullOrBlank()) {
-                    if(edt_update_pw_change_check.text == edt_update_pw_change.text){
+                    if(edt_update_pw_change_check.text.toString() == edt_update_pw_change.text.toString()){
                         edt_update_pw_change_check.setBackgroundResource(R.drawable.signup_edit_style_true)
                     } else {
                         edt_update_pw_change_check.setBackgroundResource(R.drawable.signup_edit_style)
@@ -78,13 +78,14 @@ class UpdatePwActivity : AppCompatActivity() {
                 "")
             networkManager.requestUpdateInfo("password",data).safeEnqueue(
                 onSuccess = {
-                    toast("성공")
+                    finish()
+                    toast("비밀번호 수정에 완료했습니다.")
                 },
                 onFailure = {
-                    toast("실패")
+                    toast("비밀번호 수정에 실패했습니다.")
                 },
                 onError = {
-                    toast("에러")
+                    networkErrorToast()
                 }
             )
         }
