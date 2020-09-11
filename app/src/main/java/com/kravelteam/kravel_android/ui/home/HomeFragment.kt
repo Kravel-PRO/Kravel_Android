@@ -195,7 +195,6 @@ class HomeFragment : Fragment() {
                     addItemDecoration(VerticalItemDecorator(4))
                     addItemDecoration(HorizontalItemDecorator(4))
                 }
-
                 photoAdapter.initData(it.data.result.content)
                 if(it.data.result.content.isNullOrEmpty()) {
                     txt_home_photo1.setGone()

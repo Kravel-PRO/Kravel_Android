@@ -5,10 +5,15 @@ data class PhotoReviewResponse(
 )
 data class PhotoReviewData (
     val reviewId : Int,
-    val imageURl : String,
+    val imageUrl : String,
     val likeCount : Int,
-    val like : Boolean,
-    val pageTitle : String,
-    val tag : String?
+    var like : Boolean,
+    val createdDate : String,
+    val place : PhotoPlaceData
 
+)
+data class PhotoPlaceData (
+    val placeId : Int,
+    val title : String,
+    val tags : String?
 )
