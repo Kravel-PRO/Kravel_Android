@@ -6,6 +6,9 @@ data class PhotoReviewResponse(
 data class PhotoReviewData (
     val reviewId : Int,
     val imageURl : String,
-    val likeCount : Int
+    val likeCount : Int,
+    val like : Boolean,
+    val pageTitle : String,
+    val tag : String?
 
 )

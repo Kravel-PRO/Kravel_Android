@@ -35,17 +35,13 @@ class PhotoReviewActivity : AppCompatActivity() {
     private fun initPhotoReivew() {
         networkManager.getPhotoReview( page= 0, size = 20 , sort ="reviewLikes,desc").safeEnqueue (
             onSuccess = {
-//                rv_home_photo_review.apply {
-//                    adapter = photoAdapter
-//                    addItemDecoration(VerticalItemDecorator(4))
-//                    addItemDecoration(HorizontalItemDecorator(4))
-//                }
-
-//                photoAdapter.initData(it.data.result.content)
-                if(it.data.result.content.isNullOrEmpty()) {
-                    txt_home_photo1.setGone()
-                    txt_home_photo2.setGone()
+                rv_home_photo_review.apply {
+                    adapter = photoAdapter
+                    addItemDecoration(VerticalItemDecorator(4))
+                    addItemDecoration(HorizontalItemDecorator(4))
                 }
+
+                photoAdapter.initData(it.data.result.content)
             },
             onFailure = {
                 Timber.e("실패")
@@ -53,27 +49,6 @@ class PhotoReviewActivity : AppCompatActivity() {
             onError = {
                 networkErrorToast()
             }
-        )
-
-        photoAdapter.initData(
-            listOf(
-                NewPhotoReview("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나",
-                    arrayListOf<String>("호텔델루나","여진구","피오")
-                ),
-                NewPhotoReview("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나",
-                    arrayListOf<String>("호텔델루나","여진구","피오")
-                ),
-                NewPhotoReview("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나",
-                    arrayListOf<String>("호텔델루나","여진구","피오")
-                ),
-                NewPhotoReview("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나",
-                    arrayListOf<String>("호텔델루나","여진구","피오")
-                ),
-                NewPhotoReview("https://www.dramamilk.com/wp-content/uploads/2019/07/Hotel-de-Luna-episode-5-live-recap-IU.jpg","호델 델루나",
-                    arrayListOf<String>("호텔델루나","여진구","피오")
-                )
-
-            )
         )
     }
 }
