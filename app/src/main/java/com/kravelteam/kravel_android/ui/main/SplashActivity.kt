@@ -1,5 +1,8 @@
 package com.kravelteam.kravel_android.ui.main
 
+import android.content.Context
+import android.content.SharedPreferences
+import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -10,6 +13,8 @@ import com.kravelteam.kravel_android.ui.login.LoginActivity
 import com.kravelteam.kravel_android.util.startActivity
 import kotlinx.android.synthetic.main.activity_splash.*
 import org.koin.android.ext.android.inject
+import timber.log.Timber
+import java.util.*
 
 class SplashActivity : AppCompatActivity() {
 
@@ -28,6 +33,26 @@ class SplashActivity : AppCompatActivity() {
             loop(true)
         }
 
+        val locale = resources.configuration.locale
+        Timber.e("setting locale ::::: ${locale.language}")
+        if(!authManager.setLang.isNullOrEmpty()) {
+            if(authManager.setLang=="ko") {
+                val kor = Locale.KOREA
+                val config = Configuration()
+                config.locale = kor
+                Timber.e("resetting kor locale ::::: ${locale.language}")
+                authManager.setLang = "ko"
+                resources.updateConfiguration(config,resources.displayMetrics)
+            }
+            if(authManager.setLang =="en") {
+                val en = Locale.US
+                val config = Configuration()
+                config.locale = en
+                authManager.setLang = "en"
+                Timber.e("resetting en locale ::::: ${locale.language}")
+                resources.updateConfiguration(config,resources.displayMetrics)
+            }
+        }
         Handler().postDelayed({
             if(authManager.autoLogin){
                 startActivity(MainActivity::class,true)

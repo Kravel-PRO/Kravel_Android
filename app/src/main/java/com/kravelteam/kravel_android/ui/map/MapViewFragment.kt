@@ -24,6 +24,7 @@ import com.kravelteam.kravel_android.common.VerticalItemDecorator
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.request.ScrapBody
 import com.kravelteam.kravel_android.data.response.PlaceContentResponse
+import com.kravelteam.kravel_android.network.AuthManager
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.*
 import com.kravelteam.kravel_android.util.*
@@ -76,6 +77,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
     private var checkFirst : Boolean = true
     private val networkManager : NetworkManager by inject()
     private var currentPlaceId : Int = 0
+    private val authManager : AuthManager by inject()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -387,6 +389,15 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
         if(mapMarker?.map !=null) {
             mapMarker?.map = null
         }
+
+        cl_bottom_sheet_map_detail.img_map_detail_arrow.setOnDebounceClickListener {
+            checkBottomSheet = false
+            checkBottomSheetDetailClick =false
+            cl_bottom_seat_place.setVisible()
+            (activity as AppCompatActivity).cl_main_bottom?.setVisible()
+            cl_bottom_sheet_map_detail.setGone()
+            mapFragment_Bottom.onDestroy()
+        }
         cl_bottom_seat_place.setGone()
         cl_bottom_sheet_map_detail.setVisible()
         bottomSheetDetailBehavior.state = BottomSheetBehavior.STATE_EXPANDED
@@ -511,9 +522,9 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
             addItemDecoration(HorizontalItemDecorator(12))
         }
 
-        val local = "eng"
+        val local = authManager.setLang
         var url : URL? = null
-        if(local == "kor") {
+        if(local == "ko") {
             url= URL(
                 "http://api.visitkorea.or.kr/openapi/service/rest/KorService/locationBasedList?&MobileOS=AND&MobileApp=Kravel&radius=1000"
                         + "&ServiceKey=" + resources.getString(R.string.open_api_kor_place)

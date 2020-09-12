@@ -11,6 +11,7 @@ import com.kravelteam.kravel_android.common.HorizontalItemDecorator
 import com.kravelteam.kravel_android.common.VerticalItemDecorator
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.request.ScrapBody
+import com.kravelteam.kravel_android.network.AuthManager
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.HashTagRecyclerView
 import com.kravelteam.kravel_android.ui.adapter.MapNearPlaceRecyclerview
@@ -42,6 +43,7 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
     private var longitude : Double = 0.0
     private var checkScrap : Boolean = false
     private var part: String = "place"
+    private val authManager : AuthManager by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -163,9 +165,9 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             addItemDecoration(HorizontalItemDecorator(12))
         }
 
-        val local = "eng"
+        val local = authManager.setLang
         var url : URL? = null
-        if(local == "kor") {
+        if(local == "ko") {
             url= URL(
                 "http://api.visitkorea.or.kr/openapi/service/rest/KorService/locationBasedList?&MobileOS=AND&MobileApp=Kravel&radius=1000"
                         + "&ServiceKey=" + resources.getString(R.string.open_api_kor_place)
