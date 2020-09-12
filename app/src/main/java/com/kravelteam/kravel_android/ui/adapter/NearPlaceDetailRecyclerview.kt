@@ -10,6 +10,7 @@ import com.kravelteam.kravel_android.common.GlideApp
 import com.kravelteam.kravel_android.data.mock.NewPhotoReview
 import com.kravelteam.kravel_android.data.response.PlaceContentResponse
 import com.kravelteam.kravel_android.util.*
+import timber.log.Timber
 
 class NearPlaceDetailRecyclerview() : RecyclerView.Adapter<NearPlaceDetailRecyclerview.ViewHolder>(){
 
@@ -52,12 +53,10 @@ class NearPlaceDetailRecyclerview() : RecyclerView.Adapter<NearPlaceDetailRecycl
             txtPlace.text = item.title
             var str : String = ""
             if(!item.tags.isNullOrEmpty()) {
-                for (i in 0 until item.tags!!.size) {
-                    str = str + "#" + item.tags!!.get(i)
-
-                    if (i != item.tags!!.size - 1) {
-                        str = str + " "
-                    }
+                val tag = item.tags.split(",")
+                for(i in 0 until tag.size) {
+                    Timber.e("size::"+i)
+                    str += "#"+tag.get(i)+" "
                 }
                 txtTag.text = str
             }

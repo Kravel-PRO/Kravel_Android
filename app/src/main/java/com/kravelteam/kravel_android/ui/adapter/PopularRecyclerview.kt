@@ -65,12 +65,10 @@ class PopularRecyclerview() : RecyclerView.Adapter<PopularRecyclerview.ViewHolde
 
             var str : String = ""
             if(!item.tags.isNullOrEmpty()) {
-                for (i in 0 until item.tags!!.size) {
-                    str = str + "#" + item.tags!!.get(i)
-
-                    if (i != item.tags!!.size - 1) {
-                        str = str + " "
-                    }
+                val tag = item.tags.split(",")
+                for(i in 0 until tag.size) {
+                    Timber.e("size::"+i)
+                    str += "#"+tag.get(i)+" "
                 }
                 txtTag.text = str
             }
