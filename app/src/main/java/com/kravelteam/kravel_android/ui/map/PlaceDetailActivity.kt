@@ -210,13 +210,16 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
     }
 
-    private fun initHashTag(data: Array<String>?) {
+    private fun initHashTag(data: String?) {
         rv_map_detail_hashtag.apply {
             adapter = hashtagAdapter
             addItemDecoration(HorizontalItemDecorator(4))
         }
 
-        hashtagAdapter.initData(data)
+        if(!data.isNullOrEmpty()) {
+            val str = data!!.split(",")
+            hashtagAdapter.initData(str)
+        }
     }
     private fun initPhotoRecycler() {
 
