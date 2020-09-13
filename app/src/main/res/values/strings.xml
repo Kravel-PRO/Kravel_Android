@@ -10,10 +10,11 @@
     <string name="emailExplain">이메일을 입력해주세요.</string>
     <string name="pwExplain">비밀번호를 입력해주세요.</string>
     <string name="loginWord1">Kravel,</string>
-    <string name="loginWord2">K-culture와          함께 떠나는 한국 여행</string>
+    <string name="loginWord2">K-culture와
+        \n함께 떠나는 한국 여행</string>
     <string name="loginFailTitle">로그인을 실패했습니다.</string>
-    <string name="loginFailContent">존재하지 않는 계정
-        \n또는 비밀번호가 잘못되었습니다.</string>
+    <string name="loginFailContent">가입하지 않은 아이디이거나,
+        \n잘못된 비밀번호 입니다.</string>
     <string name="Retry">확인</string>
     <string name="signupWord1">Kravel과 함께</string>
     <string name="signupWord2">색다른</string>
@@ -70,4 +71,52 @@
     <string name="setLanguage">언어 설정</string>
     <string name="report">제보하기</string>
     <string name="logout">로그아웃</string>
+    <string name="cancel">취소</string>
+    <string name="askLogout">정말 로그아웃 하시겠습니까?</string>
+    <string name="currentPwTitle">본인 확인을 위해 비밀번호를 입력해주세요.</string>
+    <string name="changePwTitle">변경할 비밀번호를 입력해주세요.</string>
+    <string name="reportExplain">장소에 대한 설명이 자세할수록 업로드 될 확률이 높아요!</string>
+    <string name="placeName">장소명</string>
+    <string name="address">주소</string>
+    <string name="addressContent">장소에 대한 설명</string>
+    <string name="relatedTag">관련 태그</string>
+    <string name="placePhoto">장소 및 인증샷 사진</string>
+    <string name="placeNameExplain">예) 녹사평 육교</string>
+    <string name="addressExplain">예 ) 녹사평대로 195 6호선 녹사평역</string>
+    <string name="addressContentExplain">예) 녹사평역 3번 출구 맞은편</string>
+    <string name="relatedTagExplain">예시 ) #이태원클라쓰 #박서준 #김다미</string>
+    <string name="placePhotoExplain">사진을 업로드 해주세요.</string>
+    <string name="complete">완료</string>
+    <string name="findAddressExplain">아래와 같은 방법으로 검색을 하시면 더욱 정확한
+        \n결과가 검색됩니다.</string>
+    <string name="addressSign1">도로명</string>
+    <string name="addressSign1Explain">예) 양화로 160, 조천읍 교래리</string>
+    <string name="addressSign2">건물명</string>
+    <string name="addressSign2Explain">예) 현대백화점 미아점, 경복궁</string>
+    <string name="addressSign3">지역명</string>
+    <string name="addressSign3Explain">예) 서귀포시 하원동, 면목동 산1-4</string>
+    <string name="findAddress">주소 찾기</string>
+    <string name="searchResultTitle">검색 결과</string>
+    <string name="noSearchAddress">검색 결과가 없습니다.
+        \n검색어를 다시 한 번 확인해주세요.</string>
+    <string name="noMyPhotoReview">포토 리뷰를 올리고
+        \n나만의 여행 앨범을 꾸며봐요!</string>
+    <string name="noMyScrap">아직 스크랩 한 장소가 없어요.
+        \n가고 싶은 장소를 스크랩해보세요!</string>
+    <string name="updateComplete">수정 완료</string>
+    <string name="celebPart">연예인 별</string>
+    <string name="mediaPart">드라마/영화 별</string>
+    <string name="SearchWordExplain">연예인, 드라마 등을 검색해주세요</string>
+    <string name="noRecentSearchHistory">최근 검색어 내역이 없습니다.</string>
+    <string name="recentSearch">최근 검색어</string>
+    <string name="popularPhotoReview">인기 많은 포토 리뷰</string>
+    <string name="visitedPlace">관련 장소를 둘러보세요!</string>
+    <string name="filmSite">촬영지를 둘러보세요!</string>
+    <string name="placeMore">장소 더 보기</string>
+    <string name="uploadReview">업로드 하기</string>
+    <string name="allowCamera">카메라 접근 권한 허용</string>
+    <string name="allowCameraExplain">카메라 접근 권한 허용 후에
+        \n사진을 촬영할 수 있습니다.</string>
+    <string name="gallery">갤러리</string>
+    <string name="example">예시</string>
 </resources>

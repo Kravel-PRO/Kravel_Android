@@ -53,7 +53,12 @@ class UserFragment : Fragment() {
             onSuccess = {
                 nickname = it.data.result.nickName
                 gender = it.data.result.gender
-                txt_user_nickname.text = "${nickname}님의 여행을 함께해요!"
+                if (authManager.setLang=="ko") {
+                    txt_user_nickname.text = "${nickname}님의 여행을 함께해요!"
+                } else {
+                    txt_user_nickname.text = "Let's go on ${nickname}'s trip together!"
+                }
+
             },
             onFailure = {
 

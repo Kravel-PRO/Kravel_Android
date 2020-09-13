@@ -35,6 +35,7 @@ class SearchDetailActivity : AppCompatActivity() {
         id = intent.getIntExtra("id",0)
         part = intent.getStringExtra("part")
         photoAdapter = PhotoReviewRecyclerview("default",part,id)
+        txt_search_detail_title2.text = txt_search_detail_title2.text.toString().setCustomFontSubString(resources.getString(R.string.homeNewPhotoReview2),R.font.notosans_cjk_kr_bold,18)
 
         initRecycler()
         initPlaceMoreBtn()
@@ -71,16 +72,21 @@ class SearchDetailActivity : AppCompatActivity() {
                     it.data.result.let {
                         GlideApp.with(this).load(it.celebrity.imageUrl).into(img_search_detail_title)
                         txt_search_detail_title.text = it.celebrity.celebrityName
-                        placeAdapter.initData(it.places)
-                        if( it.places.size == 7 ){
+                        txt_search_detail_sub2.text = resources.getString(R.string.visitedPlace)
+
+                        if( it.places.size == DATA_COUNT ){
+                            placeAdapter.initData(it.places.dropLast(1))
                             btn_search_detail_more.setVisible()
                         } else {
+                            placeAdapter.initData(it.places)
                             btn_search_detail_more.setGone()
                         }
                     }
                 },
                 onFailure = {},
-                onError = {}
+                onError = {
+                    networkErrorToast()
+                }
             )
 
 
@@ -99,7 +105,7 @@ class SearchDetailActivity : AppCompatActivity() {
                     toast("실패")
                 },
                 onError = {
-                    Timber.e("$it")
+                    networkErrorToast()
                 }
             )
         } else { //미디어 디테일 상세 정보
@@ -108,16 +114,21 @@ class SearchDetailActivity : AppCompatActivity() {
                     it.data.result.let {
                         GlideApp.with(this).load(it.imageUrl).into(img_search_detail_title)
                         txt_search_detail_title.text = it.title
-                        placeAdapter.initData(it.places)
-                        if( it.places.size == 7 ){
+                        txt_search_detail_sub2.text = resources.getString(R.string.filmSite)
+
+                        if( it.places.size == DATA_COUNT ){
+                            placeAdapter.initData(it.places.dropLast(1))
                             btn_search_detail_more.setVisible()
                         } else {
+                            placeAdapter.initData(it.places)
                             btn_search_detail_more.setGone()
                         }
                     }
                 },
                 onFailure = {},
-                onError = {}
+                onError = {
+                    networkErrorToast()
+                }
             )
 
 
@@ -137,11 +148,12 @@ class SearchDetailActivity : AppCompatActivity() {
                     toast("실패")
                 },
                 onError = {
-                    Timber.e("$it")
+                    networkErrorToast()
                 }
             )
         }
-
-
+    }
+    companion object {
+        private const val DATA_COUNT = 7
     }
 }

@@ -31,14 +31,14 @@ class AllPhotoReviewActivity : AppCompatActivity() {
         if(checkReview == "my") { //내 포토리뷰
 
             initGetMyPhotoReview()
-            txt_my_photo_review_title.text = "내 포토리뷰"
+            txt_my_photo_review_title.text = resources.getString(R.string.myPhotoReview)
 
         } else if(checkReview == "default"){ //포토리뷰
 
             checkPart = intent.getStringExtra("part")!!
             id = intent.getIntExtra("id",0)
 
-            txt_my_photo_review_title.text = "포토리뷰"
+            txt_my_photo_review_title.text = resources.getString(R.string.homeNewPhotoReview2)
 
             when (checkPart) {
                 "celeb" -> { //셀럽 리뷰 불러오기

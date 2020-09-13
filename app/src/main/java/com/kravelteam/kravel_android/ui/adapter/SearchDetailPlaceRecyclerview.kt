@@ -12,7 +12,7 @@ import com.kravelteam.kravel_android.util.dpToPx
 import com.kravelteam.kravel_android.util.inflate
 import com.kravelteam.kravel_android.util.setRound
 
-class SearchDetailPlaceRecyclerview() : RecyclerView.Adapter<SearchDetailPlaceRecyclerview.ViewHolder>() {
+class SearchDetailPlaceRecyclerview : RecyclerView.Adapter<SearchDetailPlaceRecyclerview.ViewHolder>() {
 
     private var data: List<DetailPlaceResponse> = emptyList()
 
@@ -24,13 +24,7 @@ class SearchDetailPlaceRecyclerview() : RecyclerView.Adapter<SearchDetailPlaceRe
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
             = ViewHolder(parent.inflate(R.layout.item_search_detail_place))
 
-    override fun getItemCount(): Int {
-        return if (data.size > 6) {
-            6
-        } else {
-            data.size
-        }
-    }
+    override fun getItemCount(): Int = data.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(data[position])
