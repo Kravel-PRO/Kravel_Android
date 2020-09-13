@@ -13,8 +13,8 @@ data class PlaceContentResponse(
     val latitude : Double,
     val longitude : Double,
     val reviewCount : Int,
-    val tags : Array<String>?,
-    val celebrities : Array<PlaceCelebResponse>
+    val tags : String?,
+    val celebrities : ArrayList<PlaceCelebResponse>
 )
 data class PlaceCelebResponse(
     val celebrityId : Int,

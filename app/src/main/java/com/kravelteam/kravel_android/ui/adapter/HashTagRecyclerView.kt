@@ -10,9 +10,9 @@ import com.kravelteam.kravel_android.util.inflate
 
 class HashTagRecyclerView() : RecyclerView.Adapter<HashTagRecyclerView.ViewHolder>() {
 
-    private var data: Array<String>? = emptyArray()
+    private var data: List<String>? = emptyList()
 
-    fun initData(data: Array<String>?){
+    fun initData(data: List<String>?){
         this.data = data
         notifyDataSetChanged()
     }

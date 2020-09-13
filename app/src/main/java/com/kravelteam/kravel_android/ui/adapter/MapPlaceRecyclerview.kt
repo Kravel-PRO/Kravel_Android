@@ -65,7 +65,10 @@ class MapPlaceRecyclerview() : RecyclerView.Adapter<MapPlaceRecyclerview.ViewHol
             clContent.setRound(5.dpToPx().toFloat())
             txtPlace.text = item.title
             txtAddress.text = item.location
-            initHashTag(item.tags)
+            if(!item.tags.isNullOrEmpty()){
+                val str =item.tags.split(",")
+                initHashTag(str)
+            }
 
             val pos = adapterPosition
             if(pos!= RecyclerView.NO_POSITION)
@@ -75,7 +78,7 @@ class MapPlaceRecyclerview() : RecyclerView.Adapter<MapPlaceRecyclerview.ViewHol
                 }
             }
         }
-        private fun initHashTag(hashTagData: Array<String>?) {
+        private fun initHashTag(hashTagData: List<String>?) {
             rvHashTag.apply {
                 adapter = hashtagAdapter
                 addItemDecoration(HorizontalItemDecorator(4))
