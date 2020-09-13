@@ -44,14 +44,10 @@ class SearchFragment : Fragment() {
 
         initViewPager()
         initSearch()
-//        initSearchView()
-//        initRecycler()
-//
-//        addSearchWord()
     }
 
     private fun initViewPager() {
-        vp_search_select.adapter = SearchViewPagerAdapter(childFragmentManager,2, arrayListOf("연예인 별","드라마/영화 별"))
+        vp_search_select.adapter = SearchViewPagerAdapter(childFragmentManager,2, arrayListOf(resources.getString(R.string.celebPart),resources.getString(R.string.mediaPart)))
         vp_search_select.offscreenPageLimit = 2
 
         vp_search_select.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tl_search_select))
@@ -71,52 +67,4 @@ class SearchFragment : Fragment() {
             startActivity(SearchContentActivity::class)
         }
     }
-
-//    private fun initVisibleRecentWord(){
-//        if(dataSize == 0){
-//            //엔터 누를시 최근 검색어 내역 보이기
-//            cl_search_recent_word.setGone()
-//            rv_search_recent.setGone()
-//
-//            //엔터 누를시 최근 검색어가 없습니다 보이기
-//            cl_search_recent_word_empty.setVisible()
-//        } else {
-//            //엔터 누를시 최근 검색어 내역 보이기
-//            cl_search_recent_word.setVisible()
-//            rv_search_recent.setVisible()
-//
-//            //엔터 누를시 최근 검색어가 없습니다 지우기
-//            cl_search_recent_word_empty.setGone()
-//        }
-//    }
-
-
-//    @SuppressLint("ClickableViewAccessibility")
-//    private fun initSearchView(){
-//        edt_search_word.setOnTouchListener { _, _ ->
-//            showKeyboard()
-//            edt_search_word.requestFocus()
-//            edt_search_word.imeOptions = EditorInfo.IME_ACTION_SEARCH
-//            cl_search_tab.setGone()
-//            cl_search_recent.setVisible()
-//            img_search_back.setVisible()
-//            initVisibleRecentWord()
-//            true
-//        }
-//
-//        img_search_back.setOnDebounceClickListener {
-//            hideKeyboard()
-//            cl_search_tab.setVisible()
-//            cl_search_recent.setGone()
-//            img_search_back.setGone()
-//
-//            txt_search_recent_title.text = "최근 검색어"
-//            view_search_line.setGone()
-//            rv_search_recent_result.setGone()
-//
-//            edt_search_word.text = Editable.Factory.getInstance().newEditable("")
-//        }
-//    }
-
-//    }
 }

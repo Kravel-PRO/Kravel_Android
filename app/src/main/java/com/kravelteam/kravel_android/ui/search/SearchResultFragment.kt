@@ -12,10 +12,7 @@ import com.kravelteam.kravel_android.common.VerticalItemDecorator
 import com.kravelteam.kravel_android.data.response.CelebResponse
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.CelebRecyclerview
-import com.kravelteam.kravel_android.util.safeEnqueue
-import com.kravelteam.kravel_android.util.setGone
-import com.kravelteam.kravel_android.util.setVisible
-import com.kravelteam.kravel_android.util.toast
+import com.kravelteam.kravel_android.util.*
 import kotlinx.android.synthetic.main.activity_search_content.*
 import kotlinx.android.synthetic.main.fragment_search_result.*
 import org.koin.android.ext.android.get
@@ -53,6 +50,7 @@ class SearchResultFragment : Fragment() {
 
                 //데이터가 빈 것이 있는지 확인
                 if (it.data.result.celebrities.isNullOrEmpty() and it.data.result.medias.isNullOrEmpty()) {
+                    img_no_search_result_icon.setVisible()
                     txt_search_recent_empty.setVisible()
                 } else {
                     var searchData = mutableListOf<CelebResponse>()
@@ -67,6 +65,7 @@ class SearchResultFragment : Fragment() {
                         }
                     }
                     txt_search_recent_empty.setGone()
+                    img_no_search_result_icon.setGone()
                     rv_search_result.setVisible()
 
                     searchResultAdapter.initData(searchData)
@@ -76,7 +75,7 @@ class SearchResultFragment : Fragment() {
                 toast("검색어 입력을 확인해주세요")
             },
             onError = {
-                toast("검색어 입력을 확인해주세요")
+                networkErrorToast()
             }
         )
     }

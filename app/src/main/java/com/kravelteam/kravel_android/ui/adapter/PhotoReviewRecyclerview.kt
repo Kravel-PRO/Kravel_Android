@@ -1,27 +1,21 @@
 package com.kravelteam.kravel_android.ui.adapter
 
-import android.content.Context
 import android.content.Intent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.kravelteam.kravel_android.KravelApplication
 import com.kravelteam.kravel_android.KravelApplication.Companion.GlobalApp
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.GlideApp
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
-import com.kravelteam.kravel_android.data.mock.NewPhotoReview
-import com.kravelteam.kravel_android.data.response.PhotoResponse
 import com.kravelteam.kravel_android.data.response.PhotoReviewData
 import com.kravelteam.kravel_android.ui.home.PhotoReviewActivity
-import com.kravelteam.kravel_android.ui.mypage.MyPhotoReviewActivity
+import com.kravelteam.kravel_android.ui.mypage.AllPhotoReviewActivity
 import com.kravelteam.kravel_android.util.inflate
 import com.kravelteam.kravel_android.util.setGone
 import com.kravelteam.kravel_android.util.setVisible
-import org.koin.core.context.GlobalContext
 
 class PhotoReviewRecyclerview(val review: String, val part: String?, val id: Int?) : RecyclerView.Adapter<PhotoReviewRecyclerview.ViewHolder>(){
 
@@ -77,7 +71,7 @@ class PhotoReviewRecyclerview(val review: String, val part: String?, val id: Int
             view.setVisible()
             img.setOnDebounceClickListener {
                 if((review == "my") or (review == "default")) {
-                    Intent(GlobalApp, MyPhotoReviewActivity::class.java).apply {
+                    Intent(GlobalApp, AllPhotoReviewActivity::class.java).apply {
                         putExtra("review", review)
                         putExtra("part",part)
                         putExtra("id",id)

@@ -14,11 +14,9 @@ import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.GlideApp
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.network.NetworkManager
-import com.kravelteam.kravel_android.ui.home.PhotoReviewActivity
-import com.kravelteam.kravel_android.ui.mypage.MyPhotoReviewActivity
+import com.kravelteam.kravel_android.ui.mypage.AllPhotoReviewActivity
 import com.kravelteam.kravel_android.util.*
 import kotlinx.android.synthetic.main.activity_post_review.*
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -86,7 +84,7 @@ class PostReviewActivity : AppCompatActivity() {
             networkManager.requestPostPhotoReview(placeId,picture).safeEnqueue(
                 onSuccess = {
                     toast("성공")
-                    Intent(KravelApplication.GlobalApp, MyPhotoReviewActivity::class.java).apply {
+                    Intent(KravelApplication.GlobalApp, AllPhotoReviewActivity::class.java).apply {
                         putExtra("review", "default")
                         putExtra("part",part)
                         putExtra("id", placeId)

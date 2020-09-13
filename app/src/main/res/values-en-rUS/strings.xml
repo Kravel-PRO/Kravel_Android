@@ -9,7 +9,8 @@
     <string name="emailExplain">Please enter your email.</string>
     <string name="pwExplain">Please enter your password.</string>
     <string name="loginWord1">Kravel,</string>
-    <string name="loginWord2">Let\'s travel Korea          With K-culture</string>
+    <string name="loginWord2">Let\'s travel Korea
+        \nWith K-culture</string>
     <string name="loginFailTitle">Login failed.</string>
     <string name="loginFailContent">Incorrect account
         \nor password.</string>
@@ -69,4 +70,53 @@
     <string name="setLanguage">Language setting</string>
     <string name="report">Report</string>
     <string name="logout">Log out</string>
+    <string name="cancel">Cancel</string>
+    <string name="askLogout">Are you sure you want to log out?</string>
+    <string name="currentPwTitle">Please enter your password for identification.</string>
+    <string name="changePwTitle">Please enter a password to change.</string>
+    <string name="reportExplain">The more detailed the location,
+        \nthe more likely it will be uploaded!</string>
+    <string name="placeName">Place name</string>
+    <string name="address">Address</string>
+    <string name="addressContent">A description of a place</string>
+    <string name="relatedTag">Associated tag</string>
+    <string name="placePhoto">Places and proof shots</string>
+    <string name="placeNameExplain">ex) Noksapyeong Bridge</string>
+    <string name="addressExplain">ex ) Noksapyeong-daero 195</string>
+    <string name="addressContentExplain">ex) opposite Noksapyeong Station Exit 3</string>
+    <string name="relatedTagExplain">ex) #Itaewon Class, #ParkSeojun</string>
+    <string name="placePhotoExplain">Upload Photo</string>
+    <string name="complete">Ok</string>
+    <string name="findAddressExplain">Search in the following way and you will find
+        \nmore accurate results.</string>
+    <string name="addressSign1">Road name</string>
+    <string name="addressSign1Explain">ex) Yanghwa 160  , Gyorae-ri, Jocheon-eup</string>
+    <string name="addressSign2">Name of building</string>
+    <string name="addressSign2Explain">ex) NSeoultower, Gyeongbokgun</string>
+    <string name="addressSign3">Area name</string>
+    <string name="addressSign3Explain">ex) Ha Won-dong, Seogwipo City</string>
+    <string name="findAddress">Find Address</string>
+    <string name="searchResultTitle">Search Results</string>
+    <string name="noSearchAddress">No search Results.
+        \nPlease check the search term again.</string>
+    <string name="noMyPhotoReview">Post a photo review
+        \nand decorate your own travel album!</string>
+    <string name="noMyScrap">There\'s no place for scraping yet.
+        \nScrap the place you want to go!</string>
+    <string name="updateComplete">Done</string>
+    <string name="celebPart">Celebrity</string>
+    <string name="mediaPart">Drama/Movie</string>
+    <string name="SearchWordExplain">Please enter a search term.</string>
+    <string name="noRecentSearchHistory">No recent search history.</string>
+    <string name="recentSearch">Recent Search</string>
+    <string name="popularPhotoReview">Popular Photo Review</string>
+    <string name="visitedPlace">the place visited</string>
+    <string name="filmSite">Fliming Location of</string>
+    <string name="placeMore">More Places</string>
+    <string name="uploadReview">Upload</string>
+    <string name="allowCamera">Allow camera access</string>
+    <string name="allowCameraExplain">You can take pictures
+        \nafter allowing access to the camera.</string>
+    <string name="gallery">Gallery</string>
+    <string name="example">Example</string>
 </resources>

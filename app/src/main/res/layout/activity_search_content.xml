@@ -32,7 +32,7 @@
                 android:layout_marginRight="16dp"
                 app:layout_goneMarginLeft="16dp"
                 android:background="@drawable/signup_btn_style"
-                android:hint="연예인, 드라마 등을 검색해주세요"
+                android:hint="@string/SearchWordExplain"
                 android:textColorHint="@color/colorOpacity30Black"
                 android:inputType="textPersonName"
                 android:paddingLeft="16dp"

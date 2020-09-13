@@ -33,8 +33,6 @@ class SearchContentActivity : AppCompatActivity() {
 
     private fun initSetting(){
         overridePendingTransition(0,0)
-        showKeyboard()
-        edt_search_word.requestFocus()
 
         img_search_back.setOnDebounceClickListener { finish() }
 
