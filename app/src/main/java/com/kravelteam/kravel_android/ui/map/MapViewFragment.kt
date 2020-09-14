@@ -824,14 +824,20 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
     override fun onBackPressed() : Boolean {
         return if (checkBottomSheet) {
             onResume()
-            Timber.e("ddd?")
+            checkBottomSheet = false
+            val fm = childFragmentManager
+            mapFragment_Bottom_D = fm.findFragmentById(R.id.place_detail_map) as MapFragment?
+                ?:MapFragment.newInstance().also {
+                    fm.beginTransaction().remove(it).commit()
+                }
             mapFragment_Bottom_D = null
+
+            checkBottomSheetDetailClick =false
             cl_bottom_seat_place.setVisible()
-            cl_bottom_sheet_map_detail.setGone()
             (activity as AppCompatActivity).cl_main_bottom?.setVisible()
+            cl_bottom_sheet_map_detail.setGone()
             bottomSheetBehavior.isFitToContents  = false
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            checkBottomSheet = false
             checkBottomSheetDetailClick = false
             true
         } else if (checkBottom) {
