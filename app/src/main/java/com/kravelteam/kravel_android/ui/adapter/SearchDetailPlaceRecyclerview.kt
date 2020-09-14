@@ -12,7 +12,7 @@ import com.kravelteam.kravel_android.util.dpToPx
 import com.kravelteam.kravel_android.util.inflate
 import com.kravelteam.kravel_android.util.setRound
 
-class SearchDetailPlaceRecyclerview() : RecyclerView.Adapter<SearchDetailPlaceRecyclerview.ViewHolder>() {
+class SearchDetailPlaceRecyclerview : RecyclerView.Adapter<SearchDetailPlaceRecyclerview.ViewHolder>() {
 
     private var data: List<DetailPlaceResponse> = emptyList()
 
@@ -41,7 +41,7 @@ class SearchDetailPlaceRecyclerview() : RecyclerView.Adapter<SearchDetailPlaceRe
             img.setRound(10.dpToPx().toFloat())
             txtPlace.text = item.title
             var tags = ""
-            item.tags?.forEach {
+            item.tags?.split(",")?.forEach {
                 tags += "#$it "
             }
             txtTag.text = tags

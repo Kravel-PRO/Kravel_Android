@@ -5,16 +5,16 @@ import android.os.Bundle
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.network.NetworkManager
-import com.kravelteam.kravel_android.ui.adapter.MyPhotoReviewRecyclerview
+import com.kravelteam.kravel_android.ui.adapter.AllPhotoReviewRecyclerview
 import com.kravelteam.kravel_android.util.networkErrorToast
 import com.kravelteam.kravel_android.util.safeEnqueue
 import com.kravelteam.kravel_android.util.toast
 import kotlinx.android.synthetic.main.activity_my_photo_review.*
 import org.koin.android.ext.android.inject
 
-class MyPhotoReviewActivity : AppCompatActivity() {
+class AllPhotoReviewActivity : AppCompatActivity() {
 
-    private lateinit var myPhotoReviewAdapter: MyPhotoReviewRecyclerview
+    private lateinit var allPhotoReviewAdapter: AllPhotoReviewRecyclerview
     private val networkManager : NetworkManager by inject()
 
     private var checkReview = ""
@@ -31,14 +31,14 @@ class MyPhotoReviewActivity : AppCompatActivity() {
         if(checkReview == "my") { //내 포토리뷰
 
             initGetMyPhotoReview()
-            txt_my_photo_review_title.text = "내 포토리뷰"
+            txt_my_photo_review_title.text = resources.getString(R.string.myPhotoReview)
 
         } else if(checkReview == "default"){ //포토리뷰
 
             checkPart = intent.getStringExtra("part")!!
             id = intent.getIntExtra("id",0)
 
-            txt_my_photo_review_title.text = "포토리뷰"
+            txt_my_photo_review_title.text = resources.getString(R.string.homeNewPhotoReview2)
 
             when (checkPart) {
                 "celeb" -> { //셀럽 리뷰 불러오기
@@ -70,16 +70,16 @@ class MyPhotoReviewActivity : AppCompatActivity() {
     }
 
     private fun initRecycler(){
-        myPhotoReviewAdapter = MyPhotoReviewRecyclerview(checkReview)
+        allPhotoReviewAdapter = AllPhotoReviewRecyclerview(checkReview)
         rv_my_photo_review.apply {
-            adapter = myPhotoReviewAdapter
+            adapter = allPhotoReviewAdapter
         }
     }
 
     private fun initGetMyPhotoReview(){
         networkManager.requestMyPhotoReviews().safeEnqueue(
             onSuccess = {
-                myPhotoReviewAdapter.initData(it.data.result.content)
+                allPhotoReviewAdapter.initData(it.data.result.content)
             },
             onFailure = {
                 toast("실패")
@@ -91,44 +91,44 @@ class MyPhotoReviewActivity : AppCompatActivity() {
     }
 
     private fun initGetCelebPhotoReview(){
-//        networkManager.getCelebPhotoReview(id).safeEnqueue(
-//            onSuccess = {
-//                myPhotoReviewAdapter.initData(it.data.result)
-//            },
-//            onFailure = {
-//                toast("실패")
-//            },
-//            onError = {
-//                networkErrorToast()
-//            }
-//        )
+        networkManager.getCelebPhotoReview(id).safeEnqueue(
+            onSuccess = {
+                allPhotoReviewAdapter.initData(it.data.result.content)
+            },
+            onFailure = {
+                toast("실패")
+            },
+            onError = {
+                networkErrorToast()
+            }
+        )
     }
 
     private fun initGetMediaPhotoReview(){
-//        networkManager.requestMediaPhotoReview(id).safeEnqueue(
-//            onSuccess = {
-//                myPhotoReviewAdapter.initData(it.data.result)
-//            },
-//            onFailure = {
-//                toast("실패")
-//            },
-//            onError = {
-//                networkErrorToast()
-//            }
-//        )
+        networkManager.requestMediaPhotoReview(id).safeEnqueue(
+            onSuccess = {
+                allPhotoReviewAdapter.initData(it.data.result.content)
+            },
+            onFailure = {
+                toast("실패")
+            },
+            onError = {
+                networkErrorToast()
+            }
+        )
     }
 
     private fun initGetPlacePhotoReview(){
-//        networkManager.getPlaceReview(id).safeEnqueue(
-//            onSuccess = {
-//                myPhotoReviewAdapter.initData(it.data.result)
-//            },
-//            onFailure = {
-//                toast("실패")
-//            },
-//            onError = {
-//                networkErrorToast()
-//            }
-//        )
+        networkManager.getPlaceReview(id).safeEnqueue(
+            onSuccess = {
+                allPhotoReviewAdapter.initData(it.data.result.content)
+            },
+            onFailure = {
+                toast("실패")
+            },
+            onError = {
+                networkErrorToast()
+            }
+        )
     }
 }

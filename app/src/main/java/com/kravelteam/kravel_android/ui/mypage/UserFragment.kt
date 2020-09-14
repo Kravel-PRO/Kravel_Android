@@ -15,7 +15,6 @@ import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.network.AuthManager
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.login.LoginActivity
-import com.kravelteam.kravel_android.ui.map.CameraActivity
 import com.kravelteam.kravel_android.ui.signup.SetLanguageActivity
 import com.kravelteam.kravel_android.util.networkErrorToast
 import com.kravelteam.kravel_android.util.safeEnqueue
@@ -54,7 +53,12 @@ class UserFragment : Fragment() {
             onSuccess = {
                 nickname = it.data.result.nickName
                 gender = it.data.result.gender
-                txt_user_nickname.text = "${nickname}님의 여행을 함께해요!"
+                if (authManager.setLang=="ko") {
+                    txt_user_nickname.text = "${nickname}님의 여행을 함께해요!"
+                } else {
+                    txt_user_nickname.text = "Let's go on ${nickname}'s trip together!"
+                }
+
             },
             onFailure = {
 
@@ -67,7 +71,7 @@ class UserFragment : Fragment() {
 
     private fun initSetting(){
         cl_user_photo.setOnDebounceClickListener {
-            Intent(KravelApplication.GlobalApp, MyPhotoReviewActivity::class.java).apply {
+            Intent(KravelApplication.GlobalApp, AllPhotoReviewActivity::class.java).apply {
                 putExtra("review", "my")
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }.run { KravelApplication.GlobalApp.startActivity(this) }

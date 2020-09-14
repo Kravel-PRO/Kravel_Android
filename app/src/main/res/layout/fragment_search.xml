@@ -24,7 +24,7 @@
                 android:layout_height="52dp"
                 android:layout_marginVertical="16dp"
                 android:background="@drawable/signup_btn_style"
-                android:text="연예인, 드라마 등을 검색해주세요"
+                android:text="@string/SearchWordExplain"
                 android:textColor="@color/colorOpacity30Black"
                 android:textSize="15sp"
                 android:gravity="left|center"
@@ -53,6 +53,13 @@
             app:layout_constraintTop_toBottomOf="@id/cl_search_edit_search"
             app:layout_constraintBottom_toBottomOf="parent">
 
+            <View
+                android:id="@+id/view_search_line_init"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/colorGrey"
+                app:layout_constraintBottom_toBottomOf="@+id/tl_search_select" />
+
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tl_search_select"
                 android:layout_width="match_parent"
@@ -63,6 +70,7 @@
                 app:tabSelectedTextColor="@color/colorCoral"
                 app:tabIndicatorColor="@color/colorCoral"
                 app:tabIndicatorHeight="2dp"/>
+
 
             <androidx.viewpager.widget.ViewPager
                 android:id="@+id/vp_search_select"

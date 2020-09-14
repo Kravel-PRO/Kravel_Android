@@ -5,5 +5,5 @@ data class DetailPlaceResponse(
     val title: String,
     val imageUrl: String?,
     val mediaTitle: String?,
-    val tags: ArrayList<String>?
+    val tags: String?
 )
