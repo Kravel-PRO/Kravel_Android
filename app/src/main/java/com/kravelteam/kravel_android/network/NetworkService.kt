@@ -82,7 +82,9 @@ interface NetworkService {
      */
     @GET("/api/celebrities/{id}")
     fun requestCelebDetail(
-        @Path("id") id: Int
+        @Path("id") id: Int,
+        @Query("page") page: Int,
+        @Query("size") size: Int
     ) : Call<BaseResponse<CelebDetailResponse>>
 
     /**

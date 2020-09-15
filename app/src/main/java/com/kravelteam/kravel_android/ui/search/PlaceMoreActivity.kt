@@ -9,7 +9,7 @@ import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.response.DetailPlaceResponse
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.SearchDetailPlaceRecyclerview
-import com.kravelteam.kravel_android.util.safeEnqueue
+import com.kravelteam.kravel_android.util.*
 import kotlinx.android.synthetic.main.activity_place_more.*
 import org.koin.android.ext.android.inject
 
@@ -17,6 +17,8 @@ class PlaceMoreActivity : AppCompatActivity() {
 
     private val placeAdapter: SearchDetailPlaceRecyclerview by lazy { SearchDetailPlaceRecyclerview() }
     private val networkManager : NetworkManager by inject()
+    private var page: Int = 0
+    private var size: Int = 20
 
     private var id : Int = 0
 
@@ -29,6 +31,10 @@ class PlaceMoreActivity : AppCompatActivity() {
         img_place_more_back.setOnDebounceClickListener {
             finish()
         }
+        btn_place_more.setOnDebounceClickListener {
+            page++
+            initPlaceMore(false)
+        }
     }
 
     private fun initRecycler(){
@@ -37,13 +43,24 @@ class PlaceMoreActivity : AppCompatActivity() {
             addItemDecoration(HorizontalItemDecorator(8))
             addItemDecoration(VerticalItemDecorator(16))
         }
+        initPlaceMore(true)
+    }
 
-        networkManager.requestCelebDetail(id).safeEnqueue(
+    private fun initPlaceMore(init : Boolean){
+        networkManager.requestCelebDetail(id,page,size).safeEnqueue(
             onSuccess = {
-                placeAdapter.initData(it.data.result.places)
+                if(it.data.result.places.size == size) btn_place_more.setVisible()
+                else btn_place_more.setGone()
+
+                if(init) placeAdapter.initData(it.data.result.places.toMutableList())
+                else placeAdapter.addData(it.data.result.places.toMutableList())
             },
-            onFailure = {},
-            onError = {}
+            onFailure = {
+                toast("실패했습니다.")
+            },
+            onError = {
+                networkErrorToast()
+            }
         )
     }
 }

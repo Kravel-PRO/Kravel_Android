@@ -76,8 +76,10 @@ class NetworkManager(authManager: AuthManager) {
     fun requestMediaList() = retrofit.requestMediaList()
 
     fun requestCelebDetail(
-        id: Int
-    ) = retrofit.requestCelebDetail(id)
+        id: Int,
+        page: Int,
+        size: Int
+    ) = retrofit.requestCelebDetail(id, page, size)
 
     fun requestMediaDetail(
         id: Int

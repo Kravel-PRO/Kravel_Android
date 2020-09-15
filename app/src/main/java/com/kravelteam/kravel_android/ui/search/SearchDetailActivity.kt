@@ -67,7 +67,7 @@ class SearchDetailActivity : AppCompatActivity() {
         }
 
         if(part == "celeb"){ //셀럽 디테일 상세 정보
-            networkManager.requestCelebDetail(id).safeEnqueue(
+            networkManager.requestCelebDetail(id,0,7).safeEnqueue(
                 onSuccess = {it ->
                     it.data.result.let {
                         GlideApp.with(this).load(it.celebrity.imageUrl).into(img_search_detail_title)
@@ -75,10 +75,10 @@ class SearchDetailActivity : AppCompatActivity() {
                         txt_search_detail_sub2.text = resources.getString(R.string.visitedPlace)
 
                         if( it.places.size == DATA_COUNT ){
-                            placeAdapter.initData(it.places.dropLast(1))
+                            placeAdapter.initData(it.places.dropLast(1).toMutableList())
                             btn_search_detail_more.setVisible()
                         } else {
-                            placeAdapter.initData(it.places)
+                            placeAdapter.initData(it.places.toMutableList())
                             btn_search_detail_more.setGone()
                         }
                     }
@@ -117,10 +117,10 @@ class SearchDetailActivity : AppCompatActivity() {
                         txt_search_detail_sub2.text = resources.getString(R.string.filmSite)
 
                         if( it.places.size == DATA_COUNT ){
-                            placeAdapter.initData(it.places.dropLast(1))
+                            placeAdapter.initData(it.places.dropLast(1).toMutableList())
                             btn_search_detail_more.setVisible()
                         } else {
-                            placeAdapter.initData(it.places)
+                            placeAdapter.initData(it.places.toMutableList())
                             btn_search_detail_more.setGone()
                         }
                     }
