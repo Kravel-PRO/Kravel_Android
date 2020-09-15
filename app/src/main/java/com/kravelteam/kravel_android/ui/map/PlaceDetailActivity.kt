@@ -79,8 +79,10 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
         img_map_detail_photo.setOnClickListener {
-               Intent(GlobalApp, CameraActivity::class.java).run {
-                   GlobalApp.startActivity(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
+            Intent(GlobalApp,CameraActivity::class.java).apply {
+                putExtra("filter","필터 이미지")
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }.run { GlobalApp.startActivity(this) }
         }
 
         img_map_detail_scrap.setOnClickListener {

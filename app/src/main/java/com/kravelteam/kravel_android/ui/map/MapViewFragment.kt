@@ -143,12 +143,16 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
 
 
         img_bottom_photo.setOnDebounceClickListener {
-             Intent(GlobalApp,CameraActivity::class.java).run {
-                 GlobalApp.startActivity(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
+             Intent(GlobalApp,CameraActivity::class.java).apply {
+                 putExtra("filter","필터 이미지")
+                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+             }.run { GlobalApp.startActivity(this) }
         }
         cl_bottom_sheet_map_detail.img_map_detail_photo.setOnDebounceClickListener {
-            Intent(GlobalApp,CameraActivity::class.java).run {
-                GlobalApp.startActivity(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
+            Intent(GlobalApp,CameraActivity::class.java).apply {
+                putExtra("filter","필터 이미지")
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }.run { GlobalApp.startActivity(this) }
         }
 
         init()

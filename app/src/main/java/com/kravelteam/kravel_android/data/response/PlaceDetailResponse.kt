@@ -5,6 +5,7 @@ data class PlaceDetailResponse(
     val title : String,
     val contents : String?,
     val imageUrl : String?,
+    val filterImageUrl: String?,
     val location : String,
     val latitude : Double,
     val longitude : Double,
