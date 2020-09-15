@@ -216,4 +216,13 @@ interface NetworkService {
         @Body data : ScrapBody
     ) : Call<BaseResponse<Int>>
 
+    /**
+     * 정보수정 -> 언어
+     */
+    @PUT("/api/member")
+    fun requestLanguage(
+        @Query("type") type : String,
+        @Body data : LanguageBody
+    ) : Call<BaseResponse<Unit>>
+
 }

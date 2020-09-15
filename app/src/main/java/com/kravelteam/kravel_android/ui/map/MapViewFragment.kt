@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kravelteam.kravel_android.KravelApplication
@@ -81,6 +82,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
     private val networkManager : NetworkManager by inject()
     private var currentPlaceId : Int = 0
     private val authManager : AuthManager by inject()
+    private lateinit var childFragment : FragmentManager
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -96,14 +98,13 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
             val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
             StrictMode.setThreadPolicy(policy)
         }
-        val fm = childFragmentManager
-        mapFragment = fm.findFragmentById(R.id.map) as MapFragment?
+        childFragment = childFragmentManager
+        mapFragment = childFragment.findFragmentById(R.id.map) as MapFragment?
             ?: MapFragment.newInstance().also {
-                fm.beginTransaction().add(R.id.map, it).commit()
+                childFragment.beginTransaction().add(R.id.map, it).commit()
             }
 
         mapFragment.getMapAsync(this)
-
         animMapInfo = animMapInfoLottie
         root = requireView().findViewById(R.id.root)
         bottomSheetBehavior = BottomSheetBehavior.from<ConstraintLayout>(cl_bottom_seat_place)
@@ -221,10 +222,9 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
     private fun initBottomSheet(marker: Marker) {
         val markerInfo : TagMarkerData = marker!!.tag as TagMarkerData
         val placeId =  markerInfo.placeId
-        val fm = childFragmentManager
-        mapFragment_Bottom = fm.findFragmentById(R.id.mapView) as MapFragment?
+        mapFragment_Bottom = childFragment.findFragmentById(R.id.mapView) as MapFragment?
             ?: MapFragment.newInstance().also {
-                fm.beginTransaction().add(R.id.mapView, it).commit()
+                childFragment.beginTransaction().add(R.id.mapView, it).commit()
             }
 
         if(mapMarker?.map !=null) {
@@ -250,7 +250,6 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
                     Marker!!.map = naver1Map
                     Marker!!.icon = OverlayImage.fromResource(R.drawable.ic_mark_focus)
                     mapMarker = Marker
-
                 }
 
                 if(!it.data.result.tags.isNullOrEmpty()) {
@@ -265,6 +264,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
                     GlideApp.with(KravelApplication.GlobalApp).load(R.drawable.ic_scrap_fill).into(cl_bottom_seat_place.img_user_scrap)
                 }
                 cl_bottom_seat_place.img_bottom_photo_edit.setOnDebounceClickListener {
+                    checkBottomSheetClick = true
                     Intent(GlobalApp,PostReviewActivity::class.java).apply{
                         putExtra("placeId",placeId)
                         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -284,30 +284,21 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
         )
         togglebtn_gps.setGone()
         img_reset.setGone()
-
-        checkBottom = true
         cl_bottom_seat_place.setVisible()
+
+
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         bottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when(newState) {
                     BottomSheetBehavior.STATE_HIDDEN -> {
-                        mapFragment.getMapAsync{naverMap ->
-                            rv_map_near_place.setVisible()
-                            markerInfo.markerClick = false
-                            checkBottom = false
-                            preMarker = null
-                            mapFragment_Bottom = null
-                            marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_default)
-                            cl_bottom_seat_place.setGone()
-                            togglebtn_gps.setVisible()
-                            img_reset.setVisible()
-                        }
+                        bottomSheetBack()
                     }
                     BottomSheetBehavior.STATE_EXPANDED -> {
                         checkBottomSheet = true
                         initAnimation()
                         checkBottom = false
+                        childFragmentManager.beginTransaction().remove(mapFragment_Bottom!!).commit()
                         (activity as AppCompatActivity).cl_main_bottom?.setGone()
                         Handler().postDelayed({
                             initBottomSheetDetail(placeId)
@@ -400,37 +391,29 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
     }
     private fun initBottomSheetDetail(placeId : Int) {
         currentPlaceId = placeId
-        val fm = childFragmentManager
-        mapFragment_Bottom_D = fm.findFragmentById(R.id.place_detail_map) as MapFragment?
+        mapFragment_Bottom_D = childFragment.findFragmentById(R.id.place_detail_map) as MapFragment?
             ?:MapFragment.newInstance().also {
-                fm.beginTransaction().add(R.id.place_detail_map,it).commit()
+                childFragment.beginTransaction().commit()
             }
 
         cl_bottom_sheet_map_detail.img_map_detail_arrow.setOnDebounceClickListener {
-            checkBottomSheet = false
-            checkBottomSheetDetailClick =false
-            cl_bottom_seat_place.setVisible()
-            (activity as AppCompatActivity).cl_main_bottom?.setVisible()
-            cl_bottom_sheet_map_detail.setGone()
-
-            mapFragment_Bottom_D = null
+            bottomSheetDetailBack()
         }
         cl_bottom_seat_place.setGone()
         cl_bottom_sheet_map_detail.setVisible()
         bottomSheetDetailBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-        checkBottomSheetClick = true
+        bottomSheetDetailBehavior.skipCollapsed = true
         onResume()
-        checkBottomSheetDetailClick =false
+
         networkManager.getPlaceDetailList(placeId).safeEnqueue (
             onSuccess = {
+                Timber.e("bottomSheetDetail Connection!!")
                 cl_bottom_sheet_map_detail.txt_map_detail_title.text = it.data.result.title
                 cl_bottom_sheet_map_detail.txt_map_detail_address.text = it.data.result.location
                 cl_bottom_sheet_map_detail.txt_map_detail_address2.text = it.data.result.location
                 if(!it.data.result.imageUrl.isNullOrBlank()) {
                     GlideApp.with(cl_bottom_sheet_map_detail.img_map_detail_place).load(it.data.result.imageUrl).into(cl_bottom_sheet_map_detail.img_map_detail_place)
                 }
-
-                Timber.e("LAT${it.data.result.latitude}, LONG${it.data.result.longitude}")
                 mapFragment_Bottom_D!!.getMapAsync{naver2Map ->
                     if(mapMarker?.map !=null) {
                         mapMarker?.map = null
@@ -482,23 +465,10 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
                 when(newState) {
                     BottomSheetBehavior.STATE_DRAGGING -> {}
                     BottomSheetBehavior.STATE_COLLAPSED -> {
-                        checkBottomSheet = false
-                        mapFragment_Bottom_D = null
-                        checkBottomSheetDetailClick =false
-                        cl_bottom_seat_place.setVisible()
-                        (activity as AppCompatActivity).cl_main_bottom?.setVisible()
-                        cl_bottom_sheet_map_detail.setGone()
-
+                       bottomSheetDetailBack()
                     }
                     BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-                        checkBottomSheet = false
-                        mapFragment_Bottom_D = null
-                        checkBottomSheetDetailClick = false
-                        cl_bottom_seat_place.setVisible()
-                        (activity as AppCompatActivity).cl_main_bottom?.setVisible()
-                        cl_bottom_sheet_map_detail.setGone()
-
-
+                        bottomSheetDetailBack()
                     }
                 }
             }
@@ -812,47 +782,50 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
         img_bottom_bar.setVisible()
         if(checkBottomSheetClick) {
             initBottomSheet(preMarker!!)
+            Timber.e("bottomsheet reset")
             checkBottomSheetClick = false
         }
         if(checkBottomSheetDetailClick) {
-            initBottomSheetDetail(currentPlaceId)
             checkBottomSheetDetailClick = false
+            initBottomSheetDetail(currentPlaceId)
+            Timber.e("bottomsheet detail reset")
         }
 
     }
 
+    private fun bottomSheetBack() {
+        if(preMarker != null) {
+            Timber.e("BottomSheet Back")
+            preMarker!!.icon = OverlayImage.fromResource(R.drawable.ic_mark_default)
+            val preMarkerData = preMarker!!.tag as TagMarkerData
+            preMarkerData.markerClick = false
+            preMarker = null
+            childFragmentManager.beginTransaction().remove(mapFragment_Bottom!!).commit()
+            rv_map_near_place.setVisible()
+            cl_bottom_seat_place.setGone()
+            togglebtn_gps.setVisible()
+            img_reset.setVisible()
+        }
+        checkBottom = false
+    }
+    private fun bottomSheetDetailBack() {
+        checkBottomSheetClick = true
+        onResume()
+        Timber.e("BottomSheetDetail Back")
+        checkBottomSheet = false
+        childFragmentManager.beginTransaction().remove(mapFragment_Bottom_D!!).commit()
+        cl_bottom_seat_place.setVisible()
+        (activity as AppCompatActivity).cl_main_bottom?.setVisible()
+        cl_bottom_sheet_map_detail.setGone()
+        bottomSheetBehavior.isFitToContents  = false
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+    }
     override fun onBackPressed() : Boolean {
         return if (checkBottomSheet) {
-            onResume()
-            checkBottomSheet = false
-            val fm = childFragmentManager
-            mapFragment_Bottom_D = fm.findFragmentById(R.id.place_detail_map) as MapFragment?
-                ?:MapFragment.newInstance().also {
-                    fm.beginTransaction().remove(it).commit()
-                }
-            mapFragment_Bottom_D = null
-
-            checkBottomSheetDetailClick =false
-            cl_bottom_seat_place.setVisible()
-            (activity as AppCompatActivity).cl_main_bottom?.setVisible()
-            cl_bottom_sheet_map_detail.setGone()
-            bottomSheetBehavior.isFitToContents  = false
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            checkBottomSheetDetailClick = false
+           bottomSheetDetailBack()
             true
         } else if (checkBottom) {
-            if(preMarker != null) {
-                preMarker!!.icon = OverlayImage.fromResource(R.drawable.ic_mark_default)
-                val preMarkerData = preMarker!!.tag as TagMarkerData
-                preMarkerData.markerClick = false
-                preMarker = null
-               mapFragment_Bottom = null
-                rv_map_near_place.setVisible()
-                cl_bottom_seat_place.setGone()
-                togglebtn_gps.setVisible()
-                img_reset.setVisible()
-            }
-            checkBottom = false
+            bottomSheetBack()
             true
         } else {
             false
