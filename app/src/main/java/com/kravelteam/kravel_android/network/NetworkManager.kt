@@ -135,6 +135,11 @@ class NetworkManager(authManager: AuthManager) {
         data : ReviewLikeBody
     ) = retrofit.postLikes(placeId, reviewId, data)
 
+    fun requestLanguage(
+        type: String,
+        data : LanguageBody
+    ) = retrofit.requestLanguage(type, data)
+
     private companion object {
         const val BASE_URL = "http://15.164.118.217:8080"
 //        const val BASE_URL ="http://noah.is.kakaocorp.com"
