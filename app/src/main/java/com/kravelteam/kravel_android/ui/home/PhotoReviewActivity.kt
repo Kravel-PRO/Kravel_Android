@@ -1,34 +1,22 @@
 package com.kravelteam.kravel_android.ui.home
 
-import android.content.Intent
-import android.media.Image
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
-import com.kravelteam.kravel_android.KravelApplication
+import android.widget.TextView
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.GlideApp
 import com.kravelteam.kravel_android.common.HorizontalItemDecorator
 import com.kravelteam.kravel_android.common.VerticalItemDecorator
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
-import com.kravelteam.kravel_android.data.mock.NewPhotoReview
-import com.kravelteam.kravel_android.data.mock.PopularPlaceData
 import com.kravelteam.kravel_android.data.request.ReviewLikeBody
 import com.kravelteam.kravel_android.data.response.PhotoReviewData
-import com.kravelteam.kravel_android.data.response.PhotoReviewResponse
-import com.kravelteam.kravel_android.data.response.PlaceContentResponse
 import com.kravelteam.kravel_android.network.NetworkManager
-import com.kravelteam.kravel_android.ui.adapter.CelebRecyclerview
-import com.kravelteam.kravel_android.ui.adapter.NearPlaceRecyclerview
 import com.kravelteam.kravel_android.ui.adapter.NewPhotoReviewRecyclerview
-import com.kravelteam.kravel_android.ui.adapter.PopularRecyclerview
-import com.kravelteam.kravel_android.ui.map.PlaceDetailActivity
 import com.kravelteam.kravel_android.util.networkErrorToast
 import com.kravelteam.kravel_android.util.safeEnqueue
-import com.kravelteam.kravel_android.util.setGone
 import kotlinx.android.synthetic.main.activity_photo_review.*
-import kotlinx.android.synthetic.main.fragment_home.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
@@ -50,7 +38,7 @@ class PhotoReviewActivity : AppCompatActivity() {
         }
     }
     private fun initPhotoReivew() {
-        networkManager.getPhotoReview(0,7,"createdDate,desc").safeEnqueue (
+        networkManager.getPhotoReview(0,20,"createdDate,desc").safeEnqueue (
             onSuccess = {
 
                 rv_photo_review.apply {
@@ -71,13 +59,19 @@ class PhotoReviewActivity : AppCompatActivity() {
         photoAdapter.setOnItemClickListener(object : NewPhotoReviewRecyclerview.OnItemClickListener {
             override fun onItemClick(v: View, data: PhotoReviewData, pos: Int) {
                 val imgLike = v!!.findViewById<ImageView>(R.id.img_rv_photo_like)
+                val txtHeart = v!!.findViewById<TextView>(R.id.txt_rv_photo_like)
                 if(data.like) {
                   networkManager.postLikes(data.place.placeId,data.reviewId,ReviewLikeBody(false)).safeEnqueue(
                       onSuccess = {
                           GlideApp.with(v).load(R.drawable.btn_like_unclick).into(imgLike)
+                          data.likeCount = data.likeCount -1
+                          txtHeart.text = data.likeCount.toString()
+
                           data.like = false
                       },
                       onFailure = {
+                          Timber.e("data id :: "+data.reviewId)
+                          Timber.e("place id :: "+ data.place.placeId)
                           Timber.e("실패")
                       },
                       onError = {
@@ -87,9 +81,13 @@ class PhotoReviewActivity : AppCompatActivity() {
                     networkManager.postLikes(data.place.placeId,data.reviewId,ReviewLikeBody(true)).safeEnqueue(
                         onSuccess = {
                             GlideApp.with(v).load(R.drawable.btn_like).into(imgLike)
+                            data.likeCount = data.likeCount +1
+                            txtHeart.text = data.likeCount.toString()
                             data.like = true
                         },
                         onFailure = {
+                            Timber.e("data id :: "+data.reviewId)
+                            Timber.e("place id :: "+ data.place.placeId)
                             Timber.e("실패")
                         },
                         onError = {
@@ -101,7 +99,5 @@ class PhotoReviewActivity : AppCompatActivity() {
 
 
         })
-
-
     }
 }

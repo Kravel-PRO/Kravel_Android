@@ -37,10 +37,6 @@ import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_place_detail.*
-import kotlinx.android.synthetic.main.bottom_sheet_place.*
-import kotlinx.android.synthetic.main.bottom_sheet_place.rv_map_detail_hashtag
-import kotlinx.android.synthetic.main.bottom_sheet_place.view.*
 import kotlinx.android.synthetic.main.dialog_gps_permission.view.*
 import kotlinx.android.synthetic.main.dialog_service_warning.view.*
 import kotlinx.android.synthetic.main.fragment_map.*
@@ -48,7 +44,7 @@ import kotlinx.android.synthetic.main.fragment_map_info.*
 import kotlinx.android.synthetic.main.fragment_map_info.view.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
-import java.net.URL
+import com.naver.maps.map.MapFragment
 
 
 class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
@@ -58,30 +54,22 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
     private var preMarker : Marker? = null
     private lateinit var naverMap : NaverMap
     private  var mapFragment_Bottom : MapFragment? = null
-    private  var mapFragment_Bottom_D : MapFragment? = null
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
-    private lateinit var bottomSheetDetailBehavior : BottomSheetBehavior<ConstraintLayout>
     private lateinit var animMapInfo: LottieAnimationView
     private lateinit var root: View
     private  var mLatitude : Double = 0.0
     private var mLongitude : Double = 0.0
-    private val nearplaceAdapter : MapNearPlaceRecyclerview by lazy { MapNearPlaceRecyclerview() } //BottomSheet_Detail
     private lateinit var photoAdapter : PhotoReviewRecyclerview //BottomSheet
     private val hashtagAdapter : HashTagRecyclerView by lazy { HashTagRecyclerView() } //BottomSheet
     private val nearAdapter: MapPlaceRecyclerview by lazy { MapPlaceRecyclerview() }
     private var checkScrap : Boolean = false // BottomSheet
-    private var checkScrapD : Boolean = false //BottomSheet_Detail
     private var mapMarker : Marker? = null
     private var checkReset : Boolean = false
     private var nearLocation : LatLng? = null
-    private var checkBottomSheet : Boolean = false
     private var checkBottom : Boolean =false
-    private var checkBottomSheetDetailClick : Boolean = false
     private var checkBottomSheetClick : Boolean = false
     private var checkFirst : Boolean = true
     private val networkManager : NetworkManager by inject()
-    private var currentPlaceId : Int = 0
-    private val authManager : AuthManager by inject()
     private lateinit var childFragment : FragmentManager
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -108,8 +96,6 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
         animMapInfo = animMapInfoLottie
         root = requireView().findViewById(R.id.root)
         bottomSheetBehavior = BottomSheetBehavior.from<ConstraintLayout>(cl_bottom_seat_place)
-        bottomSheetDetailBehavior = BottomSheetBehavior.from<ConstraintLayout>(cl_bottom_sheet_map_detail)
-
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
 
         val locationManager = requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -147,10 +133,6 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
              Intent(GlobalApp,CameraActivity::class.java).run {
                  GlobalApp.startActivity(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
         }
-        cl_bottom_sheet_map_detail.img_map_detail_photo.setOnDebounceClickListener {
-            Intent(GlobalApp,CameraActivity::class.java).run {
-                GlobalApp.startActivity(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
-        }
 
         init()
 
@@ -173,20 +155,6 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
         return checkAreaBool
     }
     private fun init() {
-        cl_bottom_sheet_map_detail.rv_map_detail_hashtag.apply {
-            adapter = hashtagAdapter
-            addItemDecoration(HorizontalItemDecorator(4))
-        }
-        cl_bottom_sheet_map_detail.rv_map_detail_near_place.apply {
-            adapter = nearplaceAdapter
-            addItemDecoration(HorizontalItemDecorator(12))
-        }
-
-        cl_bottom_sheet_map_detail.rv_map_detail_photo.apply {
-            addItemDecoration(VerticalItemDecorator(4))
-            addItemDecoration(HorizontalItemDecorator(4))
-        }
-
         cl_bottom_seat_place.rv_home_photo_review.apply {
             addItemDecoration(VerticalItemDecorator(4))
             addItemDecoration(HorizontalItemDecorator(4))
@@ -241,13 +209,18 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
                 Timber.e("BottomSheetServer Connection!!")
                 img_bottom_place.setRound(10.dpToPx().toFloat())
 
-                mapFragment_Bottom!!.getMapAsync{naver1Map ->
+                mapFragment_Bottom!!.getMapAsync{navermap ->
                     if(mapMarker?.map !=null) {
                         mapMarker?.map = null
                     }
+                    val uiSettings = navermap.uiSettings
+                    uiSettings.isZoomControlEnabled = false
+                    uiSettings.isTiltGesturesEnabled = false
+                    uiSettings.isZoomGesturesEnabled = false
+                    uiSettings.isScrollGesturesEnabled = false
                     val  Marker = Marker(LatLng(it.data.result.latitude,it.data.result.longitude))
-                    naver1Map.moveCamera(CameraUpdate.scrollTo(Marker!!.position))
-                    Marker!!.map = naver1Map
+                    navermap.moveCamera(CameraUpdate.scrollTo(Marker!!.position))
+                    Marker!!.map = navermap
                     Marker!!.icon = OverlayImage.fromResource(R.drawable.ic_mark_focus)
                     mapMarker = Marker
                 }
@@ -258,7 +231,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
                 }
 
 
-                initPhotoReview("BOTTOM",it.data.result.placeId)
+                initPhotoReview(it.data.result.placeId)
                 checkScrap = it.data.result.scrap
                 if(checkScrap) {
                     GlideApp.with(KravelApplication.GlobalApp).load(R.drawable.ic_scrap_fill).into(cl_bottom_seat_place.img_user_scrap)
@@ -295,13 +268,16 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
                         bottomSheetBack()
                     }
                     BottomSheetBehavior.STATE_EXPANDED -> {
-                        checkBottomSheet = true
                         initAnimation()
-                        checkBottom = false
                         childFragmentManager.beginTransaction().remove(mapFragment_Bottom!!).commit()
-                        (activity as AppCompatActivity).cl_main_bottom?.setGone()
                         Handler().postDelayed({
-                            initBottomSheetDetail(placeId)
+                            Intent(GlobalApp,PlaceDetailActivity::class.java).apply {
+                                putExtra("placeId",placeId)
+                                putExtra("mode","map")
+                            }.run {
+                                GlobalApp.startActivity(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                            }
+
                         }, 1500)
 
                     }
@@ -351,25 +327,13 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
 
     }
 
-    private fun initPhotoReview(mode : String,placeId: Int) {
+    private fun initPhotoReview(placeId: Int) {
         photoAdapter = PhotoReviewRecyclerview("default","place",placeId)
         networkManager.getPlaceReview(placeId).safeEnqueue(
             onSuccess = {
-                when(mode) {
-                    "BOTTOM" -> {
-                        if(!it.data.result.content.isNullOrEmpty()) {
-
-                            photoAdapter.initData(it.data.result.content)
-                        }
-                        return@safeEnqueue
-                    }
-                    "BOTTOM_D" -> {
-                        if(!it.data.result.content.isNullOrEmpty()) {
-                            photoAdapter.initData(it.data.result.content)
-                        }
-                        return@safeEnqueue
-
-                    }
+                if(!it.data.result.content.isNullOrEmpty()) {
+                    photoAdapter.initData(it.data.result.content)
+                    return@safeEnqueue
                 }
             },
             onFailure = {
@@ -380,178 +344,11 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
                 networkErrorToast()
             }
         )
-
-        cl_bottom_sheet_map_detail.rv_map_detail_photo.apply {
-            adapter = photoAdapter
-        }
 
         cl_bottom_seat_place.rv_home_photo_review.apply {
             adapter = photoAdapter
         }
     }
-    private fun initBottomSheetDetail(placeId : Int) {
-        currentPlaceId = placeId
-        mapFragment_Bottom_D = childFragment.findFragmentById(R.id.place_detail_map) as MapFragment?
-            ?:MapFragment.newInstance().also {
-                childFragment.beginTransaction().commit()
-            }
-
-        cl_bottom_sheet_map_detail.img_map_detail_arrow.setOnDebounceClickListener {
-            bottomSheetDetailBack()
-        }
-        cl_bottom_seat_place.setGone()
-        cl_bottom_sheet_map_detail.setVisible()
-        bottomSheetDetailBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-        bottomSheetDetailBehavior.skipCollapsed = true
-        onResume()
-
-        networkManager.getPlaceDetailList(placeId).safeEnqueue (
-            onSuccess = {
-                Timber.e("bottomSheetDetail Connection!!")
-                cl_bottom_sheet_map_detail.txt_map_detail_title.text = it.data.result.title
-                cl_bottom_sheet_map_detail.txt_map_detail_address.text = it.data.result.location
-                cl_bottom_sheet_map_detail.txt_map_detail_address2.text = it.data.result.location
-                if(!it.data.result.imageUrl.isNullOrBlank()) {
-                    GlideApp.with(cl_bottom_sheet_map_detail.img_map_detail_place).load(it.data.result.imageUrl).into(cl_bottom_sheet_map_detail.img_map_detail_place)
-                }
-                mapFragment_Bottom_D!!.getMapAsync{naver2Map ->
-                    if(mapMarker?.map !=null) {
-                        mapMarker?.map = null
-                    }
-                    val  Marker = Marker(LatLng(it.data.result.latitude,it.data.result.longitude))
-                    naver2Map.moveCamera(CameraUpdate.scrollTo(Marker!!.position))
-                    Marker!!.map = naver2Map
-                    Marker!!.icon = OverlayImage.fromResource(R.drawable.ic_mark_focus)
-                    mapMarker =Marker
-                }
-
-                if(!it.data.result.tags.isNullOrEmpty()) {
-                    val str = it.data.result.tags!!.split(",")
-                    hashtagAdapter.initData(str)
-                }
-
-                cl_bottom_sheet_map_detail.txt_map_detail_bus_content.text = it.data.result.bus
-                cl_bottom_sheet_map_detail.txt_map_detail_subway_content.text = it.data.result.subway
-                initPhotoReview("BOTTOM_D",placeId)
-                initNearPlaceRecycler(it.data.result.latitude,it.data.result.longitude)
-
-                checkScrapD = it.data.result.scrap
-                if(checkScrapD) {
-                    GlideApp.with(KravelApplication.GlobalApp).load(R.drawable.ic_scrap_fill).into(cl_bottom_sheet_map_detail.img_map_detail_scrap)
-                }
-
-                cl_bottom_sheet_map_detail.img_photo_review_edit.setOnDebounceClickListener {
-                    checkBottomSheetDetailClick = true
-                    Intent(GlobalApp,PostReviewActivity::class.java).apply{
-                        putExtra("placeId",placeId)
-                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    }.run {
-                        GlobalApp.startActivity(this)
-                    }
-                }
-
-            },
-            onFailure = {
-                Timber.e("실패")
-
-            },
-            onError = {
-                networkErrorToast()
-            }
-        )
-
-        bottomSheetDetailBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                when(newState) {
-                    BottomSheetBehavior.STATE_DRAGGING -> {}
-                    BottomSheetBehavior.STATE_COLLAPSED -> {
-                       bottomSheetDetailBack()
-                    }
-                    BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-                        bottomSheetDetailBack()
-                    }
-                }
-            }
-
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
-        })
-
-
-        cl_bottom_sheet_map_detail.img_map_detail_scrap.setOnDebounceClickListener {
-            if(checkScrapD) {
-                Timber.e("checkScrap true -> false")
-                //checkScrap == TRUE
-                networkManager.postScrap(placeId, ScrapBody(false) ).safeEnqueue (
-                    onSuccess = {
-                        checkScrapD = false
-                        GlideApp.with(GlobalApp).load(R.drawable.ic_scrap).into(cl_bottom_sheet_map_detail.img_map_detail_scrap)
-                    }, onFailure = {
-                        Timber.e("실패")
-
-                    },
-                    onError = {
-                        networkErrorToast()
-                    })
-
-
-            } else {
-                Timber.e("checkScrap false -> true")
-                networkManager.postScrap(placeId, ScrapBody(true)).safeEnqueue (
-                    onSuccess = {
-                        checkScrapD = true
-                        GlideApp.with(KravelApplication.GlobalApp).load(R.drawable.ic_scrap_fill).into(cl_bottom_sheet_map_detail.img_map_detail_scrap)
-
-                    }, onFailure = {
-                        Timber.e("실패")
-
-                    },
-                    onError = {
-                        networkErrorToast()
-                    })
-            }
-        }
-    }
-    private fun initNearPlaceRecycler(latitude: Double, longitude: Double) {
-        cl_bottom_sheet_map_detail.rv_map_detail_near_place.apply {
-            adapter = nearplaceAdapter
-        }
-
-        val local = authManager.setLang
-        var url : URL? = null
-        if(local == "ko") {
-            url= URL(
-                "http://api.visitkorea.or.kr/openapi/service/rest/KorService/locationBasedList?&MobileOS=AND&MobileApp=Kravel&radius=1000"
-                        + "&ServiceKey=" + resources.getString(R.string.open_api_kor_place)
-                        + "&mapX=${longitude}&mapY=${latitude}"
-            )
-
-        } else {
-            url = URL(
-                "http://api.visitkorea.or.kr/openapi/service/rest/EngService/locationBasedList?&MobileOS=AND&MobileApp=Kravel&radius=1000"
-                        + "&ServiceKey=" + resources.getString(R.string.open_api_eng_place)
-                        + "&mapX=${longitude}&mapY=${latitude}")
-        }
-
-        val handler: Handler = object : Handler() {
-            override fun handleMessage(msg: Message?) {
-
-                val parserHandler = XmlPullParserHandler()
-                val neardatas = parserHandler.parse(url.openStream())
-
-                nearplaceAdapter.initData(neardatas)
-                nearplaceAdapter.notifyDataSetChanged()
-            }
-        }
-
-
-        object : Thread() {
-            override fun run() {
-                val msg = handler.obtainMessage()
-                handler.sendMessage(msg)
-            }
-        }.start()
-    }
-
     private fun initAnimation() {
 
         img_bottom_bar.setGone()
@@ -569,6 +366,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
             override fun onItemClick(v: View, data: PlaceContentResponse, pos: Int) {
                 Intent(GlobalApp,PlaceDetailActivity::class.java).apply {
                     putExtra("placeId",data.placeId)
+                    putExtra("mode","home")
                 }.run {
                     GlobalApp.startActivity(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
                 }
@@ -577,8 +375,6 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
         })
         networkManager.getPlaceList(latitude, longitude).safeEnqueue (
             onSuccess = {
-
-
                 nearAdapter.initData(it.data!!.result!!.content)
             },
             onFailure = {
@@ -599,7 +395,6 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
                     marker.position = LatLng(it.data.result.get(i).latitude, it.data.result.get(i).longitude)
                     marker.map = naverMap
                     marker.tag = TagMarkerData(it.data.result.get(i).placeId, false)
-                    // Timber.e("marker.tag ::: ${marker.tag}")
                     marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_default)
                     val listener = Overlay.OnClickListener { overlay ->
 
@@ -687,10 +482,6 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
        }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
-
-
-
-
     override fun onMapReady(naverMap: NaverMap) {
         this.naverMap = naverMap
         naverMap.locationSource = locationSource
@@ -785,12 +576,6 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
             Timber.e("bottomsheet reset")
             checkBottomSheetClick = false
         }
-        if(checkBottomSheetDetailClick) {
-            checkBottomSheetDetailClick = false
-            initBottomSheetDetail(currentPlaceId)
-            Timber.e("bottomsheet detail reset")
-        }
-
     }
 
     private fun bottomSheetBack() {
@@ -808,23 +593,8 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
         }
         checkBottom = false
     }
-    private fun bottomSheetDetailBack() {
-        checkBottomSheetClick = true
-        onResume()
-        Timber.e("BottomSheetDetail Back")
-        checkBottomSheet = false
-        childFragmentManager.beginTransaction().remove(mapFragment_Bottom_D!!).commit()
-        cl_bottom_seat_place.setVisible()
-        (activity as AppCompatActivity).cl_main_bottom?.setVisible()
-        cl_bottom_sheet_map_detail.setGone()
-        bottomSheetBehavior.isFitToContents  = false
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-    }
     override fun onBackPressed() : Boolean {
-        return if (checkBottomSheet) {
-           bottomSheetDetailBack()
-            true
-        } else if (checkBottom) {
+        return if (checkBottom) {
             bottomSheetBack()
             true
         } else {

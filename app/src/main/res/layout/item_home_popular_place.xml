@@ -57,7 +57,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="포토리뷰 "
+        android:text="@string/PhotoReview"
         android:id="@+id/txt_home_popular_content1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -85,7 +85,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="개"
+        android:text="@string/Count"
         android:id="@+id/txt_home_popular_content2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/txt_home_popular_photo"
@@ -94,8 +94,5 @@
         android:textColor="@color/colorWhite"
         android:fontFamily="@font/notosans_cjk_kr_regular"
         android:includeFontPadding="false"/>
-
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
