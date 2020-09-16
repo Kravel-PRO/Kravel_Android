@@ -119,4 +119,6 @@
         \nafter allowing access to the camera.</string>
     <string name="gallery">Gallery</string>
     <string name="example">Example</string>
+    <string name="PhotoReview">"PhotoReview  "</string>
+    <string name="Count">" "</string>
 </resources>

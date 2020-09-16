@@ -111,6 +111,7 @@ class HomeFragment : Fragment() {
             override fun onItemClick(v: View, data: PlaceContentResponse, pos: Int) {
                 Intent(GlobalApp,PlaceDetailActivity::class.java).apply {
                     putExtra("placeId",data.placeId)
+                    putExtra("mode","home")
                 }.run {
                     GlobalApp.startActivity(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
                 }
@@ -154,12 +155,16 @@ class HomeFragment : Fragment() {
             override fun onItemClick(v: View, data: PlaceContentResponse, pos: Int) {
                    Intent(GlobalApp,PlaceDetailActivity::class.java).apply {
                        putExtra("placeId",data.placeId)
+                       putExtra("mode","home")
                    }.run {
                        GlobalApp.startActivity(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
                    }
             }
 
         })
+        /**
+         *  바꿔야함 !!
+         */
         networkManager.getPopularPlaceList().safeEnqueue (
             onSuccess = {
                 rv_popular_place.apply {

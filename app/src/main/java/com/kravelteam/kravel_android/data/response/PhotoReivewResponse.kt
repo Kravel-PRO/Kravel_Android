@@ -8,7 +8,7 @@ data class PhotoReviewResponse(
 data class PhotoReviewData (
     val reviewId : Int,
     val imageUrl : String,
-    val likeCount : Int,
+    var likeCount : Int,
     var like : Boolean,
     val createdDate : String,
     val place : PhotoPlaceData
