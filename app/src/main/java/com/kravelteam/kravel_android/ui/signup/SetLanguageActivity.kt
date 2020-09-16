@@ -9,9 +9,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
+import com.kravelteam.kravel_android.data.request.LanguageBody
 import com.kravelteam.kravel_android.network.AuthManager
+import com.kravelteam.kravel_android.network.NetworkManager
+import com.kravelteam.kravel_android.util.networkErrorToast
+import com.kravelteam.kravel_android.util.safeLoginEnqueue
 import kotlinx.android.synthetic.main.activity_set_language.*
 import org.koin.android.ext.android.inject
+import timber.log.Timber
 import java.util.*
 
 @Suppress("DEPRECATION")
@@ -20,41 +25,25 @@ class SetLanguageActivity : AppCompatActivity() {
     private var checkLang = false
     private var Kor = false
     private var Eng = false
-
+    private val networkManager : NetworkManager by inject()
+    private lateinit var configuration: Configuration
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_set_language)
+        configuration = Configuration()
         btn_set_language_start.setOnDebounceClickListener {
             if(Kor) {
                 val ko = Locale.KOREA
-                val config = Configuration()
-                config.locale = ko
+                configuration.locale = ko
+                requestServer("KOR")
                 authManager.setLang = "ko"
-                resources.updateConfiguration(config,resources.displayMetrics)
-                val intent = baseContext.packageManager.getLaunchIntentForPackage(
-                    baseContext.packageName
-                )
-                intent!!.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                intent!!.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                finish()
-                startActivity(intent)
-
-
             }
             if(Eng) {
                 val en = Locale.US
-                val config = Configuration()
-                config.locale = en
+                configuration.locale = en
+                requestServer("ENG")
                 authManager.setLang = "en"
-                resources.updateConfiguration(config,resources.displayMetrics)
-                val intent = baseContext.packageManager.getLaunchIntentForPackage(
-                    baseContext.packageName
-                )
-                intent!!.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                intent!!.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                finish()
-                startActivity(intent)
             }
 
 
@@ -62,6 +51,29 @@ class SetLanguageActivity : AppCompatActivity() {
 
         initCheckRadioBtn()
         initEnableBtn()
+    }
+    private fun requestServer(lang : String) {
+        networkManager.requestLanguage(type = "speech",data = LanguageBody(lang)).safeLoginEnqueue(
+            onSuccess = {
+                authManager.token = it
+                resources.updateConfiguration(configuration,resources.displayMetrics)
+                val intent = baseContext.packageManager.getLaunchIntentForPackage(
+                    baseContext.packageName
+                )
+                intent!!.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                intent!!.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                finish()
+                startActivity(intent)
+
+            },
+            onFailure = {
+                Timber.e("실패")
+
+            },
+            onError = {
+                networkErrorToast()
+            }
+        )
     }
 
     private fun initCheckRadioBtn(){
