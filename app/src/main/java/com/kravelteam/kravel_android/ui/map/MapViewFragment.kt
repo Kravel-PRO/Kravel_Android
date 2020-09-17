@@ -71,6 +71,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
     private var checkFirst : Boolean = true
     private val networkManager : NetworkManager by inject()
     private lateinit var childFragment : FragmentManager
+    private var part: String = "place"
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -245,6 +246,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
                     checkBottomSheetClick = true
                     Intent(GlobalApp,PostReviewActivity::class.java).apply{
                         putExtra("placeId",placeId)
+                        putExtra("part",part)
                         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     }.run {
                         GlobalApp.startActivity(this)
@@ -335,7 +337,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
 
     private fun initPhotoReview(placeId: Int) {
         photoAdapter = PhotoReviewRecyclerview("default","place",placeId)
-        networkManager.getPlaceReview(placeId).safeEnqueue(
+        networkManager.getPlaceReview(placeId,0,7,"reviewLikes-count,desc").safeEnqueue(
             onSuccess = {
                 if(!it.data.result.content.isNullOrEmpty()) {
                     photoAdapter.initData(it.data.result.content)

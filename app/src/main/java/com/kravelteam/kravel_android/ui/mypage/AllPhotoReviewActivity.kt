@@ -133,7 +133,7 @@ class AllPhotoReviewActivity : AppCompatActivity() {
     }
 
     private fun initGetPlacePhotoReview(){
-        networkManager.getPlaceReview(id).safeEnqueue(
+        networkManager.getPlaceReview(id,0,50,"reviewLikes-count,desc").safeEnqueue(
             onSuccess = {
                 allPhotoReviewAdapter.initData(it.data.result.content)
             },

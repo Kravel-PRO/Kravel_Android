@@ -117,8 +117,11 @@ class NetworkManager(authManager: AuthManager) {
     ) = retrofit.getCelebPhotoReview(id, page, size, sort)
 
     fun getPlaceReview(
-        placeId : Int
-    ) = retrofit.getPlaceReview(placeId)
+        placeId : Int,
+        page : Int,
+        size : Int,
+        sort : String
+    ) = retrofit.getPlaceReview(placeId, page, size, sort)
 
     fun requestPostPhotoReview(
         id: Int,

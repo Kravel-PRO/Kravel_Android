@@ -166,7 +166,10 @@ interface NetworkService {
      */
     @GET("/api/places/{placeId}/reviews")
     fun getPlaceReview(
-        @Path("placeId") placeId: Int
+        @Path("placeId") placeId: Int,
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+        @Query("sort") sort: String
     ) : Call<BaseResponse<PhotoReviewResponse>>
 
     /**

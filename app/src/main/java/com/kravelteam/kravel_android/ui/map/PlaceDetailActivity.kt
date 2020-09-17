@@ -253,7 +253,7 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun initPhotoRecycler() {
 
 
-        networkManager.getPlaceReview(placeId).safeEnqueue(
+        networkManager.getPlaceReview(placeId,0,7,"reviewLikes-count,desc").safeEnqueue(
             onSuccess = {
 
 
