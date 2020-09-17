@@ -124,7 +124,8 @@ dependencies {
 
 
     //indicator
-    implementation 'me.relex:circleindicator:2.1.4'
+    implementation 'com.github.martinstamenkovski:ARIndicatorView:2.0.0'
+
 
 
 

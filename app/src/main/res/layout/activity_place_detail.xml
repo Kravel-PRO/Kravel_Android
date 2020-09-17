@@ -45,17 +45,17 @@
                 app:layout_constraintRight_toRightOf="parent"
                 android:scaleType="centerCrop"/>
 
-            <me.relex.circleindicator.CircleIndicator
-                android:id="@+id/indicator"
+            <com.arindicatorview.ARIndicatorView
+                android:id="@+id/ar_indicator"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                app:indicator_size="15"
+                app:indicator_color="@color/colorOpacity50White"
+                app:selected_color="@color/colorWhite"
+                app:indicator_animation="@anim/zoom_in"
                 android:layout_marginBottom="10dp"
-                app:ci_width ="6dp"
-                app:ci_height="6dp"
-                app:ci_orientation="horizontal"
-                app:ci_gravity="center"
-                app:ci_drawable="@color/colorWhite"
-                app:ci_drawable_unselected="@color/colorOpacity50White"
                 app:layout_constraintBottom_toBottomOf="@id/vp_map_detail_place"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"/>

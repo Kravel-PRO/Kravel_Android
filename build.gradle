@@ -22,7 +22,8 @@ allprojects {
         jcenter()
         maven {
             url 'https://navercorp.bintray.com/maps'
-        }
+            }
+        maven { url 'https://jitpack.io' }
     }
 }
 
