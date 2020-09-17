@@ -114,7 +114,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
                     naverMap.locationTrackingMode = NoFollow
                 }
             } else {
-                togglebtn_gps.isChecked = false
+                togglebtn_gps.isSelected = false
                 initAreaWarningDailog()
             }
         }
@@ -227,7 +227,10 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
 
                 if(!it.data.result.tags.isNullOrEmpty()) {
                     val str = it.data.result.tags!!.split(",")
+                    rv_map_hashtag.setVisible()
                     hashtagAdapter.initData(str)
+                } else {
+                    rv_map_hashtag.setGone()
                 }
 
 
@@ -269,6 +272,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
                     }
                     BottomSheetBehavior.STATE_EXPANDED -> {
                         initAnimation()
+                        checkBottomSheetClick = true
                         childFragmentManager.beginTransaction().remove(mapFragment_Bottom!!).commit()
                         Handler().postDelayed({
                             Intent(GlobalApp,PlaceDetailActivity::class.java).apply {
@@ -510,14 +514,14 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
 
         naverMap.addOnCameraChangeListener{reason,animated ->
             if(reason == CameraUpdate.REASON_GESTURE) {
-                togglebtn_gps.isChecked = false
+                togglebtn_gps.isSelected = false
                 trackingmode = false
             }
             if(reason == CameraUpdate.REASON_LOCATION){
                 mLatitude = locationSource.lastLocation!!.latitude
                 mLongitude = locationSource.lastLocation!!.longitude
                 if(checkArea(mLatitude,mLongitude)) {
-                    togglebtn_gps.isChecked = false
+                    togglebtn_gps.isSelected = false
                     initMarker(mLatitude,mLongitude)
                     initRecycler(mLatitude,mLongitude)
                     trackingmode = false
