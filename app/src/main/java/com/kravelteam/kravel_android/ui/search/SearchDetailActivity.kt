@@ -112,8 +112,8 @@ class SearchDetailActivity : AppCompatActivity() {
             networkManager.requestMediaDetail(id).safeEnqueue(
                 onSuccess = { it ->
                     it.data.result.let {
-                        GlideApp.with(this).load(it.imageUrl).into(img_search_detail_title)
-                        txt_search_detail_title.text = it.title
+                        GlideApp.with(this).load(it.media.imageUrl).into(img_search_detail_title)
+                        txt_search_detail_title.text = it.media.title
                         txt_search_detail_sub2.text = resources.getString(R.string.filmSite)
 
                         if( it.places.size == DATA_COUNT ){
