@@ -105,7 +105,7 @@ class AllPhotoReviewActivity : AppCompatActivity() {
     }
 
     private fun initGetCelebPhotoReview(){
-        networkManager.getCelebPhotoReview(id).safeEnqueue(
+        networkManager.getCelebPhotoReview(id,0,50,"reviewLikes-count,desc").safeEnqueue(
             onSuccess = {
                 allPhotoReviewAdapter.initData(it.data.result.content)
             },
@@ -119,7 +119,7 @@ class AllPhotoReviewActivity : AppCompatActivity() {
     }
 
     private fun initGetMediaPhotoReview(){
-        networkManager.requestMediaPhotoReview(id).safeEnqueue(
+        networkManager.requestMediaPhotoReview(id,0,50,"reviewLikes-count,desc").safeEnqueue(
             onSuccess = {
                 allPhotoReviewAdapter.initData(it.data.result.content)
             },

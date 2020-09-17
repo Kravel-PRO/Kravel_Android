@@ -90,7 +90,7 @@ class SearchDetailActivity : AppCompatActivity() {
             )
 
 
-            networkManager.getCelebPhotoReview(id).safeEnqueue(
+            networkManager.getCelebPhotoReview(id,0,7,"reviewLikes-count,desc").safeEnqueue(
                 onSuccess = {
                     rv_search_detail_photo_review.apply{
                         adapter = photoAdapter
@@ -132,7 +132,7 @@ class SearchDetailActivity : AppCompatActivity() {
             )
 
 
-            networkManager.requestMediaPhotoReview(id).safeEnqueue(
+            networkManager.requestMediaPhotoReview(id,0,7,"reviewLikes-count,desc").safeEnqueue(
                 onSuccess = {
                     rv_search_detail_photo_review.apply{
                         adapter = photoAdapter
