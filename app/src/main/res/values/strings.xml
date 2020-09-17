@@ -121,4 +121,6 @@
     <string name="example">예시</string>
     <string name="authFail">인증을 실패했습니다.</string>
     <string name="authFailCheckPw">비밀번호를 다시 입력해주세요.</string>
+    <string name="PhotoReview">"포토리뷰 "</string>
+    <string name="Count">개</string>
 </resources>

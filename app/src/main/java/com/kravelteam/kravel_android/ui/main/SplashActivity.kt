@@ -40,7 +40,6 @@ class SplashActivity : AppCompatActivity() {
                 val kor = Locale.KOREA
                 val config = Configuration()
                 config.locale = kor
-                Timber.e("resetting kor locale ::::: ${locale.language}")
                 authManager.setLang = "ko"
                 resources.updateConfiguration(config,resources.displayMetrics)
             }
@@ -49,7 +48,6 @@ class SplashActivity : AppCompatActivity() {
                 val config = Configuration()
                 config.locale = en
                 authManager.setLang = "en"
-                Timber.e("resetting en locale ::::: ${locale.language}")
                 resources.updateConfiguration(config,resources.displayMetrics)
             }
         }

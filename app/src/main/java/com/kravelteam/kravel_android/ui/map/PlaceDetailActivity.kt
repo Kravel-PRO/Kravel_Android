@@ -54,6 +54,11 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             StrictMode.setThreadPolicy(policy)
         }
         placeId = intent.getIntExtra("placeId", 0)
+        val mode = intent.getStringExtra("mode")
+
+        if(mode.equals("map")) {
+            this.overridePendingTransition(R.anim.transition_in, R.anim.transition_out)
+        }
         setResult(Activity.RESULT_OK)
 
         photoAdapter = PhotoReviewRecyclerview("default",part,placeId)
@@ -140,6 +145,7 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                 initNearPlaceRecycler(it.data.result.latitude, it.data.result.longitude)
 
                 checkScrap = it.data.result.scrap
+                Timber.e("checkScrap :::::: "+checkScrap)
                 if(checkScrap) {
                     GlideApp.with(applicationContext).load(R.drawable.ic_scrap_fill).into(img_map_detail_scrap)
                 }
@@ -251,6 +257,9 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         marker.position = LatLng(latitude, longitude)
         val uiSettings = naverMap.uiSettings
         uiSettings.isZoomControlEnabled = false
+        uiSettings.isTiltGesturesEnabled = false
+        uiSettings.isZoomGesturesEnabled = false
+        uiSettings.isScrollGesturesEnabled = false
         naverMap.moveCamera(CameraUpdate.scrollTo(marker.position))
         marker.map = naverMap
         marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_focus)
