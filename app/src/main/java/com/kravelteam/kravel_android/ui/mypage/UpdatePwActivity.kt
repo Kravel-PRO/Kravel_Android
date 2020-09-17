@@ -3,12 +3,15 @@ package com.kravelteam.kravel_android.ui.mypage
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
+import androidx.appcompat.app.AlertDialog
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.request.UpdateInfo
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.util.*
 import kotlinx.android.synthetic.main.activity_update_pw.*
+import kotlinx.android.synthetic.main.dialog_login_fail.view.*
 import org.koin.android.ext.android.inject
 
 class UpdatePwActivity : AppCompatActivity() {
@@ -82,12 +85,30 @@ class UpdatePwActivity : AppCompatActivity() {
                     toast("비밀번호 수정에 완료했습니다.")
                 },
                 onFailure = {
-                    toast("비밀번호 수정에 실패했습니다.")
+                    initDialog()
                 },
                 onError = {
                     networkErrorToast()
                 }
             )
+        }
+    }
+
+    private fun initDialog(){
+        val dialog = AlertDialog.Builder(this).create()
+        val view = LayoutInflater.from(this).inflate(R.layout.dialog_login_fail,null)
+
+        view.txt_login_fail.text = resources.getString(R.string.authFail)
+        view.txt_login_fail_content.text = resources.getString(R.string.authFailCheckPw)
+
+        view.btn_dialog_retry.setOnDebounceClickListener {
+            dialog.cancel()
+        }
+
+        dialog.apply {
+            setView(view)
+            setCancelable(false)
+            show()
         }
     }
 }

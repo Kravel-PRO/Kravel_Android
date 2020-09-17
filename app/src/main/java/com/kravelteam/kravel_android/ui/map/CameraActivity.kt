@@ -49,6 +49,11 @@ class CameraActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_camera)
 
+        //필터
+        intent.getStringExtra("filter")?.let {
+            GlideApp.with(applicationContext).load(it).into(img_camera_concept_ill)
+        }
+
         cameraProviderFuture = ProcessCameraProvider.getInstance(this)
 
         //카메라 퍼미션

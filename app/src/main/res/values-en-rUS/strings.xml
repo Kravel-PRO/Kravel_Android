@@ -119,6 +119,8 @@
         \nafter allowing access to the camera.</string>
     <string name="gallery">Gallery</string>
     <string name="example">Example</string>
+    <string name="authFail">Auth Failed.</string>
+    <string name="authFailCheckPw">Please re-enter your password.</string>
     <string name="PhotoReview">"PhotoReview  "</string>
     <string name="Count">" "</string>
 </resources>

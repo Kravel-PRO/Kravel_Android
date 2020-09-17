@@ -41,6 +41,9 @@ class RecentWordFragment : Fragment() {
             onAllDelete = {
                 cl_search_recent_word_empty.setVisible()
                 cl_search_recent_word_list.setGone()
+            },
+            onSearch = {
+                (activity as SearchContentActivity).addRecentWord(it)
             }
         )
         rv_search_recent.apply {
@@ -50,13 +53,17 @@ class RecentWordFragment : Fragment() {
         lifecycleScope.launch(Dispatchers.IO) {
             val data = KravelApplication.db.searchWordDao().getAll()
             val order = data.reversed().toMutableList()
-
+            Timber.e("${data.size}")
             if (data.size > 0) {
-                cl_search_recent_word_empty.setGone()
-                cl_search_recent_word_list.setVisible()
+                activity?.runOnUiThread {
+                    cl_search_recent_word_empty.visibility = View.GONE
+                    cl_search_recent_word_list.visibility = View.VISIBLE
+                }
             } else {
-                cl_search_recent_word_empty.setVisible()
-                cl_search_recent_word_list.setGone()
+                activity?.runOnUiThread {
+                    cl_search_recent_word_empty.visibility = View.VISIBLE
+                    cl_search_recent_word_list.visibility = View.GONE
+                }
             }
 
             wordAdapter.initData(order)

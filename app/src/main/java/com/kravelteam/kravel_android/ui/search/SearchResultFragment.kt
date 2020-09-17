@@ -5,24 +5,23 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.HorizontalItemDecorator
 import com.kravelteam.kravel_android.common.VerticalItemDecorator
+import com.kravelteam.kravel_android.data.common.SearchResult
 import com.kravelteam.kravel_android.data.response.CelebResponse
 import com.kravelteam.kravel_android.network.NetworkManager
-import com.kravelteam.kravel_android.ui.adapter.CelebRecyclerview
+import com.kravelteam.kravel_android.ui.adapter.SearchResultRecyclerview
 import com.kravelteam.kravel_android.util.*
 import kotlinx.android.synthetic.main.activity_search_content.*
 import kotlinx.android.synthetic.main.fragment_search_result.*
-import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
 class SearchResultFragment : Fragment() {
 
     private val networkManager : NetworkManager by inject()
-    private val searchResultAdapter : CelebRecyclerview by lazy { CelebRecyclerview() }
+    private val searchResultAdapter : SearchResultRecyclerview by lazy { SearchResultRecyclerview() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,15 +52,15 @@ class SearchResultFragment : Fragment() {
                     img_no_search_result_icon.setVisible()
                     txt_search_recent_empty.setVisible()
                 } else {
-                    var searchData = mutableListOf<CelebResponse>()
+                    var searchData = mutableListOf<SearchResult>()
                     if (!it.data.result.celebrities.isNullOrEmpty()) {
                         it.data.result.celebrities.forEach {
-                            searchData.add(it)
+                            searchData.add(SearchResult(it.celebrityId,it.celebrityName,it.imageUrl!!,"celeb"))
                         }
                     }
                     if (!it.data.result.medias.isNullOrEmpty()) {
                         it.data.result.medias.forEach {
-                            searchData.add(CelebResponse(it.mediaId, it.title, it.imageUrl))
+                            searchData.add(SearchResult(it.mediaId, it.title, it.imageUrl!!,"media"))
                         }
                     }
                     txt_search_recent_empty.setGone()

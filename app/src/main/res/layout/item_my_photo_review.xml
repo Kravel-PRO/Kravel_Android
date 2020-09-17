@@ -13,6 +13,17 @@
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageView
+        android:id="@+id/img_my_photo_like"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:src="@drawable/selector_photo_review_like"
+        app:layout_constraintBottom_toBottomOf="@+id/img_my_photo_review_photo"
+        app:layout_constraintEnd_toEndOf="@+id/img_my_photo_review_photo" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_title"
         android:layout_width="match_parent"

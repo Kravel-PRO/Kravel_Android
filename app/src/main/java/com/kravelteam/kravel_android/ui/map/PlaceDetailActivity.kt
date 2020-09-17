@@ -84,8 +84,10 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
         img_map_detail_photo.setOnClickListener {
-               Intent(GlobalApp, CameraActivity::class.java).run {
-                   GlobalApp.startActivity(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
+            Intent(GlobalApp,CameraActivity::class.java).apply {
+                putExtra("filter","필터 이미지")
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }.run { GlobalApp.startActivity(this) }
         }
 
         img_map_detail_scrap.setOnClickListener {
@@ -251,7 +253,7 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun initPhotoRecycler() {
 
 
-        networkManager.getPlaceReview(placeId).safeEnqueue(
+        networkManager.getPlaceReview(placeId,0,7,"reviewLikes-count,desc").safeEnqueue(
             onSuccess = {
 
 

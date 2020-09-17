@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
+import com.kravelteam.kravel_android.data.request.ReviewLikeBody
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.AllPhotoReviewRecyclerview
 import com.kravelteam.kravel_android.util.networkErrorToast
@@ -70,7 +71,20 @@ class AllPhotoReviewActivity : AppCompatActivity() {
     }
 
     private fun initRecycler(){
-        allPhotoReviewAdapter = AllPhotoReviewRecyclerview(checkReview)
+        allPhotoReviewAdapter = AllPhotoReviewRecyclerview(
+            checkReview,
+            onLike = { like,reviewId ->
+                networkManager.postLikes(id,reviewId, ReviewLikeBody(like)).safeEnqueue(
+                    onSuccess = {
+                    },
+                    onFailure = {
+                    },
+                    onError = {
+                        networkErrorToast()
+                    }
+                )
+            }
+        )
         rv_my_photo_review.apply {
             adapter = allPhotoReviewAdapter
         }
@@ -91,7 +105,7 @@ class AllPhotoReviewActivity : AppCompatActivity() {
     }
 
     private fun initGetCelebPhotoReview(){
-        networkManager.getCelebPhotoReview(id).safeEnqueue(
+        networkManager.getCelebPhotoReview(id,0,50,"reviewLikes-count,desc").safeEnqueue(
             onSuccess = {
                 allPhotoReviewAdapter.initData(it.data.result.content)
             },
@@ -105,7 +119,7 @@ class AllPhotoReviewActivity : AppCompatActivity() {
     }
 
     private fun initGetMediaPhotoReview(){
-        networkManager.requestMediaPhotoReview(id).safeEnqueue(
+        networkManager.requestMediaPhotoReview(id,0,50,"reviewLikes-count,desc").safeEnqueue(
             onSuccess = {
                 allPhotoReviewAdapter.initData(it.data.result.content)
             },
@@ -119,7 +133,7 @@ class AllPhotoReviewActivity : AppCompatActivity() {
     }
 
     private fun initGetPlacePhotoReview(){
-        networkManager.getPlaceReview(id).safeEnqueue(
+        networkManager.getPlaceReview(id,0,50,"reviewLikes-count,desc").safeEnqueue(
             onSuccess = {
                 allPhotoReviewAdapter.initData(it.data.result.content)
             },

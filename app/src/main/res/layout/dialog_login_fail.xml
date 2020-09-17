@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/notosans_cjk_kr_bold"
-        android:text="@string/loginFailTitle"
+        android:text=""
         android:textColor="@color/colorCoral"
         android:textSize="16sp"
         android:layout_marginTop="24dp"
@@ -24,7 +24,7 @@
         android:id="@+id/txt_login_fail_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/loginFailContent"
+        android:text=""
         android:textColor="@color/colorBlackGrey"
         android:textSize="16sp"
         android:gravity="center"
@@ -33,6 +33,7 @@
         app:layout_constraintTop_toBottomOf="@+id/txt_login_fail" />
 
     <TextView
+        android:id="@+id/btn_dialog_retry"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"

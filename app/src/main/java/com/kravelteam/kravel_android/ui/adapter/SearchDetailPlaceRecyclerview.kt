@@ -14,10 +14,15 @@ import com.kravelteam.kravel_android.util.setRound
 
 class SearchDetailPlaceRecyclerview : RecyclerView.Adapter<SearchDetailPlaceRecyclerview.ViewHolder>() {
 
-    private var data: List<DetailPlaceResponse> = emptyList()
+    private var data = mutableListOf<DetailPlaceResponse>()
 
-    fun initData(data: List<DetailPlaceResponse>){
+    fun initData(data: MutableList<DetailPlaceResponse>){
         this.data = data
+        notifyDataSetChanged()
+    }
+
+    fun addData(data: MutableList<DetailPlaceResponse>){
+        this.data.addAll(data)
         notifyDataSetChanged()
     }
 

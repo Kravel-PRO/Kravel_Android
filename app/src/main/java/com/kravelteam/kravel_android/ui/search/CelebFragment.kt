@@ -11,6 +11,7 @@ import com.kravelteam.kravel_android.common.VerticalItemDecorator
 import com.kravelteam.kravel_android.data.response.CelebResponse
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.CelebRecyclerview
+import com.kravelteam.kravel_android.util.networkErrorToast
 import com.kravelteam.kravel_android.util.safeEnqueue
 import com.kravelteam.kravel_android.util.toast
 import kotlinx.android.synthetic.main.fragment_celeb.*
@@ -49,23 +50,14 @@ class CelebFragment : Fragment() {
 
         networkManager.requestCelebList().safeEnqueue(
             onSuccess = {
-                if(!it.data.result.isNullOrEmpty()) celebAdapter.initData(it.data.result)
+                if(!it.data.result.content.isNullOrEmpty()) celebAdapter.initData(it.data.result.content)
             },
             onFailure = {
                 toast("실패")
             },
             onError = {
-                Timber.e("$it")
+                networkErrorToast()
             }
         )
-//        celebAdapter.initData(
-//            listOf(
-//                CelebResponse("https://www.instagram.com/p/B20TsJegiq4/media/?size=l","지창욱",null),
-//                CelebResponse("https://www.instagram.com/p/B20TsJegiq4/media/?size=l","지창욱",null),
-//                CelebResponse("https://www.instagram.com/p/B20TsJegiq4/media/?size=l","지창욱",null),
-//                CelebResponse("https://www.instagram.com/p/B20TsJegiq4/media/?size=l","지창욱",null),
-//                CelebResponse("https://www.instagram.com/p/B20TsJegiq4/media/?size=l","지창욱",null)
-//            )
-//        )
     }
 }

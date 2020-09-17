@@ -16,7 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class SearchWordRecyclerview(val onAllDelete: () -> Unit): RecyclerView.Adapter<SearchWordRecyclerview.ViewHolder>(){
+class SearchWordRecyclerview(val onAllDelete: () -> Unit, val onSearch: (String) -> Unit): RecyclerView.Adapter<SearchWordRecyclerview.ViewHolder>(){
 
     private var data = mutableListOf<SearchWord>()
 
@@ -41,6 +41,9 @@ class SearchWordRecyclerview(val onAllDelete: () -> Unit): RecyclerView.Adapter<
 
         fun bind(item: SearchWord){
             txtWord.text = item.word
+            txtWord.setOnDebounceClickListener {
+                onSearch(item.word)
+            }
             imgDelete.setOnDebounceClickListener {
                 CoroutineScope(Dispatchers.IO).launch {
                     if(data.size == 1){

@@ -75,14 +75,16 @@ interface NetworkService {
      * 셀럽 리스트
      */
     @GET("/api/celebrities")
-    fun requestCelebList() : Call<BaseResponse<List<CelebResponse>>>
+    fun requestCelebList() : Call<BaseResponse<CelebListResponse>>
 
     /**
      * 셀럽 상세
      */
     @GET("/api/celebrities/{id}")
     fun requestCelebDetail(
-        @Path("id") id: Int
+        @Path("id") id: Int,
+        @Query("page") page: Int,
+        @Query("size") size: Int
     ) : Call<BaseResponse<CelebDetailResponse>>
 
     /**
@@ -90,14 +92,17 @@ interface NetworkService {
      */
     @GET("/api/celebrities/{id}/reviews")
     fun getCelebPhotoReview(
-        @Path("id") id : Int
+        @Path("id") id : Int,
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+        @Query("sort") sort: String
     ) : Call<BaseResponse<PhotoReviewResponse>>
 
     /**
      * 미디어 리스트
      */
     @GET("/api/medias")
-    fun requestMediaList() : Call<BaseResponse<List<MediaResponse>>>
+    fun requestMediaList() : Call<BaseResponse<MediaListResponse>>
 
     /**
      * 미디어 상세
@@ -114,7 +119,10 @@ interface NetworkService {
      */
     @GET("/api/medias/{id}/reviews")
     fun requestMediaPhotoReview(
-        @Path("id") id: Int
+        @Path("id") id: Int,
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+        @Query("sort") sort: String
     ) : Call<BaseResponse<PhotoReviewResponse>>
 
     /**
@@ -158,7 +166,10 @@ interface NetworkService {
      */
     @GET("/api/places/{placeId}/reviews")
     fun getPlaceReview(
-        @Path("placeId") placeId: Int
+        @Path("placeId") placeId: Int,
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+        @Query("sort") sort: String
     ) : Call<BaseResponse<PhotoReviewResponse>>
 
     /**

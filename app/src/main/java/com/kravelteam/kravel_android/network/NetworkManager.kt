@@ -76,16 +76,21 @@ class NetworkManager(authManager: AuthManager) {
     fun requestMediaList() = retrofit.requestMediaList()
 
     fun requestCelebDetail(
-        id: Int
-    ) = retrofit.requestCelebDetail(id)
+        id: Int,
+        page: Int,
+        size: Int
+    ) = retrofit.requestCelebDetail(id, page, size)
 
     fun requestMediaDetail(
         id: Int
     ) = retrofit.requestMediaDetail(id)
 
     fun requestMediaPhotoReview(
-        id: Int
-    ) = retrofit.requestMediaPhotoReview(id)
+        id: Int,
+        page : Int,
+        size : Int,
+        sort : String
+    ) = retrofit.requestMediaPhotoReview(id, page, size, sort)
 
     fun getPlaceList(
         latitude : Double,
@@ -104,11 +109,19 @@ class NetworkManager(authManager: AuthManager) {
         sort : String
     ) = retrofit.getPhotoReview(page, size, sort)
 
-    fun getCelebPhotoReview(id : Int) = retrofit.getCelebPhotoReview(id)
+    fun getCelebPhotoReview(
+        id : Int,
+        page: Int,
+        size: Int,
+        sort: String
+    ) = retrofit.getCelebPhotoReview(id, page, size, sort)
 
     fun getPlaceReview(
-        placeId : Int
-    ) = retrofit.getPlaceReview(placeId)
+        placeId : Int,
+        page : Int,
+        size : Int,
+        sort : String
+    ) = retrofit.getPlaceReview(placeId, page, size, sort)
 
     fun requestPostPhotoReview(
         id: Int,

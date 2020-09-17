@@ -14,15 +14,15 @@
         app:layout_constraintEnd_toStartOf="@+id/txt_search_word"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginRight="16dp"
+        android:layout_marginHorizontal="16dp"
         app:srcCompat="@drawable/btn_search_small" />
 
     <TextView
         android:id="@+id/txt_search_word"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="15dp"
-        android:text="단어"
+        android:paddingVertical="15dp"
+        android:text=""
         android:textColor="@color/colorBlack"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -34,10 +34,16 @@
         android:id="@+id/img_search_word_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="3dp"
+        android:layout_marginRight="19dp"
         app:layout_constraintBottom_toBottomOf="@+id/txt_search_word"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/txt_search_word"
         app:srcCompat="@drawable/btn_delete" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorWhiteGrey"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

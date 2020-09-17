@@ -8,7 +8,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.core.animation.doOnEnd
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
@@ -17,10 +19,12 @@ import com.kravelteam.kravel_android.network.AuthManager
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.main.MainActivity
 import com.kravelteam.kravel_android.ui.signup.SignUpActivity
+import com.kravelteam.kravel_android.util.networkErrorToast
 import com.kravelteam.kravel_android.util.safeLoginEnqueue
 import com.kravelteam.kravel_android.util.startActivity
 import com.kravelteam.kravel_android.util.toast
 import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.dialog_login_fail.view.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
@@ -74,10 +78,10 @@ class LoginActivity : AppCompatActivity() {
                     startActivity(MainActivity::class,true)
                 },
                 onFailure = {
-                    toast("실패")
+                    initDialog()
                 },
                 onError = {
-                    toast("에러")
+                    networkErrorToast()
                 }
             )
         }
@@ -171,6 +175,24 @@ class LoginActivity : AppCompatActivity() {
         }else{
             btn_login_other_view.isEnabled = false
             btn_login_other_view.setTextColor(resources.getColor(R.color.colorDarkGrey))
+        }
+    }
+
+    private fun initDialog(){
+        val dialog = AlertDialog.Builder(this).create()
+        val view = LayoutInflater.from(this).inflate(R.layout.dialog_login_fail,null)
+
+        view.txt_login_fail.text = resources.getString(R.string.loginFailTitle)
+        view.txt_login_fail_content.text = resources.getString(R.string.loginFailContent)
+
+        view.btn_dialog_retry.setOnDebounceClickListener {
+            dialog.cancel()
+        }
+
+        dialog.apply {
+            setView(view)
+            setCancelable(false)
+            show()
         }
     }
 }

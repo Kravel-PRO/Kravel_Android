@@ -13,6 +13,7 @@ import com.kravelteam.kravel_android.network.AuthManager
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.CelebRecyclerview
 import com.kravelteam.kravel_android.ui.adapter.DramaRecyclerview
+import com.kravelteam.kravel_android.util.networkErrorToast
 import com.kravelteam.kravel_android.util.safeEnqueue
 import com.kravelteam.kravel_android.util.toast
 import kotlinx.android.synthetic.main.fragment_drama.*
@@ -48,13 +49,13 @@ class DramaFragment : Fragment() {
 
         networkManager.requestMediaList().safeEnqueue(
             onSuccess = {
-                if(!it.data.result.isNullOrEmpty()) dramaAdapter.initData(it.data.result)
+                if(!it.data.result.content.isNullOrEmpty()) dramaAdapter.initData(it.data.result.content)
             },
             onFailure = {
                 toast("실패")
             },
             onError = {
-                Timber.e("$it")
+                networkErrorToast()
             }
         )
     }
