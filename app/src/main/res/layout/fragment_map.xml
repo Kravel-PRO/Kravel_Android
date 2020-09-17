@@ -23,30 +23,6 @@
 
 
 
-    <androidx.appcompat.widget.AppCompatToggleButton
-        android:id="@+id/togglebtn_gps"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@id/rv_map_near_place"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:background="@drawable/map_gps"
-        app:layout_constraintHorizontal_bias="0.9"
-        android:textOff=""
-        android:textOn="" />
-
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/img_reset"
-            android:src="@drawable/btn_refresh"
-            android:layout_marginBottom="16dp"
-            app:layout_constraintBottom_toTopOf="@id/togglebtn_gps"
-            app:layout_constraintRight_toRightOf="@id/togglebtn_gps"
-            app:layout_constraintLeft_toLeftOf="@id/togglebtn_gps"/>
-
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -59,8 +35,34 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"/>
 
+        <androidx.appcompat.widget.AppCompatToggleButton
+            android:id="@+id/togglebtn_gps"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toTopOf="@id/rv_map_near_place"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:background="@drawable/map_gps"
+            app:layout_constraintHorizontal_bias="0.9"
+            android:textOff=""
+            android:textOn="" />
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/img_reset"
+            android:src="@drawable/btn_refresh"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toTopOf="@id/togglebtn_gps"
+            app:layout_constraintRight_toRightOf="@id/togglebtn_gps"
+            app:layout_constraintLeft_toLeftOf="@id/togglebtn_gps"
+            />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <include layout="@layout/fragment_map_info"
         android:visibility="gone"/>

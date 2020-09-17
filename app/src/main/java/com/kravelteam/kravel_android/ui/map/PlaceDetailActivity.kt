@@ -13,12 +13,9 @@ import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.request.ScrapBody
 import com.kravelteam.kravel_android.network.AuthManager
 import com.kravelteam.kravel_android.network.NetworkManager
-import com.kravelteam.kravel_android.ui.adapter.HashTagRecyclerView
-import com.kravelteam.kravel_android.ui.adapter.MapNearPlaceRecyclerview
-import com.kravelteam.kravel_android.ui.adapter.PhotoReviewRecyclerview
+import com.kravelteam.kravel_android.ui.adapter.*
 import com.kravelteam.kravel_android.util.networkErrorToast
 import com.kravelteam.kravel_android.util.safeEnqueue
-import com.kravelteam.kravel_android.util.startActivity
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.MapFragment
@@ -36,6 +33,7 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
     private val hashtagAdapter : HashTagRecyclerView by lazy { HashTagRecyclerView() }
     private lateinit var photoAdapter : PhotoReviewRecyclerview
     private val nearplaceAdapter : MapNearPlaceRecyclerview by lazy { MapNearPlaceRecyclerview() } //BottomSheet
+    private val imageAdapter: MapDetailRecyclerview by lazy { MapDetailRecyclerview() }
     private var placeId : Int = 0
     private lateinit var naverMap: NaverMap
     private val networkManager : NetworkManager by inject()
@@ -44,6 +42,7 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
     private var checkScrap : Boolean = false
     private var part: String = "place"
     private val authManager : AuthManager by inject()
+    private val  image = mutableListOf<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,7 +78,7 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         img_map_detail_arrow.setOnClickListener {
-            finish()
+           finish()
         }
 
 
@@ -134,9 +133,19 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                 txt_map_detail_address.text = it.data.result.location
                 txt_map_detail_address2.text = it.data.result.location
                 if (!it.data.result.imageUrl.isNullOrBlank()) {
-                    GlideApp.with(applicationContext).load(it.data.result.imageUrl)
-                        .into(img_map_detail_place)
+                    image.add(it.data.result.imageUrl)
                 }
+                if(!it.data.result.subImageUrl.isNullOrBlank()) {
+                    image.add(it.data.result.subImageUrl)
+                }
+                vp_map_detail_place.apply {
+                    adapter = imageAdapter
+                }
+
+                if(!image.isNullOrEmpty()) {
+                    imageAdapter.initData(image)
+                }
+
                 latitude = it.data.result.latitude
                 longitude = it.data.result.longitude
                 txt_map_detail_bus_content.text = it.data.result.bus
