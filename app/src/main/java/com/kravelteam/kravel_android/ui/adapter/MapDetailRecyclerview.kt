@@ -17,7 +17,9 @@ import com.kravelteam.kravel_android.data.response.MediaResponse
 import com.kravelteam.kravel_android.ui.search.SearchDetailActivity
 import com.kravelteam.kravel_android.util.inflate
 import kotlinx.android.synthetic.main.activity_place_detail.*
+import java.lang.reflect.Array
 import java.net.URL
+import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
 
 class MapDetailRecyclerview() : RecyclerView.Adapter<MapDetailRecyclerview.ViewHolder>() {
 
@@ -25,6 +27,7 @@ class MapDetailRecyclerview() : RecyclerView.Adapter<MapDetailRecyclerview.ViewH
 
     fun initData(data: List<String>){
         this.data = data
+
         notifyDataSetChanged()
     }
 
@@ -43,6 +46,7 @@ class MapDetailRecyclerview() : RecyclerView.Adapter<MapDetailRecyclerview.ViewH
 
         fun bind(item: String){
             GlideApp.with(img).load(item).into(img)
+
         }
     }
 }

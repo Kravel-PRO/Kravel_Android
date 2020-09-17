@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.PagerSnapHelper
 import com.kravelteam.kravel_android.KravelApplication.Companion.GlobalApp
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.GlideApp
@@ -137,14 +138,25 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
                 if(!it.data.result.subImageUrl.isNullOrBlank()) {
                     image.add(it.data.result.subImageUrl)
+
                 }
+                else {
+                    image.add(R.color.colorDarkGrey.toString())
+                }
+
                 vp_map_detail_place.apply {
                     adapter = imageAdapter
+                    ar_indicator.attachTo(this,true)
                 }
+
 
                 if(!image.isNullOrEmpty()) {
                     imageAdapter.initData(image)
+                    ar_indicator.numberOfIndicators = image.size
                 }
+
+
+
 
                 latitude = it.data.result.latitude
                 longitude = it.data.result.longitude

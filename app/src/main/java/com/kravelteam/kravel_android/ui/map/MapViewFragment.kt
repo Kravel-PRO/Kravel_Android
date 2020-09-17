@@ -58,7 +58,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
     private lateinit var animMapInfo: LottieAnimationView
     private lateinit var root: View
     private  var mLatitude : Double = 0.0
-    private var mLongitude : Double = 0.0
+    private var mLongitude : Double = 0.0 
     private lateinit var photoAdapter : PhotoReviewRecyclerview //BottomSheet
     private val hashtagAdapter : HashTagRecyclerView by lazy { HashTagRecyclerView() } //BottomSheet
     private val nearAdapter: MapPlaceRecyclerview by lazy { MapPlaceRecyclerview() }
