@@ -41,6 +41,9 @@ class RecentWordFragment : Fragment() {
             onAllDelete = {
                 cl_search_recent_word_empty.setVisible()
                 cl_search_recent_word_list.setGone()
+            },
+            onSearch = {
+                (activity as SearchContentActivity).addRecentWord(it)
             }
         )
         rv_search_recent.apply {

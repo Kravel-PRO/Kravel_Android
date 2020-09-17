@@ -3,6 +3,7 @@ package com.kravelteam.kravel_android.ui.search
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.text.Editable
 import android.view.inputmethod.EditorInfo
 import androidx.lifecycle.lifecycleScope
 import com.kravelteam.kravel_android.KravelApplication
@@ -54,21 +55,22 @@ class SearchContentActivity : AppCompatActivity() {
     private fun initSetBtn(){
         edt_search_word.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                addRecentWord()
+                addRecentWord(edt_search_word.text.toString())
+                hideKeyboard()
             }
             true
         }
         img_search_btn.setOnDebounceClickListener {
-            addRecentWord()
+            addRecentWord(edt_search_word.text.toString())
+            hideKeyboard()
         }
     }
 
-    private fun addRecentWord(){
+    fun addRecentWord(edtWord: String){
+        edt_search_word.text = Editable.Factory.getInstance().newEditable(edtWord)
         changeFragment()
         initGetRecentWord()
-        hideKeyboard()
 
-        val edtWord = edt_search_word.text.toString()
         val word = SearchWord(word = edtWord)
 
         var find: SearchWord? = null
