@@ -29,7 +29,7 @@
                     android:id="@+id/txt_search_recent_word_empty"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="최근 검색어 내역이 없습니다."
+                    android:text="@string/noRecentSearchHistory"
                     android:textColor="@color/colorDarkGrey"
                     android:textSize="15sp"
                     app:layout_constraintBottom_toBottomOf="parent"

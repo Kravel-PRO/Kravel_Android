@@ -123,4 +123,5 @@
     <string name="authFailCheckPw">Please re-enter your password.</string>
     <string name="PhotoReview">"PhotoReview  "</string>
     <string name="Count">" "</string>
+    <string name="setLanguageTitle">Please set the language</string>
 </resources>
