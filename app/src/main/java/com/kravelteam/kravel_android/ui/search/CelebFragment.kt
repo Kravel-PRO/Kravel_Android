@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.airbnb.lottie.LottieAnimationView
 import com.kravelteam.kravel_android.R
@@ -23,7 +24,6 @@ class CelebFragment() : Fragment() {
 
     private val networkManager : NetworkManager by inject()
     private lateinit var celebAdapter : CelebRecyclerview
-    private lateinit var lottie : LottieAnimationView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
