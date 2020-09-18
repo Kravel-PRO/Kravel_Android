@@ -39,8 +39,10 @@ class RecentWordFragment : Fragment() {
     private fun initRecycler() {
         wordAdapter = SearchWordRecyclerview(
             onAllDelete = {
-                cl_search_recent_word_empty.setVisible()
-                cl_search_recent_word_list.setGone()
+                activity?.runOnUiThread {
+                    cl_search_recent_word_empty.visibility = View.VISIBLE
+                    cl_search_recent_word_list.visibility = View.GONE
+                }
             },
             onSearch = {
                 (activity as SearchContentActivity).addRecentWord(it)

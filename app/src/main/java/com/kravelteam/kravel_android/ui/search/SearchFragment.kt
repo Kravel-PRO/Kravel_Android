@@ -23,6 +23,7 @@ import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.CelebRecyclerview
 import com.kravelteam.kravel_android.ui.adapter.SearchViewPagerAdapter
 import com.kravelteam.kravel_android.ui.adapter.SearchWordRecyclerview
+import com.kravelteam.kravel_android.ui.base.BaseFragment
 import com.kravelteam.kravel_android.util.*
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.coroutines.CoroutineScope
@@ -30,9 +31,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
-class SearchFragment : Fragment() {
+class SearchFragment : Fragment(){
 
-    private lateinit var lottie : LottieAnimationView
     private val networkManager : NetworkManager by inject()
 
     override fun onCreateView(
@@ -46,59 +46,13 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        lottie = lottie_loading
-
         initViewPager()
         initSearch()
     }
 
-    private fun onLoading(){
-        cl_search_main.setGone()
-        lottie_loading.setVisible()
-        lottie.apply {
-            setAnimation("loading_map.json")
-            playAnimation()
-            loop(true)
-        }
-    }
-    private fun offLoading(){
-        lottie_loading.setGone()
-        cl_search_main.setVisible()
-    }
-
     private fun initViewPager() {
-        onLoading()
 
-        var celeb : List<CelebResponse> = emptyList()
-        var media : List<MediaResponse> = emptyList()
-        networkManager.requestCelebList().safeEnqueue(
-            onSuccess = {
-                if(!it.data.result.content.isNullOrEmpty()) celeb = it.data.result.content
-            },
-            onFailure = {
-                toast("실패")
-            },
-            onError = {
-                networkErrorToast()
-            }
-        )
-
-        networkManager.requestMediaList().safeEnqueue(
-            onSuccess = {
-                if(!it.data.result.content.isNullOrEmpty()) media = it.data.result.content
-            },
-            onFailure = {
-                toast("실패")
-            },
-            onError = {
-                networkErrorToast()
-            }
-        )
-        Handler().postDelayed({
-            offLoading()
-        },200)
-
-        vp_search_select.adapter = SearchViewPagerAdapter(childFragmentManager,2, arrayListOf(resources.getString(R.string.celebPart),resources.getString(R.string.mediaPart)),celeb,media)
+        vp_search_select.adapter = SearchViewPagerAdapter(childFragmentManager,2, arrayListOf(resources.getString(R.string.celebPart),resources.getString(R.string.mediaPart)))
         vp_search_select.offscreenPageLimit = 2
 
         vp_search_select.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tl_search_select))

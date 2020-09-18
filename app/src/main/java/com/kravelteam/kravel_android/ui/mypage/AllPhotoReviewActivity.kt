@@ -7,9 +7,7 @@ import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.request.ReviewLikeBody
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.AllPhotoReviewRecyclerview
-import com.kravelteam.kravel_android.util.networkErrorToast
-import com.kravelteam.kravel_android.util.safeEnqueue
-import com.kravelteam.kravel_android.util.toast
+import com.kravelteam.kravel_android.util.*
 import kotlinx.android.synthetic.main.activity_all_photo_review.*
 import org.koin.android.ext.android.inject
 
@@ -93,7 +91,14 @@ class AllPhotoReviewActivity : AppCompatActivity() {
     private fun initGetMyPhotoReview(){
         networkManager.requestMyPhotoReviews().safeEnqueue(
             onSuccess = {
-                allPhotoReviewAdapter.initData(it.data.result.content)
+                if(it.data.result.content.isNullOrEmpty()){
+                    img_my_photo_review_empty_icon.setVisible()
+                    textView2.setVisible()
+                } else {
+                    img_my_photo_review_empty_icon.setGone()
+                    textView2.setGone()
+                    allPhotoReviewAdapter.initData(it.data.result.content)
+                }
             },
             onFailure = {
                 toast("실패")

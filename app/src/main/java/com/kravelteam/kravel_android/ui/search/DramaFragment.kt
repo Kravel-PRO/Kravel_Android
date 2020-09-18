@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.fragment_drama.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
-class DramaFragment(private val data: List<MediaResponse>) : Fragment() {
+class DramaFragment() : Fragment() {
 
     private val networkManager : NetworkManager by inject()
     private lateinit var dramaAdapter : DramaRecyclerview
@@ -47,6 +47,7 @@ class DramaFragment(private val data: List<MediaResponse>) : Fragment() {
             addItemDecoration(HorizontalItemDecorator(24))
             addItemDecoration(VerticalItemDecorator(18))
         }
+
 
         networkManager.requestMediaList().safeEnqueue(
             onSuccess = {
