@@ -9,6 +9,7 @@ import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.HorizontalItemDecorator
 import com.kravelteam.kravel_android.common.VerticalItemDecorator
 import com.kravelteam.kravel_android.data.response.CelebResponse
+import com.kravelteam.kravel_android.data.response.MediaResponse
 import com.kravelteam.kravel_android.network.AuthManager
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.CelebRecyclerview
@@ -20,7 +21,7 @@ import kotlinx.android.synthetic.main.fragment_drama.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
-class DramaFragment : Fragment() {
+class DramaFragment(private val data: List<MediaResponse>) : Fragment() {
 
     private val networkManager : NetworkManager by inject()
     private lateinit var dramaAdapter : DramaRecyclerview

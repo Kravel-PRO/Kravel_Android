@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.tabs.TabLayout
 import com.kravelteam.kravel_android.KravelApplication
 import com.kravelteam.kravel_android.R
@@ -17,6 +18,7 @@ import com.kravelteam.kravel_android.common.VerticalItemDecorator
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.common.SearchWord
 import com.kravelteam.kravel_android.data.response.CelebResponse
+import com.kravelteam.kravel_android.data.response.MediaResponse
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.CelebRecyclerview
 import com.kravelteam.kravel_android.ui.adapter.SearchViewPagerAdapter
@@ -30,6 +32,8 @@ import org.koin.android.ext.android.inject
 
 class SearchFragment : Fragment() {
 
+    private lateinit var lottie : LottieAnimationView
+    private val networkManager : NetworkManager by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,12 +46,59 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        lottie = lottie_loading
+
         initViewPager()
         initSearch()
     }
 
+    private fun onLoading(){
+        cl_search_main.setGone()
+        lottie_loading.setVisible()
+        lottie.apply {
+            setAnimation("loading_map.json")
+            playAnimation()
+            loop(true)
+        }
+    }
+    private fun offLoading(){
+        lottie_loading.setGone()
+        cl_search_main.setVisible()
+    }
+
     private fun initViewPager() {
-        vp_search_select.adapter = SearchViewPagerAdapter(childFragmentManager,2, arrayListOf(resources.getString(R.string.celebPart),resources.getString(R.string.mediaPart)))
+        onLoading()
+
+        var celeb : List<CelebResponse> = emptyList()
+        var media : List<MediaResponse> = emptyList()
+        networkManager.requestCelebList().safeEnqueue(
+            onSuccess = {
+                if(!it.data.result.content.isNullOrEmpty()) celeb = it.data.result.content
+            },
+            onFailure = {
+                toast("실패")
+            },
+            onError = {
+                networkErrorToast()
+            }
+        )
+
+        networkManager.requestMediaList().safeEnqueue(
+            onSuccess = {
+                if(!it.data.result.content.isNullOrEmpty()) media = it.data.result.content
+            },
+            onFailure = {
+                toast("실패")
+            },
+            onError = {
+                networkErrorToast()
+            }
+        )
+        Handler().postDelayed({
+            offLoading()
+        },200)
+
+        vp_search_select.adapter = SearchViewPagerAdapter(childFragmentManager,2, arrayListOf(resources.getString(R.string.celebPart),resources.getString(R.string.mediaPart)),celeb,media)
         vp_search_select.offscreenPageLimit = 2
 
         vp_search_select.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tl_search_select))

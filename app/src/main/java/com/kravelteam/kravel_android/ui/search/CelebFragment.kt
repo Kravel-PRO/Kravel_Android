@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.fragment_celeb.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
-class CelebFragment : Fragment() {
+class CelebFragment(private val data: List<CelebResponse>) : Fragment() {
 
     private val networkManager : NetworkManager by inject()
     private lateinit var celebAdapter : CelebRecyclerview
@@ -38,7 +38,6 @@ class CelebFragment : Fragment() {
     }
 
     private fun initRecycler(){
-
 
         celebAdapter = CelebRecyclerview()
 

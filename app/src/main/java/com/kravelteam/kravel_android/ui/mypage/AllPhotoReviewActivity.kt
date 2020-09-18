@@ -10,7 +10,7 @@ import com.kravelteam.kravel_android.ui.adapter.AllPhotoReviewRecyclerview
 import com.kravelteam.kravel_android.util.networkErrorToast
 import com.kravelteam.kravel_android.util.safeEnqueue
 import com.kravelteam.kravel_android.util.toast
-import kotlinx.android.synthetic.main.activity_my_photo_review.*
+import kotlinx.android.synthetic.main.activity_all_photo_review.*
 import org.koin.android.ext.android.inject
 
 class AllPhotoReviewActivity : AppCompatActivity() {
@@ -24,7 +24,7 @@ class AllPhotoReviewActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_my_photo_review)
+        setContentView(R.layout.activity_all_photo_review)
 
         checkReview = intent.getStringExtra("review")!!
         initRecycler()
@@ -105,7 +105,7 @@ class AllPhotoReviewActivity : AppCompatActivity() {
     }
 
     private fun initGetCelebPhotoReview(){
-        networkManager.getCelebPhotoReview(id,0,50,"reviewLikes-count,desc").safeEnqueue(
+        networkManager.getCelebPhotoReview(id,0,60,"reviewLikes-count,desc").safeEnqueue(
             onSuccess = {
                 allPhotoReviewAdapter.initData(it.data.result.content)
             },
@@ -119,7 +119,7 @@ class AllPhotoReviewActivity : AppCompatActivity() {
     }
 
     private fun initGetMediaPhotoReview(){
-        networkManager.requestMediaPhotoReview(id,0,50,"reviewLikes-count,desc").safeEnqueue(
+        networkManager.requestMediaPhotoReview(id,0,60,"reviewLikes-count,desc").safeEnqueue(
             onSuccess = {
                 allPhotoReviewAdapter.initData(it.data.result.content)
             },
@@ -133,7 +133,7 @@ class AllPhotoReviewActivity : AppCompatActivity() {
     }
 
     private fun initGetPlacePhotoReview(){
-        networkManager.getPlaceReview(id,0,50,"reviewLikes-count,desc").safeEnqueue(
+        networkManager.getPlaceReview(id,0,60,"reviewLikes-count,desc").safeEnqueue(
             onSuccess = {
                 allPhotoReviewAdapter.initData(it.data.result.content)
             },
