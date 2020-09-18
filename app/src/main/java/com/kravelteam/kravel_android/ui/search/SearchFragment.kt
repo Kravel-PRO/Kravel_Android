@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.tabs.TabLayout
 import com.kravelteam.kravel_android.KravelApplication
 import com.kravelteam.kravel_android.R
@@ -17,10 +18,12 @@ import com.kravelteam.kravel_android.common.VerticalItemDecorator
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.common.SearchWord
 import com.kravelteam.kravel_android.data.response.CelebResponse
+import com.kravelteam.kravel_android.data.response.MediaResponse
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.CelebRecyclerview
 import com.kravelteam.kravel_android.ui.adapter.SearchViewPagerAdapter
 import com.kravelteam.kravel_android.ui.adapter.SearchWordRecyclerview
+import com.kravelteam.kravel_android.ui.base.BaseFragment
 import com.kravelteam.kravel_android.util.*
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.coroutines.CoroutineScope
@@ -28,8 +31,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
-class SearchFragment : Fragment() {
+class SearchFragment : Fragment(){
 
+    private val networkManager : NetworkManager by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,6 +51,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun initViewPager() {
+
         vp_search_select.adapter = SearchViewPagerAdapter(childFragmentManager,2, arrayListOf(resources.getString(R.string.celebPart),resources.getString(R.string.mediaPart)))
         vp_search_select.offscreenPageLimit = 2
 

@@ -44,12 +44,23 @@ class AuthManager(context: Context) {
             }
         }
 
+    var first: Boolean
+        get() {
+            return preferences.getBoolean(FIRST_KEY, false)
+        }
+        set(value) {
+            preferences.edit {
+                putBoolean(FIRST_KEY, value)
+            }
+        }
+
 
     private companion object {
         const val AUTH_PREFERENCES = "auth"
         const val TOKEN_KEY = "token"
         const val AUTO_LOGIN_KEY = "auto"
         const val LANGUAGE_KEY = "lang"
+        const val FIRST_KEY = "first"
     }
 }
 

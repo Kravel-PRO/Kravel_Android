@@ -53,7 +53,7 @@ class UserFragment : Fragment() {
             onSuccess = {
                 nickname = it.data.result.nickName
                 gender = it.data.result.gender
-                if (authManager.setLang=="ko") {
+                if (authManager.setLang=="KOR") {
                     txt_user_nickname.text = "${nickname}님의 여행을 함께해요!"
                 } else {
                     txt_user_nickname.text = "Let's go on ${nickname}'s trip together!"
@@ -92,7 +92,10 @@ class UserFragment : Fragment() {
         }
 
         cl_user_set_lang.setOnDebounceClickListener {
-            startActivity(SetLanguageActivity::class)
+            Intent(KravelApplication.GlobalApp, SetLanguageActivity::class.java).apply {
+                putExtra("my", "my")
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }.run { KravelApplication.GlobalApp.startActivity(this) }
         }
 
         cl_user_report.setOnDebounceClickListener {

@@ -12,8 +12,10 @@ import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.request.LanguageBody
 import com.kravelteam.kravel_android.network.AuthManager
 import com.kravelteam.kravel_android.network.NetworkManager
+import com.kravelteam.kravel_android.ui.login.LoginActivity
 import com.kravelteam.kravel_android.util.networkErrorToast
 import com.kravelteam.kravel_android.util.safeLoginEnqueue
+import com.kravelteam.kravel_android.util.startActivity
 import kotlinx.android.synthetic.main.activity_set_language.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
@@ -31,22 +33,47 @@ class SetLanguageActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_set_language)
+
+        intent.getStringExtra("my")?.let {
+            if(authManager.setLang == "KOR"){
+                rb_set_language_korea.isChecked = true
+                rb_set_language_korea.setTextColor(resources.getColor(R.color.colorCoral))
+                rb_set_language_english.setTextColor(resources.getColor(R.color.colorDarkGrey))
+                checkLang=true
+            } else {
+                rb_set_language_english.isChecked = true
+                rb_set_language_korea.setTextColor(resources.getColor(R.color.colorDarkGrey))
+                rb_set_language_english.setTextColor(resources.getColor(R.color.colorCoral))
+                checkLang=true
+            }
+            btn_set_language_start.text = resources.getString(R.string.updateComplete)
+        }
+
         configuration = Configuration()
         btn_set_language_start.setOnDebounceClickListener {
-            if(Kor) {
-                val ko = Locale.KOREA
-                configuration.locale = ko
-                requestServer("KOR")
-                authManager.setLang = "ko"
+            if(intent.getStringExtra("my")=="my"){
+                if(Kor) {
+                    val ko = Locale.KOREA
+                    configuration.locale = ko
+                    requestServer("KOR")
+                    authManager.setLang = "KOR"
+                }
+                if(Eng) {
+                    val en = Locale.US
+                    configuration.locale = en
+                    requestServer("ENG")
+                    authManager.setLang = "ENG"
+                }
+            } else {
+                startActivity(LoginActivity::class,true)
+                authManager.first = true
+                if(Kor) {
+                    authManager.setLang = "KOR"
+                }
+                if(Eng) {
+                    authManager.setLang = "ENG"
+                }
             }
-            if(Eng) {
-                val en = Locale.US
-                configuration.locale = en
-                requestServer("ENG")
-                authManager.setLang = "en"
-            }
-
-
         }
 
         initCheckRadioBtn()

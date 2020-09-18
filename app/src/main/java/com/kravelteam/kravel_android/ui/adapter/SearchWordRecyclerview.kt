@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.os.Handler
+import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.RecyclerView
 import com.kravelteam.kravel_android.KravelApplication
 import com.kravelteam.kravel_android.R
@@ -51,11 +52,13 @@ class SearchWordRecyclerview(val onAllDelete: () -> Unit, val onSearch: (String)
                     }
                     KravelApplication.db.searchWordDao().deleteWord(data[adapterPosition].word)
                 }
+                AnimationUtils.loadAnimation(KravelApplication.GlobalApp,R.anim.push_left_out)
+                    .run { itemView.startAnimation(this) }
                 Handler().postDelayed({
                     data.removeAt(adapterPosition)
                     notifyItemRemoved(adapterPosition)
                     notifyDataSetChanged()
-                },150)
+                },400)
             }
         }
     }

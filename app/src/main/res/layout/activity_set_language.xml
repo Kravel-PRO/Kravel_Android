@@ -21,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/notosans_cjk_kr_bold"
-            android:text="Please set the language"
+            android:text="@string/setLanguageTitle"
             android:textColor="@color/colorSignUpEditText"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"

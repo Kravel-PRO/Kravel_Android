@@ -53,8 +53,7 @@
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/cl_my_photo_review_toolbar"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_weight="8.89"
-        android:background="@color/colorOpacity10DarkGrey">
+        app:layout_constraintVertical_weight="8.89">
 
         <ImageView
             android:id="@+id/img_my_photo_review_empty_icon"
@@ -65,7 +64,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.15"
+            app:layout_constraintVertical_bias="0.2"
             app:layout_constraintVertical_chainStyle="packed"
             android:visibility="gone"/>
 
@@ -97,5 +96,10 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottie_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

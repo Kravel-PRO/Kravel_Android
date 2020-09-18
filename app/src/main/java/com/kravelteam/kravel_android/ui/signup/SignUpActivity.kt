@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import com.kravelteam.kravel_android.KravelApplication.Companion.GlobalApp
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.data.request.SignUpRequest
+import com.kravelteam.kravel_android.network.AuthManager
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.util.safeEnqueue
 import com.kravelteam.kravel_android.util.toJson
@@ -21,6 +22,7 @@ import org.koin.android.ext.android.inject
 import timber.log.Timber
 
 class SignUpActivity : AppCompatActivity() {
+    private val authManager : AuthManager by inject()
 
     var checkemail = false
     var checkpw = false
@@ -314,7 +316,7 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
     private fun requestSignUp(){
-        val data = SignUpRequest(email,pw,nickname,gender,"KOR")
+        val data = SignUpRequest(email,pw,nickname,gender,authManager.setLang)
         networkManager.requestSignUp(data).safeEnqueue(
             onSuccess = {
                 toast("성공")
