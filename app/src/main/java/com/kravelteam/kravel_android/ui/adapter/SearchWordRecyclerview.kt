@@ -52,13 +52,13 @@ class SearchWordRecyclerview(val onAllDelete: () -> Unit, val onSearch: (String)
                     }
                     KravelApplication.db.searchWordDao().deleteWord(data[adapterPosition].word)
                 }
-//                AnimationUtils.loadAnimation(KravelApplication.GlobalApp,R.anim.push_left_in)
-//                    .run { itemView.startAnimation(this) }
+                AnimationUtils.loadAnimation(KravelApplication.GlobalApp,R.anim.push_left_out)
+                    .run { itemView.startAnimation(this) }
                 Handler().postDelayed({
                     data.removeAt(adapterPosition)
                     notifyItemRemoved(adapterPosition)
                     notifyDataSetChanged()
-                },150)
+                },400)
             }
         }
     }
