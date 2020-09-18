@@ -10,7 +10,7 @@
         android:id="@+id/rv_drama_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="25dp"
+        android:paddingTop="24dp"
         android:paddingHorizontal="16dp"
         android:clipToPadding="false"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"

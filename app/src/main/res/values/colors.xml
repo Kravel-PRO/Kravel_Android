@@ -10,6 +10,7 @@
     <color name="colorWhiteGrey">#eeeeee</color>
     <color name="colorOpacityWhiteGrey">#66EEEEEE</color>
     <color name="colorOpacity20WhiteGrey">#33EEEEEE</color>
+    <color name="colorOpacity60WhiteGrey">#99EEEEEE</color>
     <color name="colorPoint">#ff6359</color>
     <color name="colorSignUpEditText">#272727</color>
     <color name="colorSignUpEditTextWarning">#fa372b</color>

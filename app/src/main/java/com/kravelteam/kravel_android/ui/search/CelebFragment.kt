@@ -45,7 +45,7 @@ class CelebFragment : Fragment() {
         rv_celeb_list.apply {
             adapter = celebAdapter
             addItemDecoration(HorizontalItemDecorator(24))
-            addItemDecoration(VerticalItemDecorator(36))
+            addItemDecoration(VerticalItemDecorator(38))
         }
 
         networkManager.requestCelebList().safeEnqueue(

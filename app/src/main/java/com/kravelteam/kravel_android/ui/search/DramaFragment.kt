@@ -44,7 +44,7 @@ class DramaFragment : Fragment() {
         rv_drama_list.apply {
             adapter = dramaAdapter
             addItemDecoration(HorizontalItemDecorator(24))
-            addItemDecoration(VerticalItemDecorator(36))
+            addItemDecoration(VerticalItemDecorator(18))
         }
 
         networkManager.requestMediaList().safeEnqueue(

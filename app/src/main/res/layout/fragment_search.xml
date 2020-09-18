@@ -23,7 +23,7 @@
                 android:layout_width="0dp"
                 android:layout_height="52dp"
                 android:layout_marginVertical="16dp"
-                android:background="@drawable/signup_btn_style"
+                android:background="@drawable/whitegrey_round_fill_background"
                 android:text="@string/SearchWordExplain"
                 android:textColor="@color/colorOpacity30Black"
                 android:textSize="15sp"
@@ -67,6 +67,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/vp_search_select"
                 app:tabGravity="fill"
+                app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
                 app:tabSelectedTextColor="@color/colorCoral"
                 app:tabIndicatorColor="@color/colorCoral"
                 app:tabIndicatorHeight="2dp"/>
