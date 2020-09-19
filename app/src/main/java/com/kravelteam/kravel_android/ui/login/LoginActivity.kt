@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.core.animation.doOnEnd
+import com.auth0.android.jwt.JWT
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.request.LoginRequest
@@ -27,6 +28,7 @@ import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.dialog_login_fail.view.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
+import java.util.*
 
 class LoginActivity : AppCompatActivity() {
 
@@ -75,6 +77,8 @@ class LoginActivity : AppCompatActivity() {
                         this.token = token
                         autoLogin = true
                     }
+                    authManager.expire = JWT(token).expiresAt?.time!!
+                    Timber.e("${Date(JWT(token).expiresAt?.time!!)}")
                     startActivity(MainActivity::class,true)
                 },
                 onFailure = {

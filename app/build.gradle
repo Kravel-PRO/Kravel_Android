@@ -127,7 +127,8 @@ dependencies {
     implementation 'com.github.martinstamenkovski:ARIndicatorView:2.0.0'
 
 
-
+    //jwt
+    implementation 'com.auth0.android:jwtdecode:2.0.0'
 
 
     // Extensions = ViewModel + LiveData

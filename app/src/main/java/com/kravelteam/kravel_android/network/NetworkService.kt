@@ -48,6 +48,9 @@ interface NetworkService {
         @Body data: SignUpRequest
     ) : Call<BaseResponse<Int>>
 
+    @GET("/auth/refresh-token")
+    fun requestRefreshToken() : Call<Unit>
+
     /**
      * 내 정보 가져오기
      */

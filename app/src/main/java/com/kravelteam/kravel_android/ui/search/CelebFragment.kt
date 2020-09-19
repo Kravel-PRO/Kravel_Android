@@ -11,7 +11,9 @@ import com.airbnb.lottie.LottieAnimationView
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.HorizontalItemDecorator
 import com.kravelteam.kravel_android.common.VerticalItemDecorator
+import com.kravelteam.kravel_android.common.newToken
 import com.kravelteam.kravel_android.data.response.CelebResponse
+import com.kravelteam.kravel_android.network.AuthManager
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.CelebRecyclerview
 import com.kravelteam.kravel_android.ui.main.MainActivity
@@ -19,10 +21,12 @@ import com.kravelteam.kravel_android.util.*
 import kotlinx.android.synthetic.main.fragment_celeb.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
+import java.util.*
 
 class CelebFragment() : Fragment() {
 
     private val networkManager : NetworkManager by inject()
+    private val authManager: AuthManager by inject()
     private lateinit var celebAdapter : CelebRecyclerview
 
     override fun onCreateView(
@@ -49,6 +53,7 @@ class CelebFragment() : Fragment() {
             addItemDecoration(VerticalItemDecorator(38))
         }
 
+        newToken(authManager,networkManager)
         networkManager.requestCelebList().safeEnqueue(
             onSuccess = {
                 if(!it.data.result.content.isNullOrEmpty()) celebAdapter.initData(it.data.result.content)
