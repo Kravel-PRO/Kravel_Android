@@ -49,9 +49,12 @@ class CameraActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_camera)
 
+        Timber.e(intent.getStringExtra("placeName"))
         //필터
         intent.getStringExtra("filter")?.let {
             GlideApp.with(applicationContext).load(it).into(img_camera_concept_ill)
+            txt_camera_unselect_concept.setVisible()
+            txt_camera_unselect_concept.text = intent.getStringExtra("placeName")
         }
 
         cameraProviderFuture = ProcessCameraProvider.getInstance(this)
@@ -86,6 +89,12 @@ class CameraActivity : AppCompatActivity(){
 
         img_camera_cancel.setOnDebounceClickListener {
             finish()
+        }
+    }
+
+    private fun showEx(){
+        txt_camera_concept_example.setOnDebounceClickListener {
+
         }
     }
 
@@ -229,7 +238,7 @@ class CameraActivity : AppCompatActivity(){
         txt_camera_unselect_concept.setOnDebounceClickListener {
             txt_camera_unselect_concept.setInvisible()
             txt_camera_unselect_basic.setVisible()
-            txt_camera_select.text = "기생충"
+            txt_camera_select.text = intent.getStringExtra("placeName")
             img_camera_concept_ill.setVisible()
             cl_camera_concept_example.setVisible()
             txt_camera_concept_example.setVisible()
