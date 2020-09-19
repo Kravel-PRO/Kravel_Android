@@ -11,8 +11,8 @@ android {
         applicationId 'com.kravelteam.kravel_android'
         minSdkVersion 24
         targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "0.0.1"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -127,7 +127,8 @@ dependencies {
     implementation 'com.github.martinstamenkovski:ARIndicatorView:2.0.0'
 
 
-
+    //jwt
+    implementation 'com.auth0.android:jwtdecode:2.0.0'
 
 
     // Extensions = ViewModel + LiveData

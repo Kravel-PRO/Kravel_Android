@@ -83,7 +83,13 @@ class SearchDetailActivity : AppCompatActivity() {
                         }
                     }
                 },
-                onFailure = {},
+                onFailure = {
+                    if(it.code() == 403) {
+                        toast("재로그인을 해주세요!")
+                    } else {
+                        toast("상세 불러오기에 실패했습니다")
+                    }
+                },
                 onError = {
                     networkErrorToast()
                 }
@@ -102,7 +108,11 @@ class SearchDetailActivity : AppCompatActivity() {
                     }
                 },
                 onFailure = {
-                    toast("실패")
+                    if(it.code() == 403) {
+                        toast("재로그인을 해주세요!")
+                    } else {
+                        toast("포토리뷰 불러오기에 실패했습니다")
+                    }
                 },
                 onError = {
                     networkErrorToast()
@@ -125,7 +135,13 @@ class SearchDetailActivity : AppCompatActivity() {
                         }
                     }
                 },
-                onFailure = {},
+                onFailure = {
+                    if(it.code() == 403) {
+                        toast("재로그인을 해주세요!")
+                    } else {
+                        toast("상세 불러오기에 실패했습니다")
+                    }
+                },
                 onError = {
                     networkErrorToast()
                 }
@@ -145,7 +161,11 @@ class SearchDetailActivity : AppCompatActivity() {
                     }
                 },
                 onFailure = {
-                    toast("실패")
+                    if(it.code() == 403) {
+                        toast("재로그인을 해주세요!")
+                    } else {
+                        toast("포토리뷰 불러오기에 실패했습니다")
+                    }
                 },
                 onError = {
                     networkErrorToast()

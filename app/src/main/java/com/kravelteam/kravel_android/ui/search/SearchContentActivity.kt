@@ -12,6 +12,7 @@ import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.common.SearchWord
 import com.kravelteam.kravel_android.util.hideKeyboard
 import com.kravelteam.kravel_android.util.showKeyboard
+import com.kravelteam.kravel_android.util.toast
 import kotlinx.android.synthetic.main.activity_search_content.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -55,14 +56,22 @@ class SearchContentActivity : AppCompatActivity() {
     private fun initSetBtn(){
         edt_search_word.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                addRecentWord(edt_search_word.text.toString())
-                hideKeyboard()
+                if(edt_search_word.text.toString() == ""){
+                    toast("검색어 입력을 확인해주세요!")
+                } else {
+                    addRecentWord(edt_search_word.text.toString())
+                    hideKeyboard()
+                }
             }
             true
         }
         img_search_btn.setOnDebounceClickListener {
-            addRecentWord(edt_search_word.text.toString())
-            hideKeyboard()
+            if(edt_search_word.text.toString() == ""){
+                toast("검색어 입력을 확인해주세요!")
+            } else {
+                addRecentWord(edt_search_word.text.toString())
+                hideKeyboard()
+            }
         }
     }
 

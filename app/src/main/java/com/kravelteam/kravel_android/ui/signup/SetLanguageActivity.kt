@@ -16,6 +16,7 @@ import com.kravelteam.kravel_android.ui.login.LoginActivity
 import com.kravelteam.kravel_android.util.networkErrorToast
 import com.kravelteam.kravel_android.util.safeLoginEnqueue
 import com.kravelteam.kravel_android.util.startActivity
+import com.kravelteam.kravel_android.util.toast
 import kotlinx.android.synthetic.main.activity_set_language.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
@@ -94,8 +95,11 @@ class SetLanguageActivity : AppCompatActivity() {
 
             },
             onFailure = {
-                Timber.e("실패")
-
+                if(it.code() == 403){
+                    toast("재로그인을 해주세요")
+                } else {
+                    toast("언어 수정에 실패했습니다")
+                }
             },
             onError = {
                 networkErrorToast()

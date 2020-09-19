@@ -71,7 +71,13 @@ class SearchResultFragment : Fragment() {
                 }
             },
             onFailure = {
-                toast("검색어 입력을 확인해주세요")
+                if(it.code() == 400){
+                    toast("검색어 입력을 확인해주세요!")
+                } else if(it.code() == 403){
+                    toast("재로그인을 해주세요!")
+                } else {
+                    toast("검색 결과를 불러오는데 실패했습니다")
+                }
             },
             onError = {
                 networkErrorToast()
