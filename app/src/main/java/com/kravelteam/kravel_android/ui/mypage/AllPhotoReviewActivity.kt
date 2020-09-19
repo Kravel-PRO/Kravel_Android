@@ -1,7 +1,13 @@
 package com.kravelteam.kravel_android.ui.mypage
 
+import android.app.AlertDialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.TextureView
+import android.widget.TextView
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.request.ReviewLikeBody
@@ -9,6 +15,7 @@ import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.AllPhotoReviewRecyclerview
 import com.kravelteam.kravel_android.util.*
 import kotlinx.android.synthetic.main.activity_all_photo_review.*
+import kotlinx.android.synthetic.main.dialog_logout.view.*
 import org.koin.android.ext.android.inject
 
 class AllPhotoReviewActivity : AppCompatActivity() {
@@ -81,6 +88,44 @@ class AllPhotoReviewActivity : AppCompatActivity() {
                         networkErrorToast()
                     }
                 )
+            },
+            onDelete = { i: Int, delete: () -> Unit ->
+                val dialog = AlertDialog.Builder(this).create()
+                val view = LayoutInflater.from(this).inflate(R.layout.dialog_logout, null)
+                dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                val txtTitle = view.findViewById<TextView>(R.id.txt_logout_title)
+                val txtDelete = view.findViewById<TextView>(R.id.btn_logout)
+                txtTitle?.text = resources.getString(R.string.deletePhotoReview)
+                txtDelete?.text = resources.getString(R.string.deleteTxt)
+
+                view.btn_logout_cancel.setOnDebounceClickListener {
+                    dialog.cancel()
+                }
+
+                view.btn_logout.setOnDebounceClickListener {
+                    networkManager.requestDeletePhotoReview(i).safeEnqueue(
+                        onSuccess = {
+                            delete()
+                            dialog.dismiss()
+                            toast("삭제되었습니다")
+                        },
+                        onFailure = {
+
+                        },
+                        onError = {
+                            networkErrorToast()
+                        }
+                    )
+                }
+
+                dialog.apply {
+                    setView(view)
+                    setCancelable(false)
+                    show()
+                }
+            },
+            onAllDelete = {
+                emptyMyPhoto()
             }
         )
         rv_my_photo_review.apply {
@@ -88,12 +133,16 @@ class AllPhotoReviewActivity : AppCompatActivity() {
         }
     }
 
+    private fun emptyMyPhoto(){
+        img_my_photo_review_empty_icon.setVisible()
+        textView2.setVisible()
+    }
+
     private fun initGetMyPhotoReview(){
-        networkManager.requestMyPhotoReviews().safeEnqueue(
+        networkManager.requestMyPhotoReviews(0,100,"createdDate,desc").safeEnqueue(
             onSuccess = {
                 if(it.data.result.content.isNullOrEmpty()){
-                    img_my_photo_review_empty_icon.setVisible()
-                    textView2.setVisible()
+                    emptyMyPhoto()
                 } else {
                     img_my_photo_review_empty_icon.setGone()
                     textView2.setGone()

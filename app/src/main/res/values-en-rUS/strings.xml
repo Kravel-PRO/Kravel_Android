@@ -124,4 +124,6 @@
     <string name="PhotoReview">"PhotoReview  "</string>
     <string name="Count">" "</string>
     <string name="setLanguageTitle">Please set the language</string>
+    <string name="deletePhotoReview">Do you want to delete it?</string>
+    <string name="deleteTxt">Delete</string>
 </resources>

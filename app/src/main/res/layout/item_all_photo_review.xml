@@ -24,6 +24,17 @@
         app:layout_constraintBottom_toBottomOf="@+id/img_my_photo_review_photo"
         app:layout_constraintEnd_toEndOf="@+id/img_my_photo_review_photo" />
 
+    <ImageView
+        android:id="@+id/img_my_photo_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/btn_cancel_white"
+        app:layout_constraintEnd_toEndOf="@+id/img_my_photo_review_photo"
+        app:layout_constraintTop_toTopOf="@+id/img_my_photo_review_photo" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_title"
         android:layout_width="match_parent"
@@ -38,7 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/notosans_cjk_kr_bold"
-            android:text="장소"
+            android:text=""
             android:textColor="@color/colorBlack"
             android:textSize="14sp"
             app:layout_constraintTop_toTopOf="parent"
