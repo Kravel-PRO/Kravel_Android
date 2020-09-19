@@ -106,7 +106,11 @@ class UpdateInfoActivity : AppCompatActivity() {
                     finish()
                 },
                 onFailure = {
-                    toast("업데이트를 실패했습니다")
+                    if(it.code() == 403) {
+                        toast("재로그인을 해주세요!")
+                    } else {
+                        toast("업데이트에 실패했습니다")
+                    }
                 },
                 onError = {
                     networkErrorToast()

@@ -9,6 +9,7 @@ import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.response.MyScrapData
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.ScrapRecyclerview
+import com.kravelteam.kravel_android.util.networkErrorToast
 import com.kravelteam.kravel_android.util.safeEnqueue
 import com.kravelteam.kravel_android.util.setVisible
 import com.kravelteam.kravel_android.util.toast
@@ -51,10 +52,14 @@ class ScrapActivity : AppCompatActivity() {
                 }
             },
             onFailure = {
-                toast("실패")
+                if(it.code() == 403) {
+                    toast("재로그인을 해주세요!")
+                } else {
+                    toast("스크랩 불러오기에 실패했습니다")
+                }
             },
             onError = {
-                toast("에러")
+                networkErrorToast()
             }
         )
     }

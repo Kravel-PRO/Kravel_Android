@@ -78,7 +78,11 @@ class LoginActivity : AppCompatActivity() {
                     startActivity(MainActivity::class,true)
                 },
                 onFailure = {
-                    initDialog()
+                    if(it.code() == 400){
+                        initDialog()
+                    } else {
+                        toast("로그인에 실패했습니다.")
+                    }
                 },
                 onError = {
                     networkErrorToast()
