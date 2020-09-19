@@ -12,6 +12,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.os.Handler
 import android.provider.MediaStore
 import android.webkit.MimeTypeMap
 import android.widget.Toast
@@ -147,6 +148,7 @@ class CameraActivity : AppCompatActivity(){
             values
         ).build()
 
+        cl_camer_capture.setVisible()
         //카메라 셔터
         val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
         val volume = audioManager.getStreamVolume(AudioManager.STREAM_NOTIFICATION)
@@ -156,17 +158,20 @@ class CameraActivity : AppCompatActivity(){
             }
             shoot?.start()
         }
-
-        //깜빡이는 애니메이션 넣어주기
+        Handler().postDelayed({
+            cl_camer_capture.setGone()
+        },100)
 
         // 이미지 캡쳐
         imageCapture.takePicture(
             outputOptions, ContextCompat.getMainExecutor(this), object : ImageCapture.OnImageSavedCallback {
                 override fun onError(exc: ImageCaptureException) {
                     Timber.e("실패 ${exc.message}")
+                    toast("이미지 저장에 실패했습니다")
                 }
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
+
                     val savedUri = Uri.fromFile(f)
 
                     GlideApp.with(applicationContext).load(output.savedUri).into(img_gallery_take_picture)
@@ -182,6 +187,7 @@ class CameraActivity : AppCompatActivity(){
                     ) { _, uri ->
                         Timber.e( "저장된 곳: $uri")
                     }
+                    toast("이미지를 저장했습니다")
                 }
             })
 

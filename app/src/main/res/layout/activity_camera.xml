@@ -206,4 +206,11 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_camer_capture"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorOpacity30Black"
+        android:visibility="gone"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
