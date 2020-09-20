@@ -124,6 +124,8 @@
     <string name="PhotoReview">"PhotoReview  "</string>
     <string name="Count">" "</string>
     <string name="setLanguageTitle">Please set the language</string>
+    <string name="deletePhotoReview">Do you want to delete it?</string>
+    <string name="deleteTxt">Delete</string>
     <string name="homePhotoReviewWarning1">There\'s no photo review yet!\n Let\'s wait for a nice snapshot.</string>
     <string name="mapPhotoReveiwEmpty">There\'s no photo review yet!\n Post a great proof shot!</string>
     <string name="signupEmailWarning">" This email already exists!"</string>

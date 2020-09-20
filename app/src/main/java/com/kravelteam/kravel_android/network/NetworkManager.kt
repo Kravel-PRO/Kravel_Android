@@ -73,9 +73,16 @@ class NetworkManager(authManager: AuthManager) {
         search: String
     ) = retrofit.requestSearchResult(search)
 
-    fun requestCelebList() = retrofit.requestCelebList()
+    fun requestCelebList(
+        page : Int,
+        size : Int
+    ) = retrofit.requestCelebList(page, size)
 
-    fun requestMediaList() = retrofit.requestMediaList()
+    fun requestMediaList(
+        page : Int,
+        size : Int,
+        sort : String
+    ) = retrofit.requestMediaList(page, size, sort)
 
     fun requestCelebDetail(
         id: Int,
@@ -134,9 +141,17 @@ class NetworkManager(authManager: AuthManager) {
         file: MultipartBody.Part?
     ) = retrofit.requestPostPhotoReview(id,file)
 
+    fun requestDeletePhotoReview(
+        id: Int
+    ) = retrofit.requestDeletePhotoReview(id)
+
     fun requestMyScrap() = retrofit.requestMyScrap()
 
-    fun requestMyPhotoReviews() = retrofit.requestMyPhotoReviews()
+    fun requestMyPhotoReviews(
+        page : Int,
+        size : Int,
+        sort : String
+    ) = retrofit.requestMyPhotoReviews(page, size, sort)
 
     fun getMapMarkerList(
     ) = retrofit.getMapMarkerList()

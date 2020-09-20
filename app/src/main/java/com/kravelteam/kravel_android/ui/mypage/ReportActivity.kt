@@ -146,9 +146,9 @@ class ReportActivity : AppCompatActivity() {
             val inputStream: InputStream = contentResolver.openInputStream(selectedPicUri!!)!!
             val bitmap = BitmapFactory.decodeStream(inputStream,null,options)
             val byteArrayOutputStream = ByteArrayOutputStream()
-            bitmap!!.compress(Bitmap.CompressFormat.JPEG,20,byteArrayOutputStream)
+            bitmap!!.compress(Bitmap.CompressFormat.JPEG,100,byteArrayOutputStream)
             val photoBody = RequestBody.create("image/jpg".toMediaTypeOrNull(),byteArrayOutputStream.toByteArray())
-            val picture = MultipartBody.Part.createFormData("files", File(selectedPicUri.toString()).name,photoBody)
+            val picture = MultipartBody.Part.createFormData("files", File(selectedPicUri.toString()).name+".jpg",photoBody)
             val pictureList = ArrayList<MultipartBody.Part?>()
             pictureList.add(picture)
 
