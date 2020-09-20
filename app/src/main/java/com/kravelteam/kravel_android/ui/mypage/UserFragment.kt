@@ -51,6 +51,7 @@ class UserFragment : Fragment(), fragmentBackPressed {
     }
 
     private fun initGetUserInfo(){
+
         networkManager.requestUserInfo().safeEnqueue(
             onSuccess = {
                 nickname = it.data.result.nickName

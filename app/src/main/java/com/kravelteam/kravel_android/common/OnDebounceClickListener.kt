@@ -11,7 +11,7 @@ class OnDebounceClickListener(private val listener: (View) -> Unit) : View.OnCli
     }
 
     companion object {
-        private const val INTERVAL: Long = 300L
+        private const val INTERVAL: Long = 600L
         private var lastTime: Long = 0
     }
 }

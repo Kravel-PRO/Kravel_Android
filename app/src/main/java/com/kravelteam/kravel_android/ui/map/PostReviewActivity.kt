@@ -84,7 +84,7 @@ class PostReviewActivity : AppCompatActivity() {
             val photoBody = RequestBody.create("image/jpg".toMediaTypeOrNull(),byteArrayOutputStream.toByteArray())
             val picture = MultipartBody.Part.createFormData("file", File(selectedPicUri.toString()).name+".jpg",photoBody)
 
-            newToken(authManager,networkManager)
+            if (newToken(authManager,networkManager)) {
             networkManager.requestPostPhotoReview(placeId,picture).safeEnqueue(
                 onSuccess = {
                     toast("포토리뷰 업로드를 완료했습니다!")
@@ -109,6 +109,9 @@ class PostReviewActivity : AppCompatActivity() {
                     networkErrorToast()
                 }
             )
+            } else {
+                toast(resources.getString(R.string.errorNetwork))
+            }
         }
 
     }

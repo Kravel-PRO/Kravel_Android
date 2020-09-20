@@ -6,8 +6,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
 import com.kravelteam.kravel_android.R
+import com.kravelteam.kravel_android.common.newToken
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.request.UpdateInfo
+import com.kravelteam.kravel_android.network.AuthManager
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.util.*
 import kotlinx.android.synthetic.main.activity_update_pw.*
@@ -17,6 +19,7 @@ import org.koin.android.ext.android.inject
 class UpdatePwActivity : AppCompatActivity() {
 
     private val networkManager : NetworkManager by inject()
+    private val authManager: AuthManager by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,24 +82,28 @@ class UpdatePwActivity : AppCompatActivity() {
                 edt_update_pw_change_check.text.toString(),
                 "",
                 "")
-            networkManager.requestUpdateInfo("password",data).safeEnqueue(
-                onSuccess = {
-                    finish()
-                    toast("비밀번호 수정에 완료했습니다.")
-                },
-                onFailure = {
-                    if(it.code() == 403) {
-                        toast("재로그인을 해주세요!")
-                    } else if(it.code() == 400) {
-                        initDialog()
-                    } else {
-                        toast("업데이트에 실패했습니다")
+            if (newToken(authManager,networkManager)) {
+                networkManager.requestUpdateInfo("password",data).safeEnqueue(
+                    onSuccess = {
+                        finish()
+                        toast("비밀번호 수정에 완료했습니다.")
+                    },
+                    onFailure = {
+                        if(it.code() == 403) {
+                            toast("재로그인을 해주세요!")
+                        } else if(it.code() == 400) {
+                            initDialog()
+                        } else {
+                            toast("업데이트에 실패했습니다")
+                        }
+                    },
+                    onError = {
+                        networkErrorToast()
                     }
-                },
-                onError = {
-                    networkErrorToast()
-                }
-            )
+                )
+            } else {
+                toast(resources.getString(R.string.errorNetwork))
+            }
         }
     }
 

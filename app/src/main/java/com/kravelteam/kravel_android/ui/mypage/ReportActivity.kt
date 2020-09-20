@@ -11,7 +11,9 @@ import android.os.Bundle
 import android.widget.ImageView
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.GlideApp
+import com.kravelteam.kravel_android.common.newToken
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
+import com.kravelteam.kravel_android.network.AuthManager
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.util.*
 import kotlinx.android.synthetic.main.activity_report.*
@@ -33,6 +35,7 @@ class ReportActivity : AppCompatActivity() {
     private var checkTag = false
     private var checkImg = false
 
+    private val authManager : AuthManager by inject()
     private val networkManager : NetworkManager by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -158,6 +161,7 @@ class ReportActivity : AppCompatActivity() {
             val tags = RequestBody.create("text/plain".toMediaTypeOrNull(), edt_report_place_tag.text.toString())
             val inquireCategory = RequestBody.create("text/plain".toMediaTypeOrNull(), "PLACE_REPORT")
 
+            if (newToken(authManager,networkManager)) {
             networkManager.requestReport(pictureList, title, contents, address, tags, inquireCategory).safeEnqueue(
                 onSuccess = {
                     toast("제보가 완료되었습니다! 감사합니다!")
@@ -176,6 +180,9 @@ class ReportActivity : AppCompatActivity() {
                     networkErrorToast()
                 }
             )
+            } else {
+                toast(resources.getString(R.string.errorNetwork))
+            }
         }
     }
 

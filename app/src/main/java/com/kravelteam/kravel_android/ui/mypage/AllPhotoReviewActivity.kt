@@ -9,8 +9,10 @@ import android.view.LayoutInflater
 import android.view.TextureView
 import android.widget.TextView
 import com.kravelteam.kravel_android.R
+import com.kravelteam.kravel_android.common.newToken
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.request.ReviewLikeBody
+import com.kravelteam.kravel_android.network.AuthManager
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.AllPhotoReviewRecyclerview
 import com.kravelteam.kravel_android.util.*
@@ -22,7 +24,7 @@ class AllPhotoReviewActivity : AppCompatActivity() {
 
     private lateinit var allPhotoReviewAdapter: AllPhotoReviewRecyclerview
     private val networkManager : NetworkManager by inject()
-
+    private val authManager : AuthManager by inject()
     private var checkReview = ""
     private var checkPart = ""
     private var id : Int = -1
@@ -80,15 +82,19 @@ class AllPhotoReviewActivity : AppCompatActivity() {
         allPhotoReviewAdapter = AllPhotoReviewRecyclerview(
             checkReview,
             onLike = { like,reviewId ->
-                networkManager.postLikes(id,reviewId, ReviewLikeBody(like)).safeEnqueue(
-                    onSuccess = {
-                    },
-                    onFailure = {
-                    },
-                    onError = {
-                        networkErrorToast()
-                    }
-                )
+                if (newToken(authManager,networkManager)) {
+                    networkManager.postLikes(id,reviewId, ReviewLikeBody(like)).safeEnqueue(
+                        onSuccess = {
+                        },
+                        onFailure = {
+                        },
+                        onError = {
+                            networkErrorToast()
+                        }
+                    )
+                } else {
+                    toast(resources.getString(R.string.errorNetwork))
+                }
             },
             onDelete = { i: Int, delete: () -> Unit ->
                 val dialog = AlertDialog.Builder(this).create()
@@ -104,19 +110,23 @@ class AllPhotoReviewActivity : AppCompatActivity() {
                 }
 
                 view.btn_logout.setOnDebounceClickListener {
-                    networkManager.requestDeletePhotoReview(i).safeEnqueue(
-                        onSuccess = {
-                            delete()
-                            dialog.dismiss()
-                            toast("삭제되었습니다")
-                        },
-                        onFailure = {
+                    if (newToken(authManager,networkManager)) {
+                        networkManager.requestDeletePhotoReview(i).safeEnqueue(
+                            onSuccess = {
+                                delete()
+                                dialog.dismiss()
+                                toast("삭제되었습니다")
+                            },
+                            onFailure = {
 
-                        },
-                        onError = {
-                            networkErrorToast()
-                        }
-                    )
+                            },
+                            onError = {
+                                networkErrorToast()
+                            }
+                        )
+                    } else {
+                        toast(resources.getString(R.string.errorNetwork))
+                    }
                 }
 
                 dialog.apply {
@@ -140,92 +150,108 @@ class AllPhotoReviewActivity : AppCompatActivity() {
     }
 
     private fun initGetMyPhotoReview(){
-        networkManager.requestMyPhotoReviews(0,100,"createdDate,desc").safeEnqueue(
-            onSuccess = {
-                if(it.data.result.content.isNullOrEmpty()){
-                    emptyMyPhoto()
-                } else {
-                    img_my_photo_review_empty_icon.setGone()
-                    textView2.setGone()
+        if (newToken(authManager,networkManager)) {
+            networkManager.requestMyPhotoReviews(0,100,"createdDate,desc").safeEnqueue(
+                onSuccess = {
+                    if(it.data.result.content.isNullOrEmpty()){
+                        emptyMyPhoto()
+                    } else {
+                        img_my_photo_review_empty_icon.setGone()
+                        textView2.setGone()
 
-                    allPhotoReviewAdapter.initData(it.data.result.content)
+                        allPhotoReviewAdapter.initData(it.data.result.content)
+                    }
+                },
+                onFailure = {
+                    toast("실패")
+                },
+                onError = {
+                    networkErrorToast()
                 }
-            },
-            onFailure = {
-                toast("실패")
-            },
-            onError = {
-                networkErrorToast()
-            }
-        )
+            )
+        } else {
+            toast(resources.getString(R.string.errorNetwork))
+        }
     }
 
     private fun initGetCelebPhotoReview(){
-        networkManager.getCelebPhotoReview(id,0,60,"reviewLikes-count,desc").safeEnqueue(
-            onSuccess = {
-                val data = it.data.result.content
-                allPhotoReviewAdapter.initData(data)
-                if(intent.getIntExtra("position",0) != 0) {
-                    toast("실행")
-                    data.forEachIndexed{ index, data ->
-                        if(data.reviewId == intent.getIntExtra("position",0))
-                            position = index
+        if (newToken(authManager,networkManager)) {
+            networkManager.getCelebPhotoReview(id,0,60,"reviewLikes-count,desc").safeEnqueue(
+                onSuccess = {
+                    val data = it.data.result.content
+                    allPhotoReviewAdapter.initData(data)
+                    if(intent.getIntExtra("position",0) != 0) {
+                        toast("실행")
+                        data.forEachIndexed{ index, data ->
+                            if(data.reviewId == intent.getIntExtra("position",0))
+                                position = index
+                        }
+                        rv_my_photo_review.scrollToPosition(position)
                     }
-                    rv_my_photo_review.scrollToPosition(position)
+                },
+                onFailure = {
+                    toast("실패")
+                },
+                onError = {
+                    networkErrorToast()
                 }
-            },
-            onFailure = {
-                toast("실패")
-            },
-            onError = {
-                networkErrorToast()
-            }
-        )
+            )
+        } else {
+            toast(resources.getString(R.string.errorNetwork))
+        }
     }
 
     private fun initGetMediaPhotoReview(){
-        networkManager.requestMediaPhotoReview(id,0,60,"reviewLikes-count,desc").safeEnqueue(
-            onSuccess = {
-                val data = it.data.result.content
-                allPhotoReviewAdapter.initData(data)
-                if(intent.getIntExtra("position",0) != 0) {
-                    toast("실행")
-                    data.forEachIndexed{ index, data ->
-                        if(data.reviewId == intent.getIntExtra("position",0))
-                            position = index
+        if (newToken(authManager,networkManager)) {
+            networkManager.requestMediaPhotoReview(id,0,60,"reviewLikes-count,desc").safeEnqueue(
+                onSuccess = {
+                    val data = it.data.result.content
+                    allPhotoReviewAdapter.initData(data)
+                    if(intent.getIntExtra("position",0) != 0) {
+                        toast("실행")
+                        data.forEachIndexed{ index, data ->
+                            if(data.reviewId == intent.getIntExtra("position",0))
+                                position = index
+                        }
+                        rv_my_photo_review.scrollToPosition(position)
                     }
-                    rv_my_photo_review.scrollToPosition(position)
+                },
+                onFailure = {
+                    toast("실패")
+                },
+                onError = {
+                    networkErrorToast()
                 }
-            },
-            onFailure = {
-                toast("실패")
-            },
-            onError = {
-                networkErrorToast()
-            }
-        )
+            )
+        } else {
+            toast(resources.getString(R.string.errorNetwork))
+        }
     }
 
     private fun initGetPlacePhotoReview(){
-        networkManager.getPlaceReview(id,0,60,"reviewLikes-count,desc").safeEnqueue(
-            onSuccess = {
-                val data = it.data.result.content
-                allPhotoReviewAdapter.initData(data)
-                if(intent.getIntExtra("position",0) != 0) {
-                    toast("실행")
-                    data.forEachIndexed{ index, data ->
-                        if(data.reviewId == intent.getIntExtra("position",0))
-                            position = index
+        if (newToken(authManager,networkManager)) {
+            networkManager.getPlaceReview(id,0,60,"reviewLikes-count,desc").safeEnqueue(
+                onSuccess = {
+                    val data = it.data.result.content
+                    allPhotoReviewAdapter.initData(data)
+                    if(intent.getIntExtra("position",0) != 0) {
+                        toast("실행")
+                        data.forEachIndexed{ index, data ->
+                            if(data.reviewId == intent.getIntExtra("position",0))
+                                position = index
+                        }
+                        rv_my_photo_review.scrollToPosition(position)
                     }
-                    rv_my_photo_review.scrollToPosition(position)
+                },
+                onFailure = {
+                    toast("실패")
+                },
+                onError = {
+                    networkErrorToast()
                 }
-            },
-            onFailure = {
-                toast("실패")
-            },
-            onError = {
-                networkErrorToast()
-            }
-        )
+            )
+        } else {
+            toast(resources.getString(R.string.errorNetwork))
+        }
     }
 }

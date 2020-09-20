@@ -5,12 +5,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.kravelteam.kravel_android.KravelApplication
 import com.kravelteam.kravel_android.R
-import com.kravelteam.kravel_android.common.GlideApp
-import com.kravelteam.kravel_android.common.HorizontalItemDecorator
-import com.kravelteam.kravel_android.common.VerticalItemDecorator
-import com.kravelteam.kravel_android.common.setOnDebounceClickListener
+import com.kravelteam.kravel_android.common.*
 import com.kravelteam.kravel_android.data.response.DetailPlaceResponse
 import com.kravelteam.kravel_android.data.response.PhotoResponse
+import com.kravelteam.kravel_android.network.AuthManager
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.PhotoReviewRecyclerview
 import com.kravelteam.kravel_android.ui.adapter.SearchDetailPlaceRecyclerview
@@ -25,6 +23,7 @@ class SearchDetailActivity : AppCompatActivity() {
     private val placeAdapter: SearchDetailPlaceRecyclerview by lazy { SearchDetailPlaceRecyclerview() }
     private lateinit var photoAdapter: PhotoReviewRecyclerview
     private val networkManager : NetworkManager by inject()
+    private val authManager: AuthManager by inject()
 
     private var id : Int = 0
     private var part : String = ""
@@ -67,6 +66,7 @@ class SearchDetailActivity : AppCompatActivity() {
         }
 
         if(part == "celeb"){ //셀럽 디테일 상세 정보
+            if (newToken(authManager,networkManager)) {
             networkManager.requestCelebDetail(id,0,7).safeEnqueue(
                 onSuccess = {it ->
                     it.data.result.let {
@@ -118,7 +118,11 @@ class SearchDetailActivity : AppCompatActivity() {
                     networkErrorToast()
                 }
             )
+            } else {
+                toast(resources.getString(R.string.errorNetwork))
+            }
         } else { //미디어 디테일 상세 정보
+            if (newToken(authManager,networkManager)) {
             networkManager.requestMediaDetail(id).safeEnqueue(
                 onSuccess = { it ->
                     it.data.result.let {
@@ -171,6 +175,9 @@ class SearchDetailActivity : AppCompatActivity() {
                     networkErrorToast()
                 }
             )
+            } else {
+                toast(resources.getString(R.string.errorNetwork))
+            }
         }
     }
     companion object {

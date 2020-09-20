@@ -5,8 +5,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import com.kravelteam.kravel_android.R
+import com.kravelteam.kravel_android.common.newToken
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.request.UpdateInfo
+import com.kravelteam.kravel_android.network.AuthManager
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.util.networkErrorToast
 import com.kravelteam.kravel_android.util.onTextChangeListener
@@ -19,6 +21,7 @@ import org.koin.android.ext.android.inject
 class UpdateInfoActivity : AppCompatActivity() {
 
     private val networkManager : NetworkManager by inject()
+    private val authManager : AuthManager by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,22 +103,28 @@ class UpdateInfoActivity : AppCompatActivity() {
                 gender,
                 edt_update_info_nickname.text.toString()
             )
-            networkManager.requestUpdateInfo("nickNameAndGender",data).safeEnqueue(
-                onSuccess = {
-                    toast("정보 수정이 완료되었습니다")
-                    finish()
-                },
-                onFailure = {
-                    if(it.code() == 403) {
-                        toast("재로그인을 해주세요!")
-                    } else {
-                        toast("업데이트에 실패했습니다")
-                    }
-                },
-                onError = {
-                    networkErrorToast()
+            if (newToken(authManager,networkManager)) {
+                if (newToken(authManager, networkManager)) {
+                    networkManager.requestUpdateInfo("nickNameAndGender", data).safeEnqueue(
+                        onSuccess = {
+                            toast("정보 수정이 완료되었습니다")
+                            finish()
+                        },
+                        onFailure = {
+                            if (it.code() == 403) {
+                                toast("재로그인을 해주세요!")
+                            } else {
+                                toast("업데이트에 실패했습니다")
+                            }
+                        },
+                        onError = {
+                            networkErrorToast()
+                        }
+                    )
+                } else {
+                    toast(resources.getString(R.string.errorNetwork))
                 }
-            )
+            }
         }
     }
 }

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.HorizontalItemDecorator
 import com.kravelteam.kravel_android.common.VerticalItemDecorator
+import com.kravelteam.kravel_android.common.newToken
 import com.kravelteam.kravel_android.data.response.CelebResponse
 import com.kravelteam.kravel_android.data.response.MediaResponse
 import com.kravelteam.kravel_android.network.AuthManager
@@ -24,6 +25,7 @@ import timber.log.Timber
 class DramaFragment() : Fragment() {
 
     private val networkManager : NetworkManager by inject()
+    private val authManager: AuthManager by inject()
     private lateinit var dramaAdapter : DramaRecyclerview
 
     override fun onCreateView(
@@ -48,21 +50,24 @@ class DramaFragment() : Fragment() {
             addItemDecoration(VerticalItemDecorator(18))
         }
 
-
-        networkManager.requestMediaList(0,100,"year,desc").safeEnqueue(
-            onSuccess = {
-                if(!it.data.result.content.isNullOrEmpty()) dramaAdapter.initData(it.data.result.content)
-            },
-            onFailure = {
-                if(it.code() == 403) {
-                    toast("재로그인을 해주세요!")
-                } else {
-                    toast("리스트 불러오기에 실패했습니다")
+        if (newToken(authManager,networkManager)) {
+            networkManager.requestMediaList(0, 100, "year,desc").safeEnqueue(
+                onSuccess = {
+                    if (!it.data.result.content.isNullOrEmpty()) dramaAdapter.initData(it.data.result.content)
+                },
+                onFailure = {
+                    if (it.code() == 403) {
+                        toast("재로그인을 해주세요!")
+                    } else {
+                        toast("리스트 불러오기에 실패했습니다")
+                    }
+                },
+                onError = {
+                    networkErrorToast()
                 }
-            },
-            onError = {
-                networkErrorToast()
-            }
-        )
+            )
+        } else {
+            toast(resources.getString(R.string.errorNetwork))
+        }
     }
 }
