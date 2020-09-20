@@ -123,4 +123,11 @@
     <string name="PhotoReview">"포토리뷰 "</string>
     <string name="Count">개</string>
     <string name="setLanguageTitle">언어를 설정해주세요.</string>
+    <string name="homePhotoReviewWarning1">아직 포토 리뷰가 없어요!\n 멋진 인증샷을 기다려볼까요?</string>
+    <string name="mapPhotoReveiwEmpty">아직 포토 리뷰가 없어요! \n 멋진 인증샷을 올려보세요!</string>
+    <string name="signupEmailWarning">이미 존재하는 이메일 입니다!</string>
+    <string name="homePopularEmpty">조금만 기다려주세요! \n 특별한 장소를 찾아올게요!</string>
+    <string name="errorReLogin">다시 로그인을 해주세요!</string>
+    <string name="errorClient">오류 발생! 개발자에게 문의 해주세요.</string>
+    <string name="errorNetwork">네트워크 에러가 발생하였습니다.</string>
 </resources>

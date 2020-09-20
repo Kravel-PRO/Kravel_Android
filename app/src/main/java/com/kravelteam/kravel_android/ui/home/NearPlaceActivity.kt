@@ -16,6 +16,7 @@ import com.kravelteam.kravel_android.ui.adapter.NearPlaceRecyclerview
 import com.kravelteam.kravel_android.ui.map.PlaceDetailActivity
 import com.kravelteam.kravel_android.util.networkErrorToast
 import com.kravelteam.kravel_android.util.safeEnqueue
+import com.kravelteam.kravel_android.util.toast
 import kotlinx.android.synthetic.main.activity_near_place.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
@@ -54,7 +55,7 @@ class NearPlaceActivity : AppCompatActivity() {
             }
 
         })
-        networkManager.getPlaceList(latitude,longitude).safeEnqueue(
+        networkManager.getPlaceList(latitude,longitude,0.025,0.03).safeEnqueue(
             onSuccess = {
                 rv_near_place.apply {
                     adapter = placeAdapter
@@ -64,7 +65,11 @@ class NearPlaceActivity : AppCompatActivity() {
                 placeAdapter.initData(it.data!!.result!!.content)
             },
             onFailure = {
-                Timber.e("onFailure")
+                if(it.code() == 403) {
+                    toast(resources.getString(R.string.errorReLogin))
+                } else {
+                    toast(resources.getString(R.string.errorClient))
+                }
             },
             onError = {
                 networkErrorToast()

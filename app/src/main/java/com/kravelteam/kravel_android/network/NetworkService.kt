@@ -46,7 +46,7 @@ interface NetworkService {
     @POST("/auth/sign-up")
     fun requestSignUp(
         @Body data: SignUpRequest
-    ) : Call<BaseResponse<Int>>
+    ) : Call<BaseResponse<Unit>>
 
     /**
      * 내 정보 가져오기
@@ -134,8 +134,8 @@ interface NetworkService {
      */
     @GET("/api/places/map")
     fun getMapMarkerList(
-        @Query("latitude") latitude : Double,
-        @Query("longitude") longitude : Double
+//        @Query("latitude") latitude : Double,
+//        @Query("longitude") longitude : Double
     ) : Call<BaseResponse<List<MapResponse>>>
 
     /**
@@ -144,7 +144,9 @@ interface NetworkService {
     @GET("/api/places")
     fun getPlaceList(
         @Query("latitude") latitude : Double,
-        @Query("longitude") longitude : Double
+        @Query("longitude") longitude : Double,
+        @Query("width") width : Double,
+        @Query("height") height : Double
     ) : Call<BaseResponse<PlaceDataResponse>>
 
     /**
@@ -159,7 +161,9 @@ interface NetworkService {
      * 인기있는 장소 리스트
      */
     @GET("/api/places")
-    fun getPopularPlaceList() : Call<BaseResponse<PlaceDataResponse>>
+    fun getPopularPlaceList(
+        @Query("review-count") bool : Boolean
+    ) : Call<BaseResponse<PlaceDataResponse>>
 
     /**
      * 장소 상세 - 포토 리뷰

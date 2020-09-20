@@ -16,6 +16,7 @@ import com.kravelteam.kravel_android.ui.login.LoginActivity
 import com.kravelteam.kravel_android.util.networkErrorToast
 import com.kravelteam.kravel_android.util.safeLoginEnqueue
 import com.kravelteam.kravel_android.util.startActivity
+import com.kravelteam.kravel_android.util.toast
 import kotlinx.android.synthetic.main.activity_set_language.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
@@ -65,14 +66,26 @@ class SetLanguageActivity : AppCompatActivity() {
                     authManager.setLang = "ENG"
                 }
             } else {
-                startActivity(LoginActivity::class,true)
                 authManager.first = true
                 if(Kor) {
                     authManager.setLang = "KOR"
+                    val ko = Locale.KOREA
+                    configuration.locale = ko
                 }
                 if(Eng) {
                     authManager.setLang = "ENG"
+                    val en = Locale.US
+                    configuration.locale = en
+
                 }
+                resources.updateConfiguration(configuration,resources.displayMetrics)
+                val intent = baseContext.packageManager.getLaunchIntentForPackage(
+                    baseContext.packageName
+                )
+                intent!!.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                intent!!.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                finish()
+                startActivity(intent)
             }
         }
 
@@ -94,7 +107,11 @@ class SetLanguageActivity : AppCompatActivity() {
 
             },
             onFailure = {
-                Timber.e("실패")
+                if(it.code() == 403) {
+                    toast(resources.getString(R.string.errorReLogin))
+                } else {
+                    toast(resources.getString(R.string.errorClient))
+                }
 
             },
             onError = {
