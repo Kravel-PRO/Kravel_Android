@@ -213,78 +213,84 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
         }
         checkBottom = true
         Timber.e("BottomSheetClick!!")
-        newToken(authManager,networkManager)
-        networkManager.getPlaceDetailList(placeId).safeEnqueue (
-            onSuccess = {
-                txt_bottom_title.text = it.data.result.title
-                txt_bottom_map_address1.text = it.data.result.location
-                it.data.result.filterImageUrl?.let {
-                    filterImg = it
-                }
-                it.data.result.subImageUrl?.let{
-                    subImg = it
-                }
-                placeName = it.data.result.title
-                if(!it.data.result.imageUrl.isNullOrBlank()) {
-                    GlideApp.with(img_bottom_place).load(it.data.result.imageUrl).into(img_bottom_place)
-                }
-                Timber.e("BottomSheetServer Connection!!")
-                img_bottom_place.setRound(10.dpToPx().toFloat())
-
-                mapFragment_Bottom!!.getMapAsync{navermap ->
-                    if(mapMarker?.map !=null) {
-                        mapMarker?.map = null
+        if(newToken(authManager,networkManager)) {
+            networkManager.getPlaceDetailList(placeId).safeEnqueue(
+                onSuccess = {
+                    txt_bottom_title.text = it.data.result.title
+                    txt_bottom_map_address1.text = it.data.result.location
+                    it.data.result.filterImageUrl?.let {
+                        filterImg = it
                     }
-                    val uiSettings = navermap.uiSettings
-                    uiSettings.isZoomControlEnabled = false
-                    uiSettings.isTiltGesturesEnabled = false
-                    uiSettings.isZoomGesturesEnabled = false
-                    uiSettings.isScrollGesturesEnabled = false
-                    val  Marker = Marker(LatLng(it.data.result.latitude,it.data.result.longitude))
-                    navermap.moveCamera(CameraUpdate.scrollTo(Marker!!.position))
-                    Marker!!.map = navermap
-                    Marker!!.icon = OverlayImage.fromResource(R.drawable.ic_mark_focus)
-                    mapMarker = Marker
-                }
-
-                if(!it.data.result.tags.isNullOrEmpty()) {
-                    val str = it.data.result.tags!!.split(",")
-                    rv_map_hashtag.setVisible()
-                    hashtagAdapter.initData(str)
-                } else {
-                    rv_map_hashtag.setGone()
-                }
-
-
-                initPhotoReview(it.data.result.placeId)
-                checkScrap = it.data.result.scrap
-                if(checkScrap) {
-                    GlideApp.with(KravelApplication.GlobalApp).load(R.drawable.ic_scrap_fill).into(cl_bottom_seat_place.img_user_scrap)
-                }
-                cl_bottom_seat_place.img_bottom_photo_edit.setOnDebounceClickListener {
-                    checkBottomSheetClick = true
-                    Intent(GlobalApp,PostReviewActivity::class.java).apply{
-                        putExtra("placeId",placeId)
-                        putExtra("part",part)
-                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    }.run {
-                        GlobalApp.startActivity(this)
+                    it.data.result.subImageUrl?.let {
+                        subImg = it
                     }
-                }
+                    placeName = it.data.result.title
+                    if (!it.data.result.imageUrl.isNullOrBlank()) {
+                        GlideApp.with(img_bottom_place).load(it.data.result.imageUrl)
+                            .into(img_bottom_place)
+                    }
+                    Timber.e("BottomSheetServer Connection!!")
+                    img_bottom_place.setRound(10.dpToPx().toFloat())
 
-            },
-            onFailure = {
-                if(it.code() == 403) {
-                    toast(resources.getString(R.string.errorReLogin))
-                } else {
-                    toast(resources.getString(R.string.errorClient))
-                }
+                    mapFragment_Bottom!!.getMapAsync { navermap ->
+                        if (mapMarker?.map != null) {
+                            mapMarker?.map = null
+                        }
+                        val uiSettings = navermap.uiSettings
+                        uiSettings.isZoomControlEnabled = false
+                        uiSettings.isTiltGesturesEnabled = false
+                        uiSettings.isZoomGesturesEnabled = false
+                        uiSettings.isScrollGesturesEnabled = false
+                        val Marker =
+                            Marker(LatLng(it.data.result.latitude, it.data.result.longitude))
+                        navermap.moveCamera(CameraUpdate.scrollTo(Marker!!.position))
+                        Marker!!.map = navermap
+                        Marker!!.icon = OverlayImage.fromResource(R.drawable.ic_mark_focus)
+                        mapMarker = Marker
+                    }
 
-            },
-            onError = {
-                networkErrorToast()
-            }
-        )
+                    if (!it.data.result.tags.isNullOrEmpty()) {
+                        val str = it.data.result.tags!!.split(",")
+                        rv_map_hashtag.setVisible()
+                        hashtagAdapter.initData(str)
+                    } else {
+                        rv_map_hashtag.setGone()
+                    }
+
+
+                    initPhotoReview(it.data.result.placeId)
+                    checkScrap = it.data.result.scrap
+                    if (checkScrap) {
+                        GlideApp.with(KravelApplication.GlobalApp).load(R.drawable.ic_scrap_fill)
+                            .into(cl_bottom_seat_place.img_user_scrap)
+                    }
+                    cl_bottom_seat_place.img_bottom_photo_edit.setOnDebounceClickListener {
+                        checkBottomSheetClick = true
+                        Intent(GlobalApp, PostReviewActivity::class.java).apply {
+                            putExtra("placeId", placeId)
+                            putExtra("part", part)
+                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        }.run {
+                            GlobalApp.startActivity(this)
+                        }
+                    }
+
+                },
+                onFailure = {
+                    if (it.code() == 403) {
+                        toast(resources.getString(R.string.errorReLogin))
+                    } else {
+                        toast(resources.getString(R.string.errorClient))
+                    }
+
+                },
+                onError = {
+                    networkErrorToast()
+                }
+            )
+        } else {
+            toast(resources.getString(R.string.errorNetwork))
+        }
         cl_bottom_seat_place.setVisible()
         togglebtn_gps.setGone()
         img_reset.setGone()
@@ -325,43 +331,51 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
             if(checkScrap) {
                 Timber.e("checkScrap true -> false")
                 //checkScrap == TRUE
-                newToken(authManager,networkManager)
-                networkManager.postScrap(placeId, ScrapBody(false) ).safeEnqueue (
-                    onSuccess = {
-                        checkScrap = false
-                        GlideApp.with(GlobalApp).load(R.drawable.ic_scrap).into(cl_bottom_seat_place.img_user_scrap)
-                    }, onFailure = {
-                        if(it.code() == 403) {
-                            toast(resources.getString(R.string.errorReLogin))
-                        } else {
-                            toast(resources.getString(R.string.errorClient))
-                        }
+                if(newToken(authManager,networkManager)) {
+                    networkManager.postScrap(placeId, ScrapBody(false)).safeEnqueue(
+                        onSuccess = {
+                            checkScrap = false
+                            GlideApp.with(GlobalApp).load(R.drawable.ic_scrap)
+                                .into(cl_bottom_seat_place.img_user_scrap)
+                        }, onFailure = {
+                            if (it.code() == 403) {
+                                toast(resources.getString(R.string.errorReLogin))
+                            } else {
+                                toast(resources.getString(R.string.errorClient))
+                            }
 
-                    },
-                    onError = {
-                        networkErrorToast()
-                    })
-
+                        },
+                        onError = {
+                            networkErrorToast()
+                        })
+                } else {
+                    toast(resources.getString(R.string.errorNetwork))
+                }
 
             } else {
                 Timber.e("checkScrap false -> true")
-                newToken(authManager,networkManager)
-                networkManager.postScrap(placeId, ScrapBody(true)).safeEnqueue (
-                    onSuccess = {
-                        checkScrap = true
-                        GlideApp.with(KravelApplication.GlobalApp).load(R.drawable.ic_scrap_fill).into(cl_bottom_seat_place.img_user_scrap)
+                if(newToken(authManager,networkManager)) {
+                    networkManager.postScrap(placeId, ScrapBody(true)).safeEnqueue(
+                        onSuccess = {
+                            checkScrap = true
+                            GlideApp.with(KravelApplication.GlobalApp)
+                                .load(R.drawable.ic_scrap_fill)
+                                .into(cl_bottom_seat_place.img_user_scrap)
 
-                    }, onFailure = {
-                        if(it.code() == 403) {
-                            toast(resources.getString(R.string.errorReLogin))
-                        } else {
-                            toast(resources.getString(R.string.errorClient))
-                        }
+                        }, onFailure = {
+                            if (it.code() == 403) {
+                                toast(resources.getString(R.string.errorReLogin))
+                            } else {
+                                toast(resources.getString(R.string.errorClient))
+                            }
 
-                    },
-                    onError = {
-                        networkErrorToast()
-                    })
+                        },
+                        onError = {
+                            networkErrorToast()
+                        })
+                }else{
+                    toast(resources.getString(R.string.errorNetwork))
+                }
             }
         }
 
@@ -369,32 +383,35 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
 
     private fun initPhotoReview(placeId: Int) {
         photoAdapter = PhotoReviewRecyclerview("default","place",placeId)
-        newToken(authManager,networkManager)
-        networkManager.getPlaceReview(placeId,0,7,"reviewLikes-count,desc").safeEnqueue(
-            onSuccess = {
-                if(!it.data.result.content.isNullOrEmpty()) {
-                    txt_bottom_photo_empty.setGone()
-                    photoAdapter.initData(it.data.result.content)
-                    cl_bottom_seat_place.rv_home_photo_review.setVisible()
-                    return@safeEnqueue
-                } else {
-                    cl_bottom_seat_place.rv_home_photo_review.setGone()
-                    txt_bottom_photo_empty.setVisible()
+        if(newToken(authManager,networkManager)) {
+            networkManager.getPlaceReview(placeId, 0, 7, "reviewLikes-count,desc").safeEnqueue(
+                onSuccess = {
+                    if (!it.data.result.content.isNullOrEmpty()) {
+                        txt_bottom_photo_empty.setGone()
+                        photoAdapter.initData(it.data.result.content)
+                        cl_bottom_seat_place.rv_home_photo_review.setVisible()
+                        return@safeEnqueue
+                    } else {
+                        cl_bottom_seat_place.rv_home_photo_review.setGone()
+                        txt_bottom_photo_empty.setVisible()
 
-                }
-            },
-            onFailure = {
-                if(it.code() == 403) {
-                    toast(resources.getString(R.string.errorReLogin))
-                } else {
-                    toast(resources.getString(R.string.errorClient))
-                }
+                    }
+                },
+                onFailure = {
+                    if (it.code() == 403) {
+                        toast(resources.getString(R.string.errorReLogin))
+                    } else {
+                        toast(resources.getString(R.string.errorClient))
+                    }
 
-            },
-            onError = {
-                networkErrorToast()
-            }
-        )
+                },
+                onError = {
+                    networkErrorToast()
+                }
+            )
+        } else {
+            toast(resources.getString(R.string.errorNetwork))
+        }
 
         cl_bottom_seat_place.rv_home_photo_review.apply {
             adapter = photoAdapter
@@ -424,86 +441,96 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
             }
 
         })
-        newToken(authManager,networkManager)
-        networkManager.getPlaceList(latitude, longitude,scale,scale).safeEnqueue (
-            onSuccess = {
-                nearAdapter.initData(it.data!!.result!!.content)
-            },
-            onFailure = {
-                if(it.code() == 403) {
-                    toast(resources.getString(R.string.errorReLogin))
-                } else {
-                    toast(resources.getString(R.string.errorClient))
-                }
+        if(newToken(authManager,networkManager)) {
+            networkManager.getPlaceList(latitude, longitude, scale, scale).safeEnqueue(
+                onSuccess = {
+                    nearAdapter.initData(it.data!!.result!!.content)
+                },
+                onFailure = {
+                    if (it.code() == 403) {
+                        toast(resources.getString(R.string.errorReLogin))
+                    } else {
+                        toast(resources.getString(R.string.errorClient))
+                    }
 
-            },
-            onError = {
-                networkErrorToast()
-            }
-        )
+                },
+                onError = {
+                    networkErrorToast()
+                }
+            )
+        } else {
+            toast(resources.getString(R.string.errorNetwork))
+        }
     }
 
     private fun initMarker() {
-        newToken(authManager,networkManager)
-        networkManager.getMapMarkerList().safeEnqueue (
-            onSuccess = {
-                for(i in 0..it.data.result.size-1) {
-                    val marker = com.naver.maps.map.overlay.Marker()
-                    marker.position = LatLng(it.data.result.get(i).latitude, it.data.result.get(i).longitude)
-                    marker.map = naverMap
-                    marker.tag = TagMarkerData(it.data.result.get(i).placeId, false)
-                    marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_default)
-                    val listener = Overlay.OnClickListener { overlay ->
+        if(newToken(authManager,networkManager)) {
+            networkManager.getMapMarkerList().safeEnqueue(
+                onSuccess = {
+                    for (i in 0..it.data.result.size - 1) {
+                        val marker = com.naver.maps.map.overlay.Marker()
+                        marker.position =
+                            LatLng(it.data.result.get(i).latitude, it.data.result.get(i).longitude)
+                        marker.map = naverMap
+                        marker.tag = TagMarkerData(it.data.result.get(i).placeId, false)
+                        marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_default)
+                        val listener = Overlay.OnClickListener { overlay ->
 
-                        val markerData = marker.tag!! as TagMarkerData
+                            val markerData = marker.tag!! as TagMarkerData
 
-                        if(preMarker== null){
-                            if(!markerData.markerClick) {
-                                markerData.markerClick = true
-                                preMarker = marker
-                                marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_focus)
-                                rv_map_near_place.setGone()
-                                initBottomSheet(marker)
-                            }
-                        } else {
-                            if (preMarker == marker) {
-                                markerData.markerClick = false
-                                preMarker = null
-                                marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_default)
-                                rv_map_near_place.setVisible()
-                                cl_bottom_seat_place.setGone()
+                            if (preMarker == null) {
+                                if (!markerData.markerClick) {
+                                    markerData.markerClick = true
+                                    preMarker = marker
+                                    marker.icon =
+                                        OverlayImage.fromResource(R.drawable.ic_mark_focus)
+                                    rv_map_near_place.setGone()
+                                    initBottomSheet(marker)
+                                }
                             } else {
-                                val preMarkerData = preMarker!!.tag!! as TagMarkerData
-                                preMarkerData.markerClick = false
-                                preMarker!!.icon =
-                                    OverlayImage.fromResource(R.drawable.ic_mark_default)
-                                markerData.markerClick = true
-                                marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_focus)
-                                preMarker = marker
-                                rv_map_near_place.setGone()
-                                initBottomSheet(marker)
+                                if (preMarker == marker) {
+                                    markerData.markerClick = false
+                                    preMarker = null
+                                    marker.icon =
+                                        OverlayImage.fromResource(R.drawable.ic_mark_default)
+                                    rv_map_near_place.setVisible()
+                                    cl_bottom_seat_place.setGone()
+                                } else {
+                                    val preMarkerData = preMarker!!.tag!! as TagMarkerData
+                                    preMarkerData.markerClick = false
+                                    preMarker!!.icon =
+                                        OverlayImage.fromResource(R.drawable.ic_mark_default)
+                                    markerData.markerClick = true
+                                    marker.icon =
+                                        OverlayImage.fromResource(R.drawable.ic_mark_focus)
+                                    preMarker = marker
+                                    rv_map_near_place.setGone()
+                                    initBottomSheet(marker)
+                                }
                             }
+                            true
                         }
-                        true
+                        marker.onClickListener = listener
+
                     }
-                    marker.onClickListener = listener
 
+                },
+                onFailure = {
+                    if (it.code() == 403) {
+                        toast(resources.getString(R.string.errorReLogin))
+                    } else {
+                        toast(resources.getString(R.string.errorClient))
+                    }
+
+                },
+                onError = {
+                    networkErrorToast()
                 }
 
-            },
-            onFailure = {
-                if(it.code() == 403) {
-                    toast(resources.getString(R.string.errorReLogin))
-                } else {
-                    toast(resources.getString(R.string.errorClient))
-                }
-
-            },
-            onError = {
-                networkErrorToast()
-            }
-
-        )
+            )
+        } else {
+            toast(resources.getString(R.string.errorNetwork))
+        }
     }
     /*
     핸드폰 gps 가 꺼져있을 시 , gps를 키기위한 함수

@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.kravelteam.kravel_android.KravelApplication
 import com.kravelteam.kravel_android.R
+import com.kravelteam.kravel_android.common.newToken
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.network.AuthManager
 import com.kravelteam.kravel_android.network.NetworkManager
@@ -51,29 +52,32 @@ class UserFragment : Fragment(), fragmentBackPressed {
     }
 
     private fun initGetUserInfo(){
+        if(newToken(authManager,networkManager)) {
+            networkManager.requestUserInfo().safeEnqueue(
+                onSuccess = {
+                    nickname = it.data.result.nickName
+                    gender = it.data.result.gender
+                    if (authManager.setLang == "KOR") {
+                        txt_user_nickname.text = "${nickname}님의 여행을 함께해요!"
+                    } else {
+                        txt_user_nickname.text = "Let's go on ${nickname}'s trip together!"
+                    }
 
-        networkManager.requestUserInfo().safeEnqueue(
-            onSuccess = {
-                nickname = it.data.result.nickName
-                gender = it.data.result.gender
-                if (authManager.setLang=="KOR") {
-                    txt_user_nickname.text = "${nickname}님의 여행을 함께해요!"
-                } else {
-                    txt_user_nickname.text = "Let's go on ${nickname}'s trip together!"
+                },
+                onFailure = {
+                    if (it.code() == 403) {
+                        toast("재로그인을 해주세요!")
+                    } else {
+                        toast("업데이트에 실패했습니다")
+                    }
+                },
+                onError = {
+                    networkErrorToast()
                 }
-
-            },
-            onFailure = {
-                if(it.code() == 403) {
-                    toast("재로그인을 해주세요!")
-                } else {
-                    toast("업데이트에 실패했습니다")
-                }
-            },
-            onError = {
-                networkErrorToast()
-            }
-        )
+            )
+        }else{
+            toast(resources.getString(R.string.errorNetwork))
+        }
     }
 
     private fun initSetting(){

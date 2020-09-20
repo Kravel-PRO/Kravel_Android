@@ -107,110 +107,120 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             if(checkScrap) {
                 Timber.e("checkScrap true -> false")
                 //checkScrap == TRUE
-                newToken(authManager,networkManager)
-                networkManager.postScrap(placeId, ScrapBody(false) ).safeEnqueue (
+                if (newToken(authManager, networkManager)){
+                    networkManager.postScrap(placeId, ScrapBody(false)).safeEnqueue(
                         onSuccess = {
                             checkScrap = false
-                            GlideApp.with(img_map_detail_scrap).load(R.drawable.ic_scrap).into(img_map_detail_scrap)
+                            GlideApp.with(img_map_detail_scrap).load(R.drawable.ic_scrap)
+                                .into(img_map_detail_scrap)
                         }, onFailure = {
-                            if(it.code() == 403) {
+                            if (it.code() == 403) {
                                 toast(resources.getString(R.string.errorReLogin))
                             } else {
                                 toast(resources.getString(R.string.errorClient))
                             }
 
-                    },
+                        },
                         onError = {
                             networkErrorToast()
-                    })
-
+                        }
+                    )
+                } else {
+                    toast(resources.getString(R.string.errorNetwork))
+                }
 
             } else {
                 Timber.e("checkScrap false -> true")
-                newToken(authManager,networkManager)
-                networkManager.postScrap(placeId, ScrapBody(true)).safeEnqueue (
-                    onSuccess = {
-                        checkScrap = true
-                        GlideApp.with(img_map_detail_scrap).load(R.drawable.ic_scrap_fill).into(img_map_detail_scrap)
+                if(newToken(authManager,networkManager)) {
+                    networkManager.postScrap(placeId, ScrapBody(true)).safeEnqueue(
+                        onSuccess = {
+                            checkScrap = true
+                            GlideApp.with(img_map_detail_scrap).load(R.drawable.ic_scrap_fill)
+                                .into(img_map_detail_scrap)
 
-                    }, onFailure = {
-                        if(it.code() == 403) {
-                            toast(resources.getString(R.string.errorReLogin))
-                        } else {
-                            toast(resources.getString(R.string.errorClient))
-                        }
+                        }, onFailure = {
+                            if (it.code() == 403) {
+                                toast(resources.getString(R.string.errorReLogin))
+                            } else {
+                                toast(resources.getString(R.string.errorClient))
+                            }
 
-                    },
-                    onError = {
-                        networkErrorToast()
-                    })
+                        },
+                        onError = {
+                            networkErrorToast()
+                        })
+                } else {
+                    toast(resources.getString(R.string.errorNetwork))
+                }
             }
         }
 
     }
     private fun initSetting() {
-        newToken(authManager,networkManager)
-        networkManager.getPlaceDetailList(placeId).safeEnqueue(
-            onSuccess = {
-                txt_map_detail_title.text = it.data.result.title
-                txt_map_detail_address.text = it.data.result.location
-                txt_map_detail_address2.text = it.data.result.location
-                it.data.result.filterImageUrl?.let {
-                    filterImg = it
+        if(newToken(authManager,networkManager)) {
+            networkManager.getPlaceDetailList(placeId).safeEnqueue(
+                onSuccess = {
+                    txt_map_detail_title.text = it.data.result.title
+                    txt_map_detail_address.text = it.data.result.location
+                    txt_map_detail_address2.text = it.data.result.location
+                    it.data.result.filterImageUrl?.let {
+                        filterImg = it
+                    }
+                    it.data.result.subImageUrl?.let {
+                        subImg = it
+                    }
+                    placeName = it.data.result.title
+                    if (!it.data.result.imageUrl.isNullOrBlank()) {
+                        image.add(it.data.result.imageUrl)
+                    }
+                    if (!it.data.result.subImageUrl.isNullOrBlank()) {
+                        image.add(it.data.result.subImageUrl)
+
+                    } else {
+                        image.add(R.color.colorDarkGrey.toString())
+                    }
+
+                    if (!image.isNullOrEmpty()) {
+                        imageAdapter.initData(image)
+
+                    }
+
+
+
+                    latitude = it.data.result.latitude
+                    longitude = it.data.result.longitude
+                    txt_map_detail_bus_content.text = it.data.result.bus
+                    txt_map_detail_subway_content.text = it.data.result.subway
+
+                    initNearPlaceRecycler(it.data.result.latitude, it.data.result.longitude)
+
+                    checkScrap = it.data.result.scrap
+                    Timber.e("checkScrap :::::: " + checkScrap)
+                    if (checkScrap) {
+                        GlideApp.with(applicationContext).load(R.drawable.ic_scrap_fill)
+                            .into(img_map_detail_scrap)
+                    }
+
+                    initMap()
+                    initHashTag(it.data.result.tags)
+
+
+                },
+                onFailure = {
+                    if (it.code() == 403) {
+                        toast(resources.getString(R.string.errorReLogin))
+                    } else {
+                        toast(resources.getString(R.string.errorClient))
+                    }
+
+                },
+                onError = {
+                    networkErrorToast()
                 }
-                it.data.result.subImageUrl?.let{
-                    subImg = it
-                }
-                placeName = it.data.result.title
-                if (!it.data.result.imageUrl.isNullOrBlank()) {
-                    image.add(it.data.result.imageUrl)
-                }
-                if(!it.data.result.subImageUrl.isNullOrBlank()) {
-                    image.add(it.data.result.subImageUrl)
-
-                }
-                else {
-                    image.add(R.color.colorDarkGrey.toString())
-                }
-
-                if(!image.isNullOrEmpty()) {
-                    imageAdapter.initData(image)
-
-                }
-
-
-
-                latitude = it.data.result.latitude
-                longitude = it.data.result.longitude
-                txt_map_detail_bus_content.text = it.data.result.bus
-                txt_map_detail_subway_content.text = it.data.result.subway
-
-                initNearPlaceRecycler(it.data.result.latitude, it.data.result.longitude)
-
-                checkScrap = it.data.result.scrap
-                Timber.e("checkScrap :::::: "+checkScrap)
-                if(checkScrap) {
-                    GlideApp.with(applicationContext).load(R.drawable.ic_scrap_fill).into(img_map_detail_scrap)
-                }
-
-                initMap()
-                initHashTag(it.data.result.tags)
-
-
-            },
-            onFailure = {
-                if(it.code() == 403) {
-                    toast(resources.getString(R.string.errorReLogin))
-                } else {
-                    toast(resources.getString(R.string.errorClient))
-                }
-
-            },
-            onError = {
-                networkErrorToast()
-            }
-        )
-
+            )
+        } else {
+            toast(resources.getString(R.string.errorNetwork))
+        }
 
         initPhotoRecycler()
     }
@@ -283,32 +293,34 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
     private fun initPhotoRecycler() {
-        newToken(authManager,networkManager)
-        networkManager.getPlaceReview(placeId,0,7,"reviewLikes-count,desc").safeEnqueue(
-            onSuccess = {
+        if(newToken(authManager,networkManager)) {
+            networkManager.getPlaceReview(placeId, 0, 7, "reviewLikes-count,desc").safeEnqueue(
+                onSuccess = {
 
-                if (!it.data.result.content.isNullOrEmpty()) {
-                    photoAdapter.initData(it.data.result.content)
-                    txt_map_detail_photo_review_empty.setGone()
-                    rv_map_detail_photo.setVisible()
-                } else {
-                    rv_map_detail_photo.setGone()
-                    txt_map_detail_photo_review_empty.setVisible()
+                    if (!it.data.result.content.isNullOrEmpty()) {
+                        photoAdapter.initData(it.data.result.content)
+                        txt_map_detail_photo_review_empty.setGone()
+                        rv_map_detail_photo.setVisible()
+                    } else {
+                        rv_map_detail_photo.setGone()
+                        txt_map_detail_photo_review_empty.setVisible()
+                    }
+                },
+                onFailure = {
+                    if (it.code() == 403) {
+                        toast(resources.getString(R.string.errorReLogin))
+                    } else {
+                        toast(resources.getString(R.string.errorClient))
+                    }
+
+                },
+                onError = {
+                    networkErrorToast()
                 }
-            },
-            onFailure = {
-                if(it.code() == 403) {
-                    toast(resources.getString(R.string.errorReLogin))
-                } else {
-                    toast(resources.getString(R.string.errorClient))
-                }
-
-            },
-            onError = {
-                networkErrorToast()
-            }
-        )
-
+            )
+        } else {
+            toast(resources.getString(R.string.errorNetwork))
+        }
     }
 
     override fun onMapReady(naverMap: NaverMap) {
