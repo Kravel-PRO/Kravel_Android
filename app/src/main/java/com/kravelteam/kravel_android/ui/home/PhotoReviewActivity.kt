@@ -51,7 +51,6 @@ class PhotoReviewActivity : AppCompatActivity() {
                     }
                     photoAdapter.initData(data)
                     if (intent.getIntExtra("position", 0) != 0) {
-                        toast("실행")
                         data.forEachIndexed { index, data ->
                             if (data.reviewId == intent.getIntExtra("position", 0))
                                 position = index

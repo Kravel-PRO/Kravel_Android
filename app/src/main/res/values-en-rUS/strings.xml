@@ -140,4 +140,5 @@
     <string name="succesSaveImg">Success to save imgae.</string>
     <string name="allowGallery">You can save pictures
         \nafter allowing access to the gallery.</string>
+    <string name="deletePhoto">Delete photo review.</string>
 </resources>

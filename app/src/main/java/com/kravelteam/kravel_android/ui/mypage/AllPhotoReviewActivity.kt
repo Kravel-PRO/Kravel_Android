@@ -120,7 +120,7 @@ class AllPhotoReviewActivity : AppCompatActivity() {
                             onSuccess = {
                                 delete()
                                 dialog.dismiss()
-                                toast("삭제되었습니다")
+                                toast(resources.getString(R.string.deletePhoto))
                             },
                             onFailure = {
                                 if(it.code() == 403) {
@@ -194,7 +194,6 @@ class AllPhotoReviewActivity : AppCompatActivity() {
                     val data = it.data.result.content
                     allPhotoReviewAdapter.initData(data)
                     if(intent.getIntExtra("position",0) != 0) {
-                        toast("실행")
                         data.forEachIndexed{ index, data ->
                             if(data.reviewId == intent.getIntExtra("position",0))
                                 position = index
@@ -225,7 +224,6 @@ class AllPhotoReviewActivity : AppCompatActivity() {
                     val data = it.data.result.content
                     allPhotoReviewAdapter.initData(data)
                     if(intent.getIntExtra("position",0) != 0) {
-                        toast("실행")
                         data.forEachIndexed{ index, data ->
                             if(data.reviewId == intent.getIntExtra("position",0))
                                 position = index
@@ -256,7 +254,6 @@ class AllPhotoReviewActivity : AppCompatActivity() {
                     val data = it.data.result.content
                     allPhotoReviewAdapter.initData(data)
                     if(intent.getIntExtra("position",0) != 0) {
-                        toast("실행")
                         data.forEachIndexed{ index, data ->
                             if(data.reviewId == intent.getIntExtra("position",0))
                                 position = index

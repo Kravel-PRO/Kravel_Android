@@ -97,7 +97,11 @@ class CameraActivity : AppCompatActivity(){
     }
 
     private fun showEx(){
-        txt_camera_concept_example.setOnDebounceClickListener {
+        intent.getStringExtra("subImg")?.let {
+            GlideApp.with(this).load(it).into(img_camera_concept_example)
+            img_camera_concept_example.setRound(10.dpToPx().toFloat())
+        }
+        img_camera_concept_example.setOnDebounceClickListener {
             Intent(KravelApplication.GlobalApp,ExampleActivity::class.java).apply {
                 intent.getStringExtra("subImg")?.let {
                     putExtra("imgEx",it)
@@ -185,7 +189,6 @@ class CameraActivity : AppCompatActivity(){
 
                     val mimeType = MimeTypeMap.getSingleton()
                         .getMimeTypeFromExtension(savedUri?.toFile()?.extension)
-                    Timber.e(savedUri?.toFile()?.absolutePath)
                     MediaScannerConnection.scanFile(
                         applicationContext,
                         arrayOf(savedUri?.toFile()?.absolutePath),
