@@ -47,6 +47,8 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_place_detail)
 
+
+
         if (Build.VERSION.SDK_INT > 9) {
             val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
             StrictMode.setThreadPolicy(policy)
@@ -78,6 +80,14 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
         img_map_detail_arrow.setOnClickListener {
            finish()
+        }
+
+        vp_map_detail_place.apply {
+            adapter = imageAdapter
+            ar_indicator.numberOfIndicators = 2
+            if(vp_map_detail_place.onFlingListener == null) {
+                ar_indicator.attachTo(this, true)
+            }
         }
 
 
@@ -158,17 +168,10 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                     image.add(R.color.colorDarkGrey.toString())
                 }
 
-                vp_map_detail_place.apply {
-                    adapter = imageAdapter
-                    ar_indicator.attachTo(this,true)
-                }
-
-
                 if(!image.isNullOrEmpty()) {
                     imageAdapter.initData(image)
-                    ar_indicator.numberOfIndicators = image.size
-                }
 
+                }
 
 
 
