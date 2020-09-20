@@ -1,10 +1,6 @@
 package com.kravelteam.kravel_android.ui.adapter
 
-import android.app.AlertDialog
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Handler
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
@@ -16,7 +12,6 @@ import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.GlideApp
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.response.PhotoReviewData
-import com.kravelteam.kravel_android.ui.login.LoginActivity
 import com.kravelteam.kravel_android.util.inflate
 import com.kravelteam.kravel_android.util.setGone
 import com.kravelteam.kravel_android.util.setVisible
@@ -25,7 +20,7 @@ import kotlinx.android.synthetic.main.dialog_logout.view.*
 
 class AllPhotoReviewRecyclerview(
     val checkReview: String,
-    val onLike: (Boolean,Int) -> Unit,
+    val onLike: (Boolean, Int, () -> Unit) -> Unit,
     val onDelete: (Int, () -> Unit) -> Unit,
     val onAllDelete: () -> Unit
 ): RecyclerView.Adapter<AllPhotoReviewRecyclerview.ViewHolder>(){
@@ -85,17 +80,18 @@ class AllPhotoReviewRecyclerview(
                 txtPlaceName.setGone()
                 imgLike.isSelected = item.like
                 imgLike.setOnDebounceClickListener {
-                    var now = item.likeCount
-                    if(it.isSelected) {
-                        now--
-                        it.isSelected = false
-                        txtLikeCount.text = (now).toString()
-                    } else {
-                        now++
-                        it.isSelected = true
-                        txtLikeCount.text = (now).toString()
+                    onLike(imgLike.isSelected,item.reviewId) {
+                        var now = item.likeCount
+                        if(it.isSelected) {
+                            now--
+                            it.isSelected = false
+                            txtLikeCount.text = (now).toString()
+                        } else {
+                            now++
+                            it.isSelected = true
+                            txtLikeCount.text = (now).toString()
+                        }
                     }
-                    onLike(imgLike.isSelected,item.reviewId)
                 }
             }
         }

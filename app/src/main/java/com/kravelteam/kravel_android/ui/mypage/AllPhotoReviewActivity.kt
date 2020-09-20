@@ -6,7 +6,6 @@ import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.TextureView
 import android.widget.TextView
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.newToken
@@ -81,12 +80,18 @@ class AllPhotoReviewActivity : AppCompatActivity() {
     private fun initRecycler(){
         allPhotoReviewAdapter = AllPhotoReviewRecyclerview(
             checkReview,
-            onLike = { like,reviewId ->
+            onLike = { like: Boolean, reviewId: Int, likeSuccess: ()-> Unit ->
                 if (newToken(authManager,networkManager)) {
                     networkManager.postLikes(id,reviewId, ReviewLikeBody(like)).safeEnqueue(
                         onSuccess = {
+                            likeSuccess()
                         },
                         onFailure = {
+                            if(it.code() == 403) {
+                                toast(resources.getString(R.string.errorReLogin))
+                            } else {
+                                toast(resources.getString(R.string.errorClient))
+                            }
                         },
                         onError = {
                             networkErrorToast()
@@ -118,7 +123,11 @@ class AllPhotoReviewActivity : AppCompatActivity() {
                                 toast("삭제되었습니다")
                             },
                             onFailure = {
-
+                                if(it.code() == 403) {
+                                    toast(resources.getString(R.string.errorReLogin))
+                                } else {
+                                    toast(resources.getString(R.string.errorClient))
+                                }
                             },
                             onError = {
                                 networkErrorToast()
@@ -163,7 +172,11 @@ class AllPhotoReviewActivity : AppCompatActivity() {
                     }
                 },
                 onFailure = {
-                    toast("실패")
+                    if(it.code() == 403) {
+                        toast(resources.getString(R.string.errorReLogin))
+                    } else {
+                        toast(resources.getString(R.string.errorClient))
+                    }
                 },
                 onError = {
                     networkErrorToast()
@@ -190,7 +203,11 @@ class AllPhotoReviewActivity : AppCompatActivity() {
                     }
                 },
                 onFailure = {
-                    toast("실패")
+                    if(it.code() == 403) {
+                        toast(resources.getString(R.string.errorReLogin))
+                    } else {
+                        toast(resources.getString(R.string.errorClient))
+                    }
                 },
                 onError = {
                     networkErrorToast()
@@ -217,7 +234,11 @@ class AllPhotoReviewActivity : AppCompatActivity() {
                     }
                 },
                 onFailure = {
-                    toast("실패")
+                    if(it.code() == 403) {
+                        toast(resources.getString(R.string.errorReLogin))
+                    } else {
+                        toast(resources.getString(R.string.errorClient))
+                    }
                 },
                 onError = {
                     networkErrorToast()
@@ -244,7 +265,11 @@ class AllPhotoReviewActivity : AppCompatActivity() {
                     }
                 },
                 onFailure = {
-                    toast("실패")
+                    if(it.code() == 403) {
+                        toast(resources.getString(R.string.errorReLogin))
+                    } else {
+                        toast(resources.getString(R.string.errorClient))
+                    }
                 },
                 onError = {
                     networkErrorToast()

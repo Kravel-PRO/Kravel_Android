@@ -57,7 +57,7 @@ class SearchContentActivity : AppCompatActivity() {
         edt_search_word.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 if(edt_search_word.text.toString() == ""){
-                    toast("검색어 입력을 확인해주세요!")
+                    toast(resources.getString(R.string.errorSearch))
                 } else {
                     addRecentWord(edt_search_word.text.toString())
                     hideKeyboard()
@@ -67,7 +67,7 @@ class SearchContentActivity : AppCompatActivity() {
         }
         img_search_btn.setOnDebounceClickListener {
             if(edt_search_word.text.toString() == ""){
-                toast("검색어 입력을 확인해주세요!")
+                toast(resources.getString(R.string.errorSearch))
             } else {
                 addRecentWord(edt_search_word.text.toString())
                 hideKeyboard()

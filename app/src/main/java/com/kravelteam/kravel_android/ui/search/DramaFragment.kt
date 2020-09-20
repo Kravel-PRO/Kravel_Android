@@ -56,10 +56,10 @@ class DramaFragment() : Fragment() {
                     if (!it.data.result.content.isNullOrEmpty()) dramaAdapter.initData(it.data.result.content)
                 },
                 onFailure = {
-                    if (it.code() == 403) {
-                        toast("재로그인을 해주세요!")
+                    if(it.code() == 403) {
+                        toast(resources.getString(R.string.errorReLogin))
                     } else {
-                        toast("리스트 불러오기에 실패했습니다")
+                        toast(resources.getString(R.string.errorClient))
                     }
                 },
                 onError = {

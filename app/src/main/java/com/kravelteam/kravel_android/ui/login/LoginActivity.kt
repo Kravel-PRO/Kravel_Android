@@ -85,7 +85,7 @@ class LoginActivity : AppCompatActivity() {
                     if(it.code() == 400){
                         initDialog()
                     } else {
-                        toast("로그인에 실패했습니다.")
+                        toast(resources.getString(R.string.errorClient))
                     }
                 },
                 onError = {

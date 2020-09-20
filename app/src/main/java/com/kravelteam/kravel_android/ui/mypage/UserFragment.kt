@@ -65,10 +65,10 @@ class UserFragment : Fragment(), fragmentBackPressed {
 
                 },
                 onFailure = {
-                    if (it.code() == 403) {
-                        toast("재로그인을 해주세요!")
+                    if(it.code() == 403) {
+                        toast(resources.getString(R.string.errorReLogin))
                     } else {
-                        toast("업데이트에 실패했습니다")
+                        toast(resources.getString(R.string.errorClient))
                     }
                 },
                 onError = {

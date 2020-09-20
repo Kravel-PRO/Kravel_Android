@@ -26,6 +26,7 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.InputStream
 
+@Suppress("DEPRECATION")
 class ReportActivity : AppCompatActivity() {
 
     private var selectedPicUri : Uri? = null
@@ -54,12 +55,12 @@ class ReportActivity : AppCompatActivity() {
     private fun initChangeEditText(){
         edt_report_place_name.onTextChangeListener(
             onTextChanged = {
-                if(!edt_report_place_name.text.isNullOrBlank()) {
+                checkTitle = if(!edt_report_place_name.text.isNullOrBlank()) {
                     edt_report_place_name.setBackgroundResource(R.drawable.signup_edit_style_true)
-                    checkTitle = true
+                    true
                 } else {
                     edt_report_place_name.setBackgroundResource(R.drawable.signup_edit_style)
-                    checkTitle = false
+                    false
                 }
                 enableCompleteBtn()
             }
@@ -83,12 +84,12 @@ class ReportActivity : AppCompatActivity() {
         )
         edt_report_place_tag.onTextChangeListener(
             onTextChanged = {
-                if(!edt_report_place_tag.text.isNullOrBlank()) {
+                checkTag = if(!edt_report_place_tag.text.isNullOrBlank()) {
                     edt_report_place_tag.setBackgroundResource(R.drawable.signup_edit_style_true)
-                    checkTag = true
+                    true
                 } else {
                     edt_report_place_tag.setBackgroundResource(R.drawable.signup_edit_style)
-                    checkTag = false
+                    false
                 }
                 enableCompleteBtn()
             }
@@ -168,12 +169,16 @@ class ReportActivity : AppCompatActivity() {
                     finish()
                 },
                 onFailure = {
-                    if(it.code() == 400){
-                        toast("이미지를 확인해주세요!")
-                    } else if(it.code() == 403){
-                        toast("재로그인을 해주세요!")
-                    } else {
-                        toast("제보하기에 실패했습니다")
+                    when {
+                        it.code() == 400 -> {
+                            toast(resources.getString(R.string.errorImg))
+                        }
+                        it.code() == 403 -> {
+                            toast(resources.getString(R.string.errorReLogin))
+                        }
+                        else -> {
+                            toast(resources.getString(R.string.errorClient))
+                        }
                     }
                 },
                 onError = {

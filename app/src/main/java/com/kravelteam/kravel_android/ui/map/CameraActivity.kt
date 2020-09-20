@@ -173,8 +173,7 @@ class CameraActivity : AppCompatActivity(){
         imageCapture.takePicture(
             outputOptions, ContextCompat.getMainExecutor(this), object : ImageCapture.OnImageSavedCallback {
                 override fun onError(exc: ImageCaptureException) {
-                    Timber.e("실패 ${exc.message}")
-                    toast("이미지 저장에 실패했습니다")
+                    toast(resources.getString(R.string.errorSaveImg))
                 }
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
@@ -192,9 +191,8 @@ class CameraActivity : AppCompatActivity(){
                         arrayOf(savedUri?.toFile()?.absolutePath),
                         arrayOf(mimeType)
                     ) { _, uri ->
-                        Timber.e( "저장된 곳: $uri")
                     }
-                    toast("이미지를 저장했습니다")
+                    toast(resources.getString(R.string.succesSaveImg))
                 }
             })
 
@@ -269,16 +267,12 @@ class CameraActivity : AppCompatActivity(){
                 cl_no_access_camera.setGone()
                 startCamera()
             } else {
-                Toast.makeText(this,
-                    "카메라 권한 설정을 해주세요",
-                    Toast.LENGTH_SHORT).show()
+                toast(resources.getString(R.string.allowCameraExplain))
                 cl_no_access_camera.setVisible()
             }
         } else if (requestCode == REQUEST_CODE_STORAGE_PERMISSIONS) {
             if(!allStoragePermissionsGranted()){
-                Toast.makeText(this,
-                    "갤러리 접근 권한 설정을 해주세요",
-                    Toast.LENGTH_SHORT).show()
+                toast(resources.getString(R.string.allowGallery))
             }
         }
     }

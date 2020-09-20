@@ -56,9 +56,9 @@ class ScrapActivity : AppCompatActivity() {
                 },
                 onFailure = {
                     if(it.code() == 403) {
-                        toast("재로그인을 해주세요!")
+                        toast(resources.getString(R.string.errorReLogin))
                     } else {
-                        toast("스크랩 불러오기에 실패했습니다")
+                        toast(resources.getString(R.string.errorClient))
                     }
                 },
                 onError = {

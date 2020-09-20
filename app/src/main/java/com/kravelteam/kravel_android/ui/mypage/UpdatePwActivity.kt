@@ -89,12 +89,16 @@ class UpdatePwActivity : AppCompatActivity() {
                         toast("비밀번호 수정에 완료했습니다.")
                     },
                     onFailure = {
-                        if(it.code() == 403) {
-                            toast("재로그인을 해주세요!")
-                        } else if(it.code() == 400) {
-                            initDialog()
-                        } else {
-                            toast("업데이트에 실패했습니다")
+                        when {
+                            it.code() == 403 -> {
+                                toast(resources.getString(R.string.errorReLogin))
+                            }
+                            it.code() == 400 -> {
+                                initDialog()
+                            }
+                            else -> {
+                                toast(resources.getString(R.string.errorClient))
+                            }
                         }
                     },
                     onError = {
