@@ -37,6 +37,7 @@ import com.kravelteam.kravel_android.ui.adapter.NearPlaceRecyclerview
 import com.kravelteam.kravel_android.ui.adapter.PhotoReviewRecyclerview
 import com.kravelteam.kravel_android.ui.adapter.PopularRecyclerview
 import com.kravelteam.kravel_android.ui.map.PlaceDetailActivity
+import com.kravelteam.kravel_android.ui.map.fragmentBackPressed
 import com.kravelteam.kravel_android.util.*
 import kotlinx.android.synthetic.main.dialog_gps_permission.view.*
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -47,7 +48,7 @@ import timber.log.Timber
 /**
  * A simple [Fragment] subclass.
  */
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), fragmentBackPressed {
     private var mFusedLocationProviderClient: FusedLocationProviderClient? = null
     lateinit var mLastLocation: Location
     internal lateinit var mLocationRequest: LocationRequest
@@ -212,8 +213,7 @@ class HomeFragment : Fragment() {
         newToken(authManager,networkManager)
         networkManager.getPhotoReview(0,7,"createdDate,desc").safeEnqueue (
             onSuccess = {
-                Timber.e("사진리뷰")
-                rv_home_photo_review.apply {
+                rv_home_photo.apply {
                     adapter = photoAdapter
                     addItemDecoration(VerticalItemDecorator(4))
                     addItemDecoration(HorizontalItemDecorator(4))
@@ -221,11 +221,11 @@ class HomeFragment : Fragment() {
 
                 if(it.data.result.content.isNullOrEmpty()) {
                     txt_home_photo_review_empty.setVisible()
-                    rv_home_photo_review.setGone()
+                    rv_home_photo.setGone()
                 } else {
                     photoAdapter.initData(it.data.result.content)
                     txt_home_photo_review_empty.setGone()
-                    rv_home_photo_review.setVisible()
+                    rv_home_photo.setVisible()
                 }
             },
             onFailure = {
@@ -314,6 +314,10 @@ class HomeFragment : Fragment() {
         } else {
             true
         }
+    }
+
+    override fun onBackPressed() : Boolean {
+        return true
     }
 
 

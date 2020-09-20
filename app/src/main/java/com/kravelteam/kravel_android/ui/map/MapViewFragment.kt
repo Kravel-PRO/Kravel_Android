@@ -107,7 +107,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
             buildAlterMessageNoGPS()
         }
 
-        initMarker()
+
 
         togglebtn_gps.setOnDebounceClickListener {
             if(checkArea(mLatitude,mLongitude)) {
@@ -206,6 +206,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
         if(mapMarker?.map !=null) {
             mapMarker?.map = null
         }
+        checkBottom = true
         Timber.e("BottomSheetClick!!")
         newToken(authManager,networkManager)
         networkManager.getPlaceDetailList(placeId).safeEnqueue (
@@ -535,6 +536,8 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
         naverMap.locationSource = locationSource
         naverMap.locationTrackingMode = NoFollow
 
+        initMarker()
+
         naverMap.addOnLocationChangeListener {
             if(checkFirst) {
                 if(checkArea(it.latitude,it.longitude)) {
@@ -544,7 +547,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
                     naverMap.locationTrackingMode = None
                     val projection = naverMap.projection
                     val masterPerDp = projection.metersPerDp
-                    scale = (masterPerDp/12)/88/2
+                    scale = (((masterPerDp/12)/88/2)).toString().substring(0,5).toDouble()
                     nearLocation = LatLng(naverMap.cameraPosition.target.latitude ,naverMap.cameraPosition.target.longitude)
                     initRecycler(nearLocation!!.latitude,nearLocation!!.longitude,scale)
                 }
@@ -649,7 +652,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
     override fun onBackPressed() : Boolean {
         return if (checkBottom) {
             bottomSheetBack()
-            true
+            false
         } else {
             true
         }

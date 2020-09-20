@@ -131,4 +131,5 @@
     <string name="errorReLogin">"Please log in again! "</string>
     <string name="errorClient">" An error occurred! Please contact the developer."</string>
     <string name="errorNetwork">A network error has occurred!</string>
+    <string name="backbuttonWarning">" Click the back button again to finish."</string>
 </resources>
