@@ -9,143 +9,175 @@
     android:background="@color/colorWhite">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_update_pw_toolbar"
+        android:id="@+id/root"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/cl_update_pw_content"
-        app:layout_constraintVertical_weight="0.78">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/updatePw"
-            android:textColor="@color/colorBlack"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/img_update_pw_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/btn_back"
-            android:layout_marginLeft="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <View
-            android:id="@+id/view_update_pw_line"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_update_pw_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorWhiteGrey"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/cl_update_pw_content"
+            app:layout_constraintVertical_weight="0.78">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/updatePw"
+                android:textColor="@color/colorBlack"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/img_update_pw_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/btn_back"
+                android:layout_marginLeft="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/view_update_pw_line"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorWhiteGrey"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_update_pw_content"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="24dp"
+            app:layout_constraintTop_toBottomOf="@id/cl_update_pw_toolbar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_weight="8.89">
+
+            <TextView
+                android:id="@+id/txt_update_pw_explan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:text="@string/currentPwTitle"
+                android:textColor="@color/colorBlack"
+                android:textSize="15sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/edt_update_pw_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/signup_edit_style"
+                android:hint="@string/hintPw"
+                android:inputType="textPassword"
+                android:paddingRight="16dp"
+                android:textColor="@color/colorBlack"
+                android:lines="1"
+                android:textSize="15sp"
+                app:layout_constraintTop_toBottomOf="@+id/txt_update_pw_explan"
+                tools:layout_editor_absoluteX="16dp" />
+
+            <TextView
+                android:id="@+id/txt_update_pw_change"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/changePwTitle"
+                android:textColor="@color/colorBlack"
+                android:textSize="15sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edt_update_pw_content" />
+
+            <EditText
+                android:id="@+id/edt_update_pw_change"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/signup_edit_style"
+                android:hint="@string/hintPw"
+                android:textColorHint="@color/colorDarkGrey"
+                android:inputType="textPassword"
+                android:lines="1"
+                android:textColor="@color/colorBlack"
+                android:paddingRight="16dp"
+                android:textSize="15sp"
+                app:layout_constraintTop_toBottomOf="@+id/txt_update_pw_change"
+                tools:layout_editor_absoluteX="16dp" />
+
+            <TextView
+                android:id="@+id/txt_update_pw_change_check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/pwCheck"
+                android:textColor="@color/colorBlack"
+                android:textSize="15sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edt_update_pw_change" />
+
+            <EditText
+                android:id="@+id/edt_update_pw_change_check"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/signup_edit_style"
+                android:hint="@string/hintPwCheck"
+                android:textColorHint="@color/colorDarkGrey"
+                android:inputType="textPassword"
+                android:textColor="@color/colorBlack"
+                android:textSize="15sp"
+                android:layout_marginTop="8dp"
+                android:lines="1"
+                android:paddingRight="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/txt_update_pw_change_check"
+                tools:layout_editor_absoluteX="16dp" />
+
+
+            <TextView
+                android:id="@+id/btn_update_pw_complete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_btn_enable_background"
+                android:fontFamily="@font/notosans_cjk_kr_bold"
+                android:gravity="center"
+                android:paddingTop="17dp"
+                android:paddingBottom="16dp"
+                android:text="@string/updateComplete"
+                android:textColor="@color/colorDarkGrey"
+                android:textSize="15sp"
+                android:layout_marginHorizontal="20dp"
+                android:enabled="false"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_update_pw_content"
+        android:id="@+id/lottie_background"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="24dp"
-        app:layout_constraintTop_toBottomOf="@id/cl_update_pw_toolbar"
+        android:layout_height="match_parent"
+        android:background="@color/colorOpacity30White"
+        android:visibility="gone"/>
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottie_detail_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_weight="8.89">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"/>
 
-        <TextView
-            android:id="@+id/txt_update_pw_explan"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:text="@string/currentPwTitle"
-            android:textColor="@color/colorBlack"
-            android:textSize="15sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <EditText
-            android:id="@+id/edt_update_pw_content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/signup_edit_style"
-            android:hint="@string/hintPw"
-            android:textColor="@color/colorBlack"
-            android:inputType="textPassword"
-            android:textSize="15sp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/txt_update_pw_explan" />
-
-        <TextView
-            android:id="@+id/txt_update_pw_change"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="@string/changePwTitle"
-            android:textColor="@color/colorBlack"
-            android:textSize="15sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edt_update_pw_content" />
-
-        <EditText
-            android:id="@+id/edt_update_pw_change"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/signup_edit_style"
-            android:hint="@string/hintPw"
-            android:textColorHint="@color/colorDarkGrey"
-            android:inputType="textPassword"
-            android:textColor="@color/colorBlack"
-            android:textSize="15sp"
-            app:layout_constraintTop_toBottomOf="@+id/txt_update_pw_change"
-            tools:layout_editor_absoluteX="16dp" />
-
-        <TextView
-            android:id="@+id/txt_update_pw_change_check"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="@string/pwCheck"
-            android:textColor="@color/colorBlack"
-            android:textSize="15sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edt_update_pw_change" />
-
-        <EditText
-            android:id="@+id/edt_update_pw_change_check"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/signup_edit_style"
-            android:hint="@string/hintPwCheck"
-            android:textColorHint="@color/colorDarkGrey"
-            android:inputType="textPassword"
-            android:textColor="@color/colorBlack"
-            android:textSize="15sp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/txt_update_pw_change_check"
-            tools:layout_editor_absoluteX="16dp" />
-
-
-        <TextView
-            android:id="@+id/btn_update_pw_complete"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/selector_btn_enable_background"
-            android:fontFamily="@font/notosans_cjk_kr_bold"
-            android:gravity="center"
-            android:paddingTop="17dp"
-            android:paddingBottom="16dp"
-            android:text="@string/updateComplete"
-            android:textColor="@color/colorDarkGrey"
-            android:textSize="15sp"
-            android:layout_marginHorizontal="20dp"
-            android:enabled="false"
-            app:layout_constraintBottom_toBottomOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -22,8 +22,8 @@ import timber.log.Timber
 class PhotoReviewActivity : AppCompatActivity() {
     private val networkManager : NetworkManager by inject()
     private val photoAdapter : NewPhotoReviewRecyclerview by lazy { NewPhotoReviewRecyclerview() }
+    private var position: Int = 0
     private val authManager : AuthManager by inject()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_photo_review)
@@ -39,79 +39,103 @@ class PhotoReviewActivity : AppCompatActivity() {
         }
     }
     private fun initPhotoReivew() {
-        newToken(authManager,networkManager)
-        networkManager.getPhotoReview(0,20,"createdDate,desc").safeEnqueue (
-            onSuccess = {
+        if(newToken(authManager,networkManager)) {
+            networkManager.getPhotoReview(0, 20, "createdDate,desc").safeEnqueue(
+                onSuccess = {
 
-                rv_photo_review.apply {
-                    adapter = photoAdapter
-                    addItemDecoration(VerticalItemDecorator(4))
-                    addItemDecoration(HorizontalItemDecorator(4))
-                }
-                photoAdapter.initData(it.data.result.content)
+                    val data = it.data.result.content
+                    rv_photo_review.apply {
+                        adapter = photoAdapter
+                        addItemDecoration(VerticalItemDecorator(4))
+                        addItemDecoration(HorizontalItemDecorator(4))
+                    }
+                    photoAdapter.initData(data)
+                    if (intent.getIntExtra("position", 0) != 0) {
+                        data.forEachIndexed { index, data ->
+                            if (data.reviewId == intent.getIntExtra("position", 0))
+                                position = index
+                        }
+                        rv_photo_review.scrollToPosition(position)
+                    }
 
-            },
-            onFailure = {
-                if(it.code() == 403) {
-                    toast(resources.getString(R.string.errorReLogin))
-                } else {
-                    toast(resources.getString(R.string.errorClient))
+                },
+                onFailure = {
+                    if (it.code() == 403) {
+                        toast(resources.getString(R.string.errorReLogin))
+                    } else {
+                        toast(resources.getString(R.string.errorClient))
+                    }
+                },
+                onError = {
+                    networkErrorToast()
                 }
-            },
-            onError = {
-                networkErrorToast()
-            }
-        )
+            )
+        } else {
+            toast(resources.getString(R.string.errorNetwork))
+        }
         photoAdapter.setOnItemClickListener(object : NewPhotoReviewRecyclerview.OnItemClickListener {
             override fun onItemClick(v: View, data: PhotoReviewData, pos: Int) {
                 val imgLike = v!!.findViewById<ImageView>(R.id.img_rv_photo_like)
                 val txtHeart = v!!.findViewById<TextView>(R.id.txt_rv_photo_like)
                 if(data.like) {
-                    newToken(authManager,networkManager)
-                    networkManager.postLikes(data.place.placeId,data.reviewId,ReviewLikeBody(false)).safeEnqueue(
-                      onSuccess = {
-                          GlideApp.with(v).load(R.drawable.btn_like_unclick).into(imgLike)
-                          data.likeCount = data.likeCount -1
-                          txtHeart.text = data.likeCount.toString()
+                    if(newToken(authManager,networkManager)) {
+                        networkManager.postLikes(
+                            data.place.placeId,
+                            data.reviewId,
+                            ReviewLikeBody(false)
+                        ).safeEnqueue(
+                            onSuccess = {
+                                GlideApp.with(v).load(R.drawable.btn_like_unclick).into(imgLike)
+                                data.likeCount = data.likeCount - 1
+                                txtHeart.text = data.likeCount.toString()
 
-                          data.like = false
-                      },
-                      onFailure = {
-                          if(it.code() == 403) {
-                              toast(resources.getString(R.string.errorReLogin))
-                          } else {
-                              toast(resources.getString(R.string.errorClient))
-                          }
-                          Timber.e("data id :: "+data.reviewId)
-                          Timber.e("place id :: "+ data.place.placeId)
-                          Timber.e("실패")
-                      },
-                      onError = {
-                          networkErrorToast()
-                      })
+                                data.like = false
+                            },
+                            onFailure = {
+                                if (it.code() == 403) {
+                                    toast(resources.getString(R.string.errorReLogin))
+                                } else {
+                                    toast(resources.getString(R.string.errorClient))
+                                }
+                                Timber.e("data id :: " + data.reviewId)
+                                Timber.e("place id :: " + data.place.placeId)
+                                Timber.e("실패")
+                            },
+                            onError = {
+                                networkErrorToast()
+                            })
+                    }else{
+                        toast(resources.getString(R.string.errorNetwork))
+                    }
                 } else {
-                    newToken(authManager,networkManager)
-                    networkManager.postLikes(data.place.placeId,data.reviewId,ReviewLikeBody(true)).safeEnqueue(
-                        onSuccess = {
-                            GlideApp.with(v).load(R.drawable.btn_like).into(imgLike)
-                            data.likeCount = data.likeCount +1
-                            txtHeart.text = data.likeCount.toString()
-                            data.like = true
-                        },
-                        onFailure = {
-                            if(it.code() == 403) {
-                                toast(resources.getString(R.string.errorReLogin))
-                            } else {
-                                toast(resources.getString(R.string.errorClient))
-                            }
-                            Timber.e("data id :: "+data.reviewId)
-                            Timber.e("place id :: "+ data.place.placeId)
-                            Timber.e("실패")
-                        },
-                        onError = {
-                            networkErrorToast()
-                        })
-
+                    if(newToken(authManager,networkManager)) {
+                        networkManager.postLikes(
+                            data.place.placeId,
+                            data.reviewId,
+                            ReviewLikeBody(true)
+                        ).safeEnqueue(
+                            onSuccess = {
+                                GlideApp.with(v).load(R.drawable.btn_like).into(imgLike)
+                                data.likeCount = data.likeCount + 1
+                                txtHeart.text = data.likeCount.toString()
+                                data.like = true
+                            },
+                            onFailure = {
+                                if (it.code() == 403) {
+                                    toast(resources.getString(R.string.errorReLogin))
+                                } else {
+                                    toast(resources.getString(R.string.errorClient))
+                                }
+                                Timber.e("data id :: " + data.reviewId)
+                                Timber.e("place id :: " + data.place.placeId)
+                                Timber.e("실패")
+                            },
+                            onError = {
+                                networkErrorToast()
+                            })
+                    } else {
+                        toast(resources.getString(R.string.errorNetwork))
+                    }
                 }
             }
 

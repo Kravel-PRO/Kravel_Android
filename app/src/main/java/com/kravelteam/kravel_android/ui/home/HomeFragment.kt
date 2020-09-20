@@ -20,6 +20,7 @@ import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.view.marginBottom
+import com.airbnb.lottie.LottieAnimationView
 import com.google.android.gms.location.*
 import com.kravelteam.kravel_android.KravelApplication
 import com.kravelteam.kravel_android.KravelApplication.Companion.GlobalApp
@@ -41,6 +42,7 @@ import com.kravelteam.kravel_android.ui.map.fragmentBackPressed
 import com.kravelteam.kravel_android.util.*
 import kotlinx.android.synthetic.main.dialog_gps_permission.view.*
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.fragment_home.lottie_detail_loading
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
@@ -59,6 +61,7 @@ class HomeFragment : Fragment(), fragmentBackPressed {
     private val nearAdapter : NearPlaceRecyclerview by lazy { NearPlaceRecyclerview() }
     private val networkManager : NetworkManager by inject()
     private val authManager : AuthManager by inject()
+    private lateinit var lottie : LottieAnimationView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -70,6 +73,8 @@ class HomeFragment : Fragment(), fragmentBackPressed {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        lottie = lottie_detail_loading
 
         photoAdapter = PhotoReviewRecyclerview("new","", -1)
         rv_home_photo.apply {
@@ -94,6 +99,21 @@ class HomeFragment : Fragment(), fragmentBackPressed {
         initPhotoRecycler()
         cl_home_near_place.setGone()
 
+    }
+
+    private fun onLoading(){
+        lottie.apply {
+            setAnimation("heart_loading.json")
+            playAnimation()
+            loop(true)
+        }
+        root.setGone()
+        lottie_detail_loading.setVisible()
+    }
+
+    private fun offLoading(){
+        lottie_detail_loading.setGone()
+        root.fadeInWithVisible(500)
     }
     /*
   핸드폰 gps 가 꺼져있을 시 , gps를 키기위한 함수
@@ -131,40 +151,43 @@ class HomeFragment : Fragment(), fragmentBackPressed {
             }
 
         })
-        newToken(authManager,networkManager)
-        networkManager.getPlaceList(latitude!!,longitude!!,0.025,0.03).safeEnqueue (
-            onSuccess = {
-                rv_near_place.apply {
-                    adapter = nearAdapter
-                    addItemDecoration(HorizontalItemDecorator(16))
-                }
-
-                if(!it.data!!.result.content.isNullOrEmpty()) {
-                    nearAdapter.initData(it.data!!.result.content)
-                    cl_home_near_place.setVisible()
-                }
-
-                txt_home_near_place_more.setOnDebounceClickListener {
-                    Intent(GlobalApp, NearPlaceActivity::class.java).apply {
-                        putExtra("latitude", latitude!!)
-                        putExtra("longitude", longitude!!)
-                    }.run {
-                        GlobalApp.startActivity(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+        if(newToken(authManager,networkManager)) {
+            networkManager.getPlaceList(latitude!!, longitude!!, 0.025, 0.03).safeEnqueue(
+                onSuccess = {
+                    rv_near_place.apply {
+                        adapter = nearAdapter
+                        addItemDecoration(HorizontalItemDecorator(16))
                     }
-                }
-            },
-            onFailure = {
-               if(it.code() == 403) {
-                   toast(resources.getString(R.string.errorReLogin))
-               } else {
-                   toast(resources.getString(R.string.errorClient))
-               }
 
-            },
-            onError = {
-                networkErrorToast()
-            }
-        )
+                    if (!it.data!!.result.content.isNullOrEmpty()) {
+                        nearAdapter.initData(it.data!!.result.content)
+                        cl_home_near_place.setVisible()
+                    }
+
+                    txt_home_near_place_more.setOnDebounceClickListener {
+                        Intent(GlobalApp, NearPlaceActivity::class.java).apply {
+                            putExtra("latitude", latitude!!)
+                            putExtra("longitude", longitude!!)
+                        }.run {
+                            GlobalApp.startActivity(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                        }
+                    }
+                },
+                onFailure = {
+                    if (it.code() == 403) {
+                        toast(resources.getString(R.string.errorReLogin))
+                    } else {
+                        toast(resources.getString(R.string.errorClient))
+                    }
+
+                },
+                onError = {
+                    networkErrorToast()
+                }
+            )
+        }else{
+            toast(resources.getString(R.string.errorNetwork))
+        }
     }
     private fun initPopularRecycler() {
 
@@ -180,33 +203,37 @@ class HomeFragment : Fragment(), fragmentBackPressed {
             }
 
         })
-        newToken(authManager,networkManager)
-        networkManager.getPopularPlaceList("review-count,desc").safeEnqueue (
-            onSuccess = {
-
-
-                if(it.data.result.content.isNullOrEmpty()) {
-                    cl_home_popular_empty.setVisible()
-                    rv_popular_place.setGone()
-                } else {
-                    popularAdapter.initData(it.data!!.result.content)
-                    cl_home_popular_empty.setGone()
-                    rv_popular_place.setVisible()
+        onLoading()
+        if(newToken(authManager,networkManager)) {
+            networkManager.getPopularPlaceList("review-count,desc").safeEnqueue (
+                onSuccess = {
+                    if(it.data.result.content.isNullOrEmpty()) {
+                        cl_home_popular_empty.setVisible()
+                        rv_popular_place.setGone()
+                    } else {
+                        popularAdapter.initData(it.data!!.result.content)
+                        cl_home_popular_empty.setGone()
+                        rv_popular_place.setVisible()
+                    }
+                    offLoading()
+                },
+                onFailure = {
+                    if (it.code() == 403) {
+                        toast(resources.getString(R.string.errorReLogin))
+                    } else {
+                        toast(resources.getString(R.string.errorClient))
+                    }
+                    offLoading()
+                },
+                onError = {
+                    networkErrorToast()
+                    offLoading()
                 }
-
-            },
-            onFailure = {
-                if(it.code() == 403) {
-                    toast(resources.getString(R.string.errorReLogin))
-                } else {
-                    toast(resources.getString(R.string.errorClient))
-                }
-            },
-            onError = {
-                networkErrorToast()
-            }
-        )
-
+            )
+        } else {
+            toast(resources.getString(R.string.errorNetwork))
+            offLoading()
+        }
 
     }
     companion object {
@@ -215,32 +242,34 @@ class HomeFragment : Fragment(), fragmentBackPressed {
         private const val FASTEST_INTERVAL: Long = 1000
     }
     private fun initPhotoRecycler() {
-        newToken(authManager,networkManager)
-        networkManager.getPhotoReview(0,7,"createdDate,desc").safeEnqueue (
-            onSuccess = {
+        if(newToken(authManager,networkManager)) {
+            networkManager.getPhotoReview(0, 7, "createdDate,desc").safeEnqueue(
+                onSuccess = {
 
 
-                if(it.data.result.content.isNullOrEmpty()) {
-                    txt_home_photo_review_empty!!.setVisible()
-                    rv_home_photo.setGone()
-                } else {
-                    photoAdapter.initData(it.data.result.content)
-                    txt_home_photo_review_empty!!.setGone()
-                    rv_home_photo.setVisible()
+                    if (it.data.result.content.isNullOrEmpty()) {
+                        txt_home_photo_review_empty!!.setVisible()
+                        rv_home_photo.setGone()
+                    } else {
+                        photoAdapter.initData(it.data.result.content)
+                        txt_home_photo_review_empty!!.setGone()
+                        rv_home_photo.setVisible()
+                    }
+                },
+                onFailure = {
+                    if (it.code() == 403) {
+                        toast(resources.getString(R.string.errorReLogin))
+                    } else {
+                        toast(resources.getString(R.string.errorClient))
+                    }
+                },
+                onError = {
+                    networkErrorToast()
                 }
-            },
-            onFailure = {
-                if(it.code() == 403) {
-                    toast(resources.getString(R.string.errorReLogin))
-                } else {
-                    toast(resources.getString(R.string.errorClient))
-                }
-            },
-            onError = {
-                networkErrorToast()
-            }
-        )
-
+            )
+        }else{
+            toast(resources.getString(R.string.errorNetwork))
+        }
 
     }
 

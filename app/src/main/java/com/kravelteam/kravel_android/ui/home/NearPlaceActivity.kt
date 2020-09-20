@@ -57,27 +57,30 @@ class NearPlaceActivity : AppCompatActivity() {
             }
 
         })
-        newToken(authManager,networkManager)
-        networkManager.getPlaceList(latitude,longitude,0.025,0.03).safeEnqueue(
-            onSuccess = {
-                rv_near_place.apply {
-                    adapter = placeAdapter
-                    addItemDecoration(VerticalItemDecorator(16))
-                }
+        if(newToken(authManager,networkManager)) {
+            networkManager.getPlaceList(latitude, longitude, 0.025, 0.03).safeEnqueue(
+                onSuccess = {
+                    rv_near_place.apply {
+                        adapter = placeAdapter
+                        addItemDecoration(VerticalItemDecorator(16))
+                    }
 
-                placeAdapter.initData(it.data!!.result!!.content)
-            },
-            onFailure = {
-                if(it.code() == 403) {
-                    toast(resources.getString(R.string.errorReLogin))
-                } else {
-                    toast(resources.getString(R.string.errorClient))
+                    placeAdapter.initData(it.data!!.result!!.content)
+                },
+                onFailure = {
+                    if (it.code() == 403) {
+                        toast(resources.getString(R.string.errorReLogin))
+                    } else {
+                        toast(resources.getString(R.string.errorClient))
+                    }
+                },
+                onError = {
+                    networkErrorToast()
                 }
-            },
-            onError = {
-                networkErrorToast()
-            }
-        )
+            )
+        }else{
+            toast(resources.getString(R.string.errorNetwork))
+        }
 
     }
 }

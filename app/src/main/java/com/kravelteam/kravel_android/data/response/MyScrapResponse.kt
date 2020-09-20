@@ -9,6 +9,6 @@ data class MyScrapResponse(
 
 data class MyScrapData(
     val placeId: Int,
-    val imageUrl: String,
-    val title: String
+    val title: String,
+    val imageUrl: String
 ): Serializable

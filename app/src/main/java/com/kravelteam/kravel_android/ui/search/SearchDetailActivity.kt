@@ -3,14 +3,14 @@ package com.kravelteam.kravel_android.ui.search
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import com.airbnb.lottie.LottieAnimationView
 import com.kravelteam.kravel_android.KravelApplication
 import com.kravelteam.kravel_android.R
-import com.kravelteam.kravel_android.common.GlideApp
-import com.kravelteam.kravel_android.common.HorizontalItemDecorator
-import com.kravelteam.kravel_android.common.VerticalItemDecorator
-import com.kravelteam.kravel_android.common.setOnDebounceClickListener
+import com.kravelteam.kravel_android.common.*
 import com.kravelteam.kravel_android.data.response.DetailPlaceResponse
 import com.kravelteam.kravel_android.data.response.PhotoResponse
+import com.kravelteam.kravel_android.network.AuthManager
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.PhotoReviewRecyclerview
 import com.kravelteam.kravel_android.ui.adapter.SearchDetailPlaceRecyclerview
@@ -25,6 +25,8 @@ class SearchDetailActivity : AppCompatActivity() {
     private val placeAdapter: SearchDetailPlaceRecyclerview by lazy { SearchDetailPlaceRecyclerview() }
     private lateinit var photoAdapter: PhotoReviewRecyclerview
     private val networkManager : NetworkManager by inject()
+    private val authManager: AuthManager by inject()
+    private lateinit var lottie : LottieAnimationView
 
     private var id : Int = 0
     private var part : String = ""
@@ -36,10 +38,26 @@ class SearchDetailActivity : AppCompatActivity() {
         part = intent.getStringExtra("part")
         photoAdapter = PhotoReviewRecyclerview("default",part,id)
         txt_search_detail_title2.text = txt_search_detail_title2.text.toString().setCustomFontSubString(resources.getString(R.string.homeNewPhotoReview2),R.font.notosans_cjk_kr_bold,18)
+        lottie = lottie_detail_loading
+
 
         initRecycler()
         initPlaceMoreBtn()
         initSetting()
+    }
+    private fun onLoading(){
+        lottie.apply {
+            setAnimation("heart_loading.json")
+            playAnimation()
+            loop(true)
+        }
+        root.setGone()
+        lottie_detail_loading.setVisible()
+    }
+
+    private fun offLoading(){
+        root.fadeInWithVisible(500)
+        lottie_detail_loading.setGone()
     }
 
     private fun initSetting(){
@@ -67,6 +85,8 @@ class SearchDetailActivity : AppCompatActivity() {
         }
 
         if(part == "celeb"){ //셀럽 디테일 상세 정보
+            onLoading()
+            if (newToken(authManager,networkManager)) {
             networkManager.requestCelebDetail(id,0,7).safeEnqueue(
                 onSuccess = {it ->
                     it.data.result.let {
@@ -74,24 +94,39 @@ class SearchDetailActivity : AppCompatActivity() {
                         txt_search_detail_title.text = it.celebrity.celebrityName
                         txt_search_detail_sub2.text = resources.getString(R.string.visitedPlace)
 
-                        if( it.places.size == DATA_COUNT ){
-                            placeAdapter.initData(it.places.dropLast(1).toMutableList())
-                            btn_search_detail_more.setVisible()
-                        } else {
-                            placeAdapter.initData(it.places.toMutableList())
-                            btn_search_detail_more.setGone()
+                        when {
+                            it.places.size == DATA_COUNT -> {
+                                placeAdapter.initData(it.places.dropLast(1).toMutableList())
+                                btn_search_detail_more.setVisible()
+                                img_search_place_empty.setGone()
+                                txt_search_place_empty.setGone()
+                            }
+                            it.places.isNullOrEmpty() -> {
+                                btn_search_detail_more.setGone()
+                                img_search_place_empty.setVisible()
+                                txt_search_place_empty.setVisible()
+                            }
+                            else -> {
+                                placeAdapter.initData(it.places.toMutableList())
+                                btn_search_detail_more.setGone()
+                                img_search_place_empty.setGone()
+                                txt_search_place_empty.setGone()
+                            }
                         }
                     }
+                    offLoading()
                 },
                 onFailure = {
                     if(it.code() == 403) {
-                        toast("재로그인을 해주세요!")
+                        toast(resources.getString(R.string.errorReLogin))
                     } else {
-                        toast("상세 불러오기에 실패했습니다")
+                        toast(resources.getString(R.string.errorClient))
                     }
+                    offLoading()
                 },
                 onError = {
                     networkErrorToast()
+                    offLoading()
                 }
             )
 
@@ -105,20 +140,29 @@ class SearchDetailActivity : AppCompatActivity() {
                     }
                     if(!it.data.result.content.isNullOrEmpty()) {
                         photoAdapter.initData(it.data.result.content)
+                        txt_search_photo_empty.setGone()
+                    } else {
+                        txt_search_photo_empty.setVisible()
                     }
                 },
                 onFailure = {
                     if(it.code() == 403) {
-                        toast("재로그인을 해주세요!")
+                        toast(resources.getString(R.string.errorReLogin))
                     } else {
-                        toast("포토리뷰 불러오기에 실패했습니다")
+                        toast(resources.getString(R.string.errorClient))
                     }
                 },
                 onError = {
                     networkErrorToast()
                 }
             )
+            } else {
+                toast(resources.getString(R.string.errorNetwork))
+                offLoading()
+            }
         } else { //미디어 디테일 상세 정보
+            onLoading()
+            if (newToken(authManager,networkManager)) {
             networkManager.requestMediaDetail(id).safeEnqueue(
                 onSuccess = { it ->
                     it.data.result.let {
@@ -126,24 +170,39 @@ class SearchDetailActivity : AppCompatActivity() {
                         txt_search_detail_title.text = it.media.title
                         txt_search_detail_sub2.text = resources.getString(R.string.filmSite)
 
-                        if( it.places.size == DATA_COUNT ){
-                            placeAdapter.initData(it.places.dropLast(1).toMutableList())
-                            btn_search_detail_more.setVisible()
-                        } else {
-                            placeAdapter.initData(it.places.toMutableList())
-                            btn_search_detail_more.setGone()
+                        when {
+                            it.places.size == DATA_COUNT -> {
+                                placeAdapter.initData(it.places.dropLast(1).toMutableList())
+                                btn_search_detail_more.setVisible()
+                                img_search_place_empty.setGone()
+                                txt_search_place_empty.setGone()
+                            }
+                            it.places.isNullOrEmpty() -> {
+                                btn_search_detail_more.setGone()
+                                img_search_place_empty.setVisible()
+                                txt_search_place_empty.setVisible()
+                            }
+                            else -> {
+                                placeAdapter.initData(it.places.toMutableList())
+                                btn_search_detail_more.setGone()
+                                img_search_place_empty.setGone()
+                                txt_search_place_empty.setGone()
+                            }
                         }
+                        offLoading()
                     }
                 },
                 onFailure = {
                     if(it.code() == 403) {
-                        toast("재로그인을 해주세요!")
+                        toast(resources.getString(R.string.errorReLogin))
                     } else {
-                        toast("상세 불러오기에 실패했습니다")
+                        toast(resources.getString(R.string.errorClient))
                     }
+                    offLoading()
                 },
                 onError = {
                     networkErrorToast()
+                    offLoading()
                 }
             )
 
@@ -155,22 +214,28 @@ class SearchDetailActivity : AppCompatActivity() {
                         addItemDecoration(HorizontalItemDecorator(4))
                         addItemDecoration(VerticalItemDecorator(4))
                     }
-                    val data = it.data.result.content
-                    data.isNullOrEmpty().let {
-                        photoAdapter.initData(data)
+                    if(!it.data.result.content.isNullOrEmpty()) {
+                        photoAdapter.initData(it.data.result.content)
+                        txt_search_photo_empty.setGone()
+                    } else {
+                        txt_search_photo_empty.setVisible()
                     }
                 },
                 onFailure = {
                     if(it.code() == 403) {
-                        toast("재로그인을 해주세요!")
+                        toast(resources.getString(R.string.errorReLogin))
                     } else {
-                        toast("포토리뷰 불러오기에 실패했습니다")
+                        toast(resources.getString(R.string.errorClient))
                     }
                 },
                 onError = {
                     networkErrorToast()
                 }
             )
+            } else {
+                toast(resources.getString(R.string.errorNetwork))
+                offLoading()
+            }
         }
     }
     companion object {

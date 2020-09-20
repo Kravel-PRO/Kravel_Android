@@ -24,7 +24,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.search.SearchContentActivity"></activity>
+        <activity android:name=".ui.map.ExampleActivity"></activity>
+        <activity android:name=".ui.search.SearchContentActivity" />
         <activity android:name=".ui.search.PlaceMoreActivity" />
         <activity android:name=".ui.mypage.AddressActivity" />
         <activity android:name=".ui.main.SplashActivity">

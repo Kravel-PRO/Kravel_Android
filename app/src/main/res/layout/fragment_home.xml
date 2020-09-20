@@ -12,287 +12,303 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
 
-
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/cl_home_content1"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:paddingBottom="24dp"
-        android:background="@drawable/coral_left_round_background">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/txt_home_title1"
-            android:text="@string/mainWord1"
-            android:fontFamily="@font/notosans_cjk_kr_regular"
-            android:textSize="22sp"
-            android:textColor="@color/colorWhite"
-            android:lineSpacingExtra="10sp"
-            android:layout_marginLeft="16dp"
-            android:includeFontPadding="false"
-            android:layout_marginTop="66dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/txt_home_title2"
-            android:text="@string/mainWord2"
-            android:fontFamily="@font/notosans_cjk_kr_regular"
-            android:textSize="22sp"
-            android:textColor="@color/colorWhite"
-            android:lineSpacingExtra="10sp"
-            android:includeFontPadding="false"
-            android:layout_marginLeft="16dp"
-            app:layout_constraintTop_toBottomOf="@id/txt_home_title1"
-            app:layout_constraintLeft_toLeftOf="parent" />
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/txt_home_title3"
-            android:text="@string/mainWord3"
-            android:fontFamily="@font/notosans_cjk_kr_bold"
-            android:textSize="22sp"
-            android:textColor="@color/colorWhite"
-            android:lineSpacingExtra="10sp"
-            android:includeFontPadding="false"
-            android:layout_marginLeft="16dp"
-            app:layout_constraintTop_toBottomOf="@id/txt_home_title2"
-            app:layout_constraintLeft_toLeftOf="parent" />
-
-
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/root"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/cl_home_near_place"
-            android:layout_marginTop="48dp"
-            app:layout_constraintTop_toBottomOf="@id/txt_home_title3"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent">
+            android:layout_height="match_parent">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/txt_home_near_title1"
-                android:text="@string/homeNearPlace1"
-                android:fontFamily="@font/notosans_cjk_kr_bold"
-                android:textSize="18sp"
-                android:textColor="@color/colorWhite"
-                android:layout_marginLeft="16dp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/txt_home_near_title2"
-                android:text="@string/homeNearPlace2"
-                android:fontFamily="@font/notosans_cjk_kr_regular"
-                android:textSize="18sp"
-                android:textColor="@color/colorWhite"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintLeft_toRightOf="@id/txt_home_near_title1"/>
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/homeMoreBtn"
-                android:id="@+id/txt_home_near_place_more"
-                android:fontFamily="@font/notosans_cjk_kr_regular"
-                android:textColor="@color/colorWhite"
-                android:textSize="14sp"
-                android:layout_marginRight="16dp"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@id/txt_home_near_title2"
-                app:layout_constraintBottom_toBottomOf="@id/txt_home_near_title2"/>
-
-
-            <androidx.recyclerview.widget.RecyclerView
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/rv_near_place"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                android:orientation="horizontal"
-                android:layout_marginTop="12dp"
-                tools:listitem="@layout/item_home_near_place"
-                app:layout_constraintTop_toBottomOf="@id/txt_home_near_title1"
+                android:id="@+id/cl_home_content1"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:paddingBottom="24dp"
+                android:background="@drawable/coral_left_round_background">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txt_home_title1"
+                    android:text="@string/mainWord1"
+                    android:fontFamily="@font/notosans_cjk_kr_regular"
+                    android:textSize="22sp"
+                    android:textColor="@color/colorWhite"
+                    android:lineSpacingExtra="10sp"
+                    android:layout_marginLeft="16dp"
+                    android:includeFontPadding="false"
+                    android:layout_marginTop="66dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txt_home_title2"
+                    android:text="@string/mainWord2"
+                    android:fontFamily="@font/notosans_cjk_kr_regular"
+                    android:textSize="22sp"
+                    android:textColor="@color/colorWhite"
+                    android:lineSpacingExtra="10sp"
+                    android:includeFontPadding="false"
+                    android:layout_marginLeft="16dp"
+                    app:layout_constraintTop_toBottomOf="@id/txt_home_title1"
+                    app:layout_constraintLeft_toLeftOf="parent" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txt_home_title3"
+                    android:text="@string/mainWord3"
+                    android:fontFamily="@font/notosans_cjk_kr_bold"
+                    android:textSize="22sp"
+                    android:textColor="@color/colorWhite"
+                    android:lineSpacingExtra="10sp"
+                    android:includeFontPadding="false"
+                    android:layout_marginLeft="16dp"
+                    app:layout_constraintTop_toBottomOf="@id/txt_home_title2"
+                    app:layout_constraintLeft_toLeftOf="parent" />
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/cl_home_near_place"
+                    android:layout_marginTop="48dp"
+                    app:layout_constraintTop_toBottomOf="@id/txt_home_title3"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/txt_home_near_title1"
+                        android:text="@string/homeNearPlace1"
+                        android:fontFamily="@font/notosans_cjk_kr_bold"
+                        android:textSize="18sp"
+                        android:textColor="@color/colorWhite"
+                        android:layout_marginLeft="16dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/txt_home_near_title2"
+                        android:text="@string/homeNearPlace2"
+                        android:fontFamily="@font/notosans_cjk_kr_regular"
+                        android:textSize="18sp"
+                        android:textColor="@color/colorWhite"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintLeft_toRightOf="@id/txt_home_near_title1"/>
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/homeMoreBtn"
+                        android:id="@+id/txt_home_near_place_more"
+                        android:fontFamily="@font/notosans_cjk_kr_regular"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="14sp"
+                        android:layout_marginRight="16dp"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/txt_home_near_title2"
+                        app:layout_constraintBottom_toBottomOf="@id/txt_home_near_title2"/>
+
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/rv_near_place"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="12dp"
+                        tools:listitem="@layout/item_home_near_place"
+                        app:layout_constraintTop_toBottomOf="@id/txt_home_near_title1"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/cl_home_popular"
+                app:layout_constraintTop_toBottomOf="@id/cl_home_content1"
+                app:layout_constraintLeft_toLeftOf="parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/homePopularPlace1"
+                    android:id="@+id/txt_home_popular1"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="24dp"
+                    android:textSize="18sp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:fontFamily="@font/notosans_cjk_kr_regular"
+                    android:textColor="@color/colorBlack"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txt_home_popular2"
+                    android:text="@string/homePopularPlace2"
+                    app:layout_constraintTop_toTopOf="@id/txt_home_popular1"
+                    app:layout_constraintBottom_toBottomOf="@id/txt_home_popular1"
+                    app:layout_constraintLeft_toRightOf="@id/txt_home_popular1"
+                    android:textSize="18sp"
+                    android:fontFamily="@font/notosans_cjk_kr_bold"
+                    android:textColor="@color/colorBlack"
+                    />
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/cl_home_popular_empty"
+                    android:layout_marginTop="50dp"
+                    android:layout_marginBottom="50dp"
+                    app:layout_constraintTop_toBottomOf="@id/txt_home_popular1"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent">
+
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_no_scrap_tiger"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        android:id="@+id/img_popular_empty"/>
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/homePopularEmpty"
+                        android:id="@+id/txt_home_popular_empty"
+                        android:gravity="center_horizontal"
+                        app:layout_constraintTop_toBottomOf="@id/img_popular_empty"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:textSize="15sp"
+                        android:layout_marginTop="18dp"
+                        android:fontFamily="@font/notosans_cjk_kr_regular"
+                        android:textColor="@color/colorDarkGrey"
+                        />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rv_popular_place"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:orientation="vertical"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:layout_marginTop="12dp"
+                    tools:listitem="@layout/item_home_popular_place"
+                    app:layout_constraintTop_toBottomOf="@id/txt_home_popular1"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+            <View
+                android:id="@+id/view_line"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#1A272727"
+                android:layout_marginTop="24dp"
+                app:layout_constraintTop_toBottomOf="@id/cl_home_popular"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"/>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/cl_home_popular"
-            app:layout_constraintTop_toBottomOf="@id/cl_home_content1"
-            app:layout_constraintLeft_toLeftOf="parent">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/homePopularPlace1"
-            android:id="@+id/txt_home_popular1"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="24dp"
-            android:textSize="18sp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            android:fontFamily="@font/notosans_cjk_kr_regular"
-            android:textColor="@color/colorBlack"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/txt_home_popular2"
-            android:text="@string/homePopularPlace2"
-            app:layout_constraintTop_toTopOf="@id/txt_home_popular1"
-            app:layout_constraintBottom_toBottomOf="@id/txt_home_popular1"
-            app:layout_constraintLeft_toRightOf="@id/txt_home_popular1"
-            android:textSize="18sp"
-            android:fontFamily="@font/notosans_cjk_kr_bold"
-            android:textColor="@color/colorBlack"
-            />
-
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/cl_home_popular_empty"
-            android:layout_marginTop="50dp"
-            android:layout_marginBottom="50dp"
-            app:layout_constraintTop_toBottomOf="@id/txt_home_popular1"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent">
-
-
-            <ImageView
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_no_scrap_tiger"
-                app:layout_constraintTop_toTopOf="parent"
+                android:text="@string/homeNewPhotoReview1"
+                android:id="@+id/txt_home_photo1"
+                app:layout_constraintTop_toBottomOf="@id/view_line"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                android:id="@+id/img_popular_empty"/>
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="24dp"
+                android:textSize="18sp"
+                android:fontFamily="@font/notosans_cjk_kr_regular"
+                android:textColor="@color/colorBlack"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/homeNewPhotoReview2"
+                android:id="@+id/txt_home_photo2"
+                app:layout_constraintTop_toTopOf="@id/txt_home_photo1"
+                app:layout_constraintBottom_toBottomOf="@id/txt_home_photo1"
+                app:layout_constraintLeft_toRightOf="@id/txt_home_photo1"
+                android:textSize="18sp"
+                android:fontFamily="@font/notosans_cjk_kr_bold"
+                android:textColor="@color/colorBlack"
+                />
 
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/homePopularEmpty"
-                android:id="@+id/txt_home_popular_empty"
                 android:gravity="center_horizontal"
-                app:layout_constraintTop_toBottomOf="@id/img_popular_empty"
+                android:text="@string/homePhotoReviewWarning1"
+                android:id="@+id/txt_home_photo_review_empty"
+                app:layout_constraintTop_toBottomOf="@id/txt_home_photo1"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginTop="36dp"
+                android:layout_marginBottom="40dp"
                 android:textSize="15sp"
-                android:layout_marginTop="18dp"
                 android:fontFamily="@font/notosans_cjk_kr_regular"
                 android:textColor="@color/colorDarkGrey"
                 />
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/rv_popular_place"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            android:orientation="vertical"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:layout_marginTop="12dp"
-            tools:listitem="@layout/item_home_popular_place"
-            app:layout_constraintTop_toBottomOf="@id/txt_home_popular1"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_home_photo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="12dp"
+                android:paddingHorizontal="16dp"
+                android:paddingBottom="24dp"
+                app:layout_constraintTop_toBottomOf="@+id/txt_home_photo1"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="3"
+                tools:listitem="@layout/item_photo_review"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-
-        <View
-            android:id="@+id/view_line"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#1A272727"
-            android:layout_marginTop="24dp"
-            app:layout_constraintTop_toBottomOf="@id/cl_home_popular"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
-
-
-        <TextView
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottie_detail_loading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/homeNewPhotoReview1"
-            android:id="@+id/txt_home_photo1"
-            app:layout_constraintTop_toBottomOf="@id/view_line"
-            app:layout_constraintLeft_toLeftOf="parent"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="24dp"
-            android:textSize="18sp"
-            android:fontFamily="@font/notosans_cjk_kr_regular"
-            android:textColor="@color/colorBlack"
-            />
-
-            <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/homeNewPhotoReview2"
-            android:id="@+id/txt_home_photo2"
-            app:layout_constraintTop_toTopOf="@id/txt_home_photo1"
-            app:layout_constraintBottom_toBottomOf="@id/txt_home_photo1"
-            app:layout_constraintLeft_toRightOf="@id/txt_home_photo1"
-            android:textSize="18sp"
-            android:fontFamily="@font/notosans_cjk_kr_bold"
-            android:textColor="@color/colorBlack"
-            />
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:text="@string/homePhotoReviewWarning1"
-            android:id="@+id/txt_home_photo_review_empty"
-            app:layout_constraintTop_toBottomOf="@id/txt_home_photo1"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginTop="36dp"
-            android:layout_marginBottom="40dp"
-            android:textSize="15sp"
-            android:fontFamily="@font/notosans_cjk_kr_regular"
-            android:textColor="@color/colorDarkGrey"
-            />
-
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_home_photo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="12dp"
-            android:paddingHorizontal="16dp"
-            android:paddingBottom="24dp"
-            app:layout_constraintTop_toBottomOf="@+id/txt_home_photo1"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:spanCount="3"
-            tools:listitem="@layout/item_photo_review"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="gone"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

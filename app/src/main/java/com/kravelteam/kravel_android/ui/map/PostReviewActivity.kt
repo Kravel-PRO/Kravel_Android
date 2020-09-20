@@ -9,6 +9,7 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
+import com.airbnb.lottie.LottieAnimationView
 import com.kravelteam.kravel_android.KravelApplication
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.GlideApp
@@ -19,11 +20,12 @@ import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.mypage.AllPhotoReviewActivity
 import com.kravelteam.kravel_android.util.*
 import kotlinx.android.synthetic.main.activity_post_review.*
+import kotlinx.android.synthetic.main.activity_post_review.lottie_detail_loading
+import kotlinx.android.synthetic.main.activity_post_review.root
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.koin.android.ext.android.inject
-import timber.log.Timber
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.InputStream
@@ -36,11 +38,13 @@ class PostReviewActivity : AppCompatActivity() {
     private var selectImg: Boolean = false
     private var placeId: Int = 0
     private var part: String = ""
+    private lateinit var lottie : LottieAnimationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_post_review)
 
+        lottie = lottie_detail_loading
 
         placeId = intent.getIntExtra("placeId",0)
         if(!intent.getStringExtra("part").isNullOrEmpty()) {
@@ -52,6 +56,21 @@ class PostReviewActivity : AppCompatActivity() {
         setImg()
         enableBtn()
         postPhotoReview()
+    }
+
+    private fun onLoading(){
+        lottie.apply {
+            setAnimation("heart_loading.json")
+            playAnimation()
+            loop(true)
+        }
+        root.setGone()
+        lottie_detail_loading.setVisible()
+    }
+
+    private fun offLoading(){
+        root.setVisible()
+        lottie_detail_loading.setGone()
     }
 
     private fun setImg(){
@@ -75,6 +94,7 @@ class PostReviewActivity : AppCompatActivity() {
 
     private fun postPhotoReview(){
         btn_post_review_upload.setOnDebounceClickListener {
+            onLoading()
             //이미지 파일 내보내기
             val options = BitmapFactory.Options()
             val inputStream: InputStream = contentResolver.openInputStream(selectedPicUri!!)!!
@@ -84,31 +104,41 @@ class PostReviewActivity : AppCompatActivity() {
             val photoBody = RequestBody.create("image/jpg".toMediaTypeOrNull(),byteArrayOutputStream.toByteArray())
             val picture = MultipartBody.Part.createFormData("file", File(selectedPicUri.toString()).name+".jpg",photoBody)
 
-            newToken(authManager,networkManager)
+            if (newToken(authManager,networkManager)) {
             networkManager.requestPostPhotoReview(placeId,picture).safeEnqueue(
                 onSuccess = {
-                    toast("포토리뷰 업로드를 완료했습니다!")
                     Intent(KravelApplication.GlobalApp, AllPhotoReviewActivity::class.java).apply {
                         putExtra("review", "default")
                         putExtra("part",part)
                         putExtra("id", placeId)
+                        putExtra("sort","createdDate,desc")
                         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     }.run { KravelApplication.GlobalApp.startActivity(this) }
                     finish()
                 },
                 onFailure = {
-                    if(it.code() == 400){
-                        toast("이미지를 확인해주세요!")
-                    } else if(it.code() == 403){
-                        toast("재로그인을 해주세요!")
-                    } else {
-                        toast("포토리뷰 작성에 실패했습니다")
+                    when {
+                        it.code() == 400 -> {
+                            toast(resources.getString(R.string.errorImg))
+                        }
+                        it.code() == 403 -> {
+                            toast(resources.getString(R.string.errorReLogin))
+                        }
+                        else -> {
+                            toast(resources.getString(R.string.errorClient))
+                        }
                     }
+                    offLoading()
                 },
                 onError = {
                     networkErrorToast()
+                    offLoading()
                 }
             )
+            } else {
+                toast(resources.getString(R.string.errorNetwork))
+                offLoading()
+            }
         }
 
     }
@@ -129,6 +159,11 @@ class PostReviewActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        offLoading()
     }
 
     companion object {

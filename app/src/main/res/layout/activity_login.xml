@@ -147,7 +147,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/grey_round_background"
                 android:hint="@string/emailExplain"
-                android:inputType="textPersonName"
+                android:inputType="textWebEmailAddress"
                 android:textColorHint="@color/colorDarkGrey"
                 android:padding="16dp"
                 android:textColor="@color/colorBlack"
@@ -224,5 +224,22 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/lottie_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorOpacity20White"
+        android:visibility="gone"/>
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottie_detail_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

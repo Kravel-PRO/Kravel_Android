@@ -5,18 +5,24 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
+import com.airbnb.lottie.LottieAnimationView
 import com.kravelteam.kravel_android.R
+import com.kravelteam.kravel_android.common.newToken
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.request.UpdateInfo
+import com.kravelteam.kravel_android.network.AuthManager
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.util.*
 import kotlinx.android.synthetic.main.activity_update_pw.*
+import kotlinx.android.synthetic.main.activity_update_pw.lottie_detail_loading
 import kotlinx.android.synthetic.main.dialog_login_fail.view.*
 import org.koin.android.ext.android.inject
 
 class UpdatePwActivity : AppCompatActivity() {
 
     private val networkManager : NetworkManager by inject()
+    private val authManager: AuthManager by inject()
+    private lateinit var lottie : LottieAnimationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,10 +32,28 @@ class UpdatePwActivity : AppCompatActivity() {
         initEnableBtn()
         initUpdatePw()
 
+        lottie = lottie_detail_loading
+
         img_update_pw_back.setOnDebounceClickListener {
             finish()
         }
     }
+
+    private fun onLoading(){
+        lottie.apply {
+            setAnimation("heart_loading.json")
+            playAnimation()
+            loop(true)
+        }
+        lottie_background.setVisible()
+        lottie_detail_loading.setVisible()
+    }
+
+    private fun offLoading(){
+        lottie_detail_loading.setGone()
+        lottie_background.setGone()
+    }
+
     private fun initChangeEditText(){
         edt_update_pw_content.onTextChangeListener(
             onTextChanged = {
@@ -74,29 +98,46 @@ class UpdatePwActivity : AppCompatActivity() {
 
     private fun initUpdatePw(){
         btn_update_pw_complete.setOnDebounceClickListener {
-            val data = UpdateInfo(
-                edt_update_pw_content.text.toString(),
-                edt_update_pw_change_check.text.toString(),
-                "",
-                "")
-            networkManager.requestUpdateInfo("password",data).safeEnqueue(
-                onSuccess = {
-                    finish()
-                    toast("비밀번호 수정에 완료했습니다.")
-                },
-                onFailure = {
-                    if(it.code() == 403) {
-                        toast("재로그인을 해주세요!")
-                    } else if(it.code() == 400) {
-                        initDialog()
-                    } else {
-                        toast("업데이트에 실패했습니다")
-                    }
-                },
-                onError = {
-                    networkErrorToast()
+            if(edt_update_pw_change.text.length < 6){
+                toast(resources.getString(R.string.hintPw))
+            } else {
+                onLoading()
+                val data = UpdateInfo(
+                    edt_update_pw_content.text.toString(),
+                    edt_update_pw_change_check.text.toString(),
+                    "",
+                    "")
+                if (newToken(authManager,networkManager)) {
+                    networkManager.requestUpdateInfo("password",data).safeEnqueue(
+                        onSuccess = {
+                            finish()
+                            toast(resources.getString(R.string.successUpdate))
+                        },
+                        onFailure = {
+                            when {
+                                it.code() == 403 -> {
+                                    toast(resources.getString(R.string.errorReLogin))
+                                }
+                                it.code() == 400 -> {
+                                    initDialog()
+                                }
+                                else -> {
+                                    toast(resources.getString(R.string.errorClient))
+                                }
+                            }
+                            offLoading()
+                        },
+                        onError = {
+                            networkErrorToast()
+                            offLoading()
+                        }
+                    )
+                } else {
+                    toast(resources.getString(R.string.errorNetwork))
+                    offLoading()
                 }
-            )
+            }
+
         }
     }
 
@@ -116,5 +157,10 @@ class UpdatePwActivity : AppCompatActivity() {
             setCancelable(false)
             show()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        offLoading()
     }
 }

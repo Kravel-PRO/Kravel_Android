@@ -41,6 +41,7 @@ class CelebFragment() : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initRecycler()
+        rv_celeb_list.fadeInWithVisible(600)
     }
 
     private fun initRecycler(){
@@ -53,21 +54,25 @@ class CelebFragment() : Fragment() {
             addItemDecoration(VerticalItemDecorator(38))
         }
 
-        newToken(authManager,networkManager)
-        networkManager.requestCelebList(0,100).safeEnqueue(
-            onSuccess = {
-                if(!it.data.result.content.isNullOrEmpty()) celebAdapter.initData(it.data.result.content)
-            },
-            onFailure = {
-                if(it.code() == 403) {
-                    toast("재로그인을 해주세요!")
-                } else {
-                    toast("리스트 불러오기에 실패했습니다")
+        if (newToken(authManager,networkManager)){
+            networkManager.requestCelebList(0,100).safeEnqueue(
+                onSuccess = {
+                    if(!it.data.result.content.isNullOrEmpty()) celebAdapter.initData(it.data.result.content)
+                },
+                onFailure = {
+                    if(it.code() == 403) {
+                        toast(resources.getString(R.string.errorReLogin))
+                    } else {
+                        toast(resources.getString(R.string.errorClient))
+                    }
+                },
+                onError = {
+                    networkErrorToast()
                 }
-            },
-            onError = {
-                networkErrorToast()
-            }
-        )
+            )
+        } else {
+            toast(resources.getString(R.string.errorNetwork))
+        }
+
     }
 }

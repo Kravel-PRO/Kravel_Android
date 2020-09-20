@@ -95,32 +95,36 @@ class SetLanguageActivity : AppCompatActivity() {
         initEnableBtn()
     }
     private fun requestServer(lang : String) {
-        newToken(authManager,networkManager)
-        networkManager.requestLanguage(type = "speech",data = LanguageBody(lang)).safeLoginEnqueue(
-            onSuccess = {
-                authManager.token = it
-                resources.updateConfiguration(configuration,resources.displayMetrics)
-                val intent = baseContext.packageManager.getLaunchIntentForPackage(
-                    baseContext.packageName
+        if(newToken(authManager,networkManager)) {
+            networkManager.requestLanguage(type = "speech", data = LanguageBody(lang))
+                .safeLoginEnqueue(
+                    onSuccess = {
+                        authManager.token = it
+                        resources.updateConfiguration(configuration, resources.displayMetrics)
+                        val intent = baseContext.packageManager.getLaunchIntentForPackage(
+                            baseContext.packageName
+                        )
+                        intent!!.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                        intent!!.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        finish()
+                        startActivity(intent)
+
+                    },
+                    onFailure = {
+                        if (it.code() == 403) {
+                            toast(resources.getString(R.string.errorReLogin))
+                        } else {
+                            toast(resources.getString(R.string.errorClient))
+                        }
+
+                    },
+                    onError = {
+                        networkErrorToast()
+                    }
                 )
-                intent!!.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                intent!!.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                finish()
-                startActivity(intent)
-
-            },
-            onFailure = {
-                if(it.code() == 403) {
-                    toast(resources.getString(R.string.errorReLogin))
-                } else {
-                    toast(resources.getString(R.string.errorClient))
-                }
-
-            },
-            onError = {
-                networkErrorToast()
-            }
-        )
+        }else{
+            toast(resources.getString(R.string.errorNetwork))
+        }
     }
 
     private fun initCheckRadioBtn(){

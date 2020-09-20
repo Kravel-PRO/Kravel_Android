@@ -132,6 +132,15 @@
     <string name="homePopularEmpty">Please wait a little bit! \n We\'ll find a special place!</string>
     <string name="errorReLogin">"Please log in again! "</string>
     <string name="errorClient">" An error occurred! Please contact the developer."</string>
-    <string name="errorNetwork">A network error has occurred!</string>
+    <string name="errorNetwork">A network error has occurred! Retry again.</string>
     <string name="backbuttonWarning">" Click the back button again to finish."</string>
+    <string name="errorImg">Please put in the image.</string>
+    <string name="errorSearch">Please enter a search word.</string>
+    <string name="errorSaveImg">Fail to save image.</string>
+    <string name="succesSaveImg">Success to save imgae.</string>
+    <string name="allowGallery">You can save pictures
+        \nafter allowing access to the gallery.</string>
+    <string name="deletePhoto">Delete photo review.</string>
+    <string name="successUpdate">Success to update.</string>
+    <string name="successReport">Thank you for report :)</string>
 </resources>

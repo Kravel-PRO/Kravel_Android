@@ -5,8 +5,10 @@ import android.os.Bundle
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.HorizontalItemDecorator
 import com.kravelteam.kravel_android.common.VerticalItemDecorator
+import com.kravelteam.kravel_android.common.newToken
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.response.DetailPlaceResponse
+import com.kravelteam.kravel_android.network.AuthManager
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.SearchDetailPlaceRecyclerview
 import com.kravelteam.kravel_android.util.*
@@ -17,6 +19,7 @@ class PlaceMoreActivity : AppCompatActivity() {
 
     private val placeAdapter: SearchDetailPlaceRecyclerview by lazy { SearchDetailPlaceRecyclerview() }
     private val networkManager : NetworkManager by inject()
+    private val authManager: AuthManager by inject()
     private var page: Int = 0
     private var size: Int = 20
 
@@ -47,6 +50,7 @@ class PlaceMoreActivity : AppCompatActivity() {
     }
 
     private fun initPlaceMore(init : Boolean){
+        if (newToken(authManager,networkManager)) {
         networkManager.requestCelebDetail(id,page,size).safeEnqueue(
             onSuccess = {
                 if(it.data.result.places.size == size) btn_place_more.setVisible()
@@ -57,14 +61,17 @@ class PlaceMoreActivity : AppCompatActivity() {
             },
             onFailure = {
                 if(it.code() == 403) {
-                    toast("재로그인을 해주세요!")
+                    toast(resources.getString(R.string.errorReLogin))
                 } else {
-                    toast("리스트 불러오기에 실패했습니다")
+                    toast(resources.getString(R.string.errorClient))
                 }
             },
             onError = {
                 networkErrorToast()
             }
         )
+        } else {
+            toast(resources.getString(R.string.errorNetwork))
+        }
     }
 }

@@ -1,7 +1,6 @@
+
 package com.kravelteam.kravel_android.common
 
-import android.content.Context
-import android.widget.Toast
 import com.auth0.android.jwt.JWT
 import com.kravelteam.kravel_android.KravelApplication
 import com.kravelteam.kravel_android.network.AuthManager
@@ -12,7 +11,8 @@ import com.kravelteam.kravel_android.util.toast
 import timber.log.Timber
 import java.util.*
 
-fun newToken(authManager: AuthManager,networkManager: NetworkManager){
+fun newToken(authManager: AuthManager,networkManager: NetworkManager): Boolean{
+    var result = false
     if(Date(authManager.expire) < Date(System.currentTimeMillis())){ //만료되었을 때
         networkManager.requestRefreshToken().safeLoginEnqueue(
             onSuccess = {
@@ -20,15 +20,19 @@ fun newToken(authManager: AuthManager,networkManager: NetworkManager){
                 val expiresAt = jwt.expiresAt
 
                 authManager.expire = expiresAt?.time!!
+                result = true
             },
             onFailure = {
-                KravelApplication.GlobalApp.toast("재로그인")
+                result = false
             },
             onError = {
-                KravelApplication.GlobalApp.networkErrorToast()
+                result = false
             }
         )
     } else {
-        Timber.e("안넘음")
+        Timber.e("안념음")
+        result = true
     }
+
+    return result
 }
