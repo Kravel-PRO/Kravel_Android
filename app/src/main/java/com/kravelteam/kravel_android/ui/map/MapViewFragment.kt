@@ -20,10 +20,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kravelteam.kravel_android.KravelApplication
 import com.kravelteam.kravel_android.KravelApplication.Companion.GlobalApp
 import com.kravelteam.kravel_android.R
-import com.kravelteam.kravel_android.common.GlideApp
-import com.kravelteam.kravel_android.common.HorizontalItemDecorator
-import com.kravelteam.kravel_android.common.VerticalItemDecorator
-import com.kravelteam.kravel_android.common.setOnDebounceClickListener
+import com.kravelteam.kravel_android.common.*
 import com.kravelteam.kravel_android.data.request.ScrapBody
 import com.kravelteam.kravel_android.data.response.PlaceContentResponse
 import com.kravelteam.kravel_android.network.AuthManager
@@ -62,7 +59,8 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
     private lateinit var animMapInfo: LottieAnimationView
     private lateinit var root: View
     private  var mLatitude : Double = 0.0
-    private var mLongitude : Double = 0.0 
+    private var mLongitude : Double = 0.0
+    private val authManager : AuthManager by inject()
     private lateinit var photoAdapter : PhotoReviewRecyclerview //BottomSheet
     private val hashtagAdapter : HashTagRecyclerView by lazy { HashTagRecyclerView() } //BottomSheet
     private val nearAdapter: MapPlaceRecyclerview by lazy { MapPlaceRecyclerview() }
@@ -108,6 +106,8 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
         if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             buildAlterMessageNoGPS()
         }
+
+        initMarker()
 
         togglebtn_gps.setOnDebounceClickListener {
             if(checkArea(mLatitude,mLongitude)) {
@@ -207,7 +207,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
             mapMarker?.map = null
         }
         Timber.e("BottomSheetClick!!")
-
+        newToken(authManager,networkManager)
         networkManager.getPlaceDetailList(placeId).safeEnqueue (
             onSuccess = {
                 txt_bottom_title.text = it.data.result.title
@@ -312,6 +312,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
             if(checkScrap) {
                 Timber.e("checkScrap true -> false")
                 //checkScrap == TRUE
+                newToken(authManager,networkManager)
                 networkManager.postScrap(placeId, ScrapBody(false) ).safeEnqueue (
                     onSuccess = {
                         checkScrap = false
@@ -331,6 +332,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
 
             } else {
                 Timber.e("checkScrap false -> true")
+                newToken(authManager,networkManager)
                 networkManager.postScrap(placeId, ScrapBody(true)).safeEnqueue (
                     onSuccess = {
                         checkScrap = true
@@ -354,6 +356,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
 
     private fun initPhotoReview(placeId: Int) {
         photoAdapter = PhotoReviewRecyclerview("default","place",placeId)
+        newToken(authManager,networkManager)
         networkManager.getPlaceReview(placeId,0,7,"reviewLikes-count,desc").safeEnqueue(
             onSuccess = {
                 if(!it.data.result.content.isNullOrEmpty()) {
@@ -408,6 +411,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
             }
 
         })
+        newToken(authManager,networkManager)
         networkManager.getPlaceList(latitude, longitude,scale,scale).safeEnqueue (
             onSuccess = {
                 nearAdapter.initData(it.data!!.result!!.content)
@@ -426,7 +430,8 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
         )
     }
 
-    private fun initMarker(latitude: Double, longitude: Double) {
+    private fun initMarker() {
+        newToken(authManager,networkManager)
         networkManager.getMapMarkerList().safeEnqueue (
             onSuccess = {
                 for(i in 0..it.data.result.size-1) {
@@ -541,7 +546,6 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
                     val masterPerDp = projection.metersPerDp
                     scale = (masterPerDp/12)/88/2
                     nearLocation = LatLng(naverMap.cameraPosition.target.latitude ,naverMap.cameraPosition.target.longitude)
-                    initMarker(nearLocation!!.latitude,nearLocation!!.longitude)
                     initRecycler(nearLocation!!.latitude,nearLocation!!.longitude,scale)
                 }
                 checkFirst = false
@@ -564,7 +568,6 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
                 mLongitude = locationSource.lastLocation!!.longitude
                 if(checkArea(mLatitude,mLongitude)) {
                     togglebtn_gps.isSelected = false
-                    initMarker(mLatitude,mLongitude)
                     initRecycler(mLatitude,mLongitude,0.025)
                     trackingmode = false
                 } else {
@@ -575,7 +578,6 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
 
             if(reason == CameraUpdate.REASON_GESTURE || reason == CameraUpdate.REASON_LOCATION) {
                 nearLocation = LatLng(naverMap.cameraPosition.target.latitude ,naverMap.cameraPosition.target.longitude)
-                initMarker(nearLocation!!.latitude,nearLocation!!.longitude)
                 val projection = naverMap.projection
                 val masterPerDp = projection.metersPerDp
                 scale = (((masterPerDp/12)/88/2)).toString().substring(0,5).toDouble()

@@ -12,7 +12,9 @@ import android.widget.ImageView
 import com.kravelteam.kravel_android.KravelApplication
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.GlideApp
+import com.kravelteam.kravel_android.common.newToken
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
+import com.kravelteam.kravel_android.network.AuthManager
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.mypage.AllPhotoReviewActivity
 import com.kravelteam.kravel_android.util.*
@@ -28,7 +30,7 @@ import java.io.InputStream
 class PostReviewActivity : AppCompatActivity() {
 
     private val networkManager : NetworkManager by inject()
-
+    private val authManager : AuthManager by inject()
     private var selectedPicUri : Uri? = null
     private var selectImg: Boolean = false
     private var placeId: Int = 0
@@ -81,6 +83,7 @@ class PostReviewActivity : AppCompatActivity() {
             val photoBody = RequestBody.create("image/jpg".toMediaTypeOrNull(),byteArrayOutputStream.toByteArray())
             val picture = MultipartBody.Part.createFormData("file", File(selectedPicUri.toString()).name,photoBody)
 
+            newToken(authManager,networkManager)
             networkManager.requestPostPhotoReview(placeId,picture).safeEnqueue(
                 onSuccess = {
                     toast("포토리뷰 업로드를 완료했습니다!")

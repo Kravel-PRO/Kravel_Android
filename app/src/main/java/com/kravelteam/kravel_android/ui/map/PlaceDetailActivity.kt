@@ -7,10 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.PagerSnapHelper
 import com.kravelteam.kravel_android.KravelApplication.Companion.GlobalApp
 import com.kravelteam.kravel_android.R
-import com.kravelteam.kravel_android.common.GlideApp
-import com.kravelteam.kravel_android.common.HorizontalItemDecorator
-import com.kravelteam.kravel_android.common.VerticalItemDecorator
-import com.kravelteam.kravel_android.common.setOnDebounceClickListener
+import com.kravelteam.kravel_android.common.*
 import com.kravelteam.kravel_android.data.request.ScrapBody
 import com.kravelteam.kravel_android.network.AuthManager
 import com.kravelteam.kravel_android.network.NetworkManager
@@ -95,6 +92,7 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             if(checkScrap) {
                 Timber.e("checkScrap true -> false")
                 //checkScrap == TRUE
+                newToken(authManager,networkManager)
                 networkManager.postScrap(placeId, ScrapBody(false) ).safeEnqueue (
                         onSuccess = {
                             checkScrap = false
@@ -114,6 +112,7 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
             } else {
                 Timber.e("checkScrap false -> true")
+                newToken(authManager,networkManager)
                 networkManager.postScrap(placeId, ScrapBody(true)).safeEnqueue (
                     onSuccess = {
                         checkScrap = true
@@ -135,6 +134,7 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
     }
     private fun initSetting() {
+        newToken(authManager,networkManager)
         networkManager.getPlaceDetailList(placeId).safeEnqueue(
             onSuccess = {
                 txt_map_detail_title.text = it.data.result.title
@@ -268,7 +268,7 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
     private fun initPhotoRecycler() {
-
+        newToken(authManager,networkManager)
         networkManager.getPlaceReview(placeId,0,7,"reviewLikes-count,desc").safeEnqueue(
             onSuccess = {
 

@@ -26,10 +26,12 @@ import com.kravelteam.kravel_android.KravelApplication.Companion.GlobalApp
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.HorizontalItemDecorator
 import com.kravelteam.kravel_android.common.VerticalItemDecorator
+import com.kravelteam.kravel_android.common.newToken
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.mock.PopularPlaceData
 import com.kravelteam.kravel_android.data.response.PhotoResponse
 import com.kravelteam.kravel_android.data.response.PlaceContentResponse
+import com.kravelteam.kravel_android.network.AuthManager
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.NearPlaceRecyclerview
 import com.kravelteam.kravel_android.ui.adapter.PhotoReviewRecyclerview
@@ -55,6 +57,8 @@ class HomeFragment : Fragment() {
     private lateinit var photoAdapter : PhotoReviewRecyclerview
     private val nearAdapter : NearPlaceRecyclerview by lazy { NearPlaceRecyclerview() }
     private val networkManager : NetworkManager by inject()
+    private val authManager : AuthManager by inject()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -118,6 +122,7 @@ class HomeFragment : Fragment() {
             }
 
         })
+        newToken(authManager,networkManager)
         networkManager.getPlaceList(latitude!!,longitude!!,0.025,0.03).safeEnqueue (
             onSuccess = {
                 rv_near_place.apply {
@@ -166,6 +171,7 @@ class HomeFragment : Fragment() {
             }
 
         })
+        newToken(authManager,networkManager)
         networkManager.getPopularPlaceList(true).safeEnqueue (
             onSuccess = {
                 rv_popular_place.apply {
@@ -203,7 +209,7 @@ class HomeFragment : Fragment() {
         private const val FASTEST_INTERVAL: Long = 1000
     }
     private fun initPhotoRecycler() {
-
+        newToken(authManager,networkManager)
         networkManager.getPhotoReview(0,7,"createdDate,desc").safeEnqueue (
             onSuccess = {
                 Timber.e("사진리뷰")
