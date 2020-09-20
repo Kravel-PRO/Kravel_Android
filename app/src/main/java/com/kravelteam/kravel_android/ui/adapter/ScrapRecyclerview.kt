@@ -11,8 +11,9 @@ import com.kravelteam.kravel_android.data.response.MyScrapData
 import com.kravelteam.kravel_android.util.dpToPx
 import com.kravelteam.kravel_android.util.inflate
 import com.kravelteam.kravel_android.util.setRound
+import timber.log.Timber
 
-class ScrapRecyclerview(): RecyclerView.Adapter<ScrapRecyclerview.ViewHolder>(){
+class ScrapRecyclerview: RecyclerView.Adapter<ScrapRecyclerview.ViewHolder>(){
 
     private var data: List<MyScrapData> = emptyList()
 

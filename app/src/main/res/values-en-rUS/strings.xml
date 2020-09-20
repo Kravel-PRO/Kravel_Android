@@ -141,4 +141,5 @@
     <string name="allowGallery">You can save pictures
         \nafter allowing access to the gallery.</string>
     <string name="deletePhoto">Delete photo review.</string>
+    <string name="successUpdate">Success to update.</string>
 </resources>

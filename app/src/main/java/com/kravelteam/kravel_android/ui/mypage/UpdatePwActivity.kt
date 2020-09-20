@@ -86,7 +86,7 @@ class UpdatePwActivity : AppCompatActivity() {
                 networkManager.requestUpdateInfo("password",data).safeEnqueue(
                     onSuccess = {
                         finish()
-                        toast("비밀번호 수정에 완료했습니다.")
+                        toast(resources.getString(R.string.successUpdate))
                     },
                     onFailure = {
                         when {

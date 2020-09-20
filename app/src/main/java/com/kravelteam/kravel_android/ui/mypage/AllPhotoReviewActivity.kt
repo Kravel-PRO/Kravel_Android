@@ -189,7 +189,7 @@ class AllPhotoReviewActivity : AppCompatActivity() {
                     } else {
                         img_my_photo_review_empty_icon.setGone()
                         textView2.setGone()
-
+                        rv_my_photo_review.setVisible()
                         allPhotoReviewAdapter.initData(it.data.result.content)
                     }
                     offLoading()
@@ -222,6 +222,7 @@ class AllPhotoReviewActivity : AppCompatActivity() {
                             if(data.reviewId == intent.getIntExtra("position",0))
                                 position = index
                         }
+                        rv_my_photo_review.setVisible()
                         rv_my_photo_review.scrollToPosition(position)
                     }
                     offLoading()
@@ -254,6 +255,7 @@ class AllPhotoReviewActivity : AppCompatActivity() {
                             if(data.reviewId == intent.getIntExtra("position",0))
                                 position = index
                         }
+                        rv_my_photo_review.setVisible()
                         rv_my_photo_review.scrollToPosition(position)
                     }
                     offLoading()
@@ -290,6 +292,7 @@ class AllPhotoReviewActivity : AppCompatActivity() {
                             if(data.reviewId == intent.getIntExtra("position",0))
                                 position = index
                         }
+                        rv_my_photo_review.setVisible()
                         rv_my_photo_review.scrollToPosition(position)
                     }
                     offLoading()

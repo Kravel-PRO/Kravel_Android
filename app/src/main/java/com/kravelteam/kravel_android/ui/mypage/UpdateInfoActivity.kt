@@ -107,7 +107,7 @@ class UpdateInfoActivity : AppCompatActivity() {
                 if (newToken(authManager, networkManager)) {
                     networkManager.requestUpdateInfo("nickNameAndGender", data).safeEnqueue(
                         onSuccess = {
-                            toast("수정이 완료되었습니다")
+                            toast(resources.getString(R.string.successUpdate))
                             finish()
                         },
                         onFailure = {
