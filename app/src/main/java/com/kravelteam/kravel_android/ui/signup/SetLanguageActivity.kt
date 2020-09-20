@@ -70,10 +70,23 @@ class SetLanguageActivity : AppCompatActivity() {
                 authManager.first = true
                 if(Kor) {
                     authManager.setLang = "KOR"
+                    val ko = Locale.KOREA
+                    configuration.locale = ko
                 }
                 if(Eng) {
                     authManager.setLang = "ENG"
+                    val en = Locale.US
+                    configuration.locale = en
+
                 }
+                resources.updateConfiguration(configuration,resources.displayMetrics)
+                val intent = baseContext.packageManager.getLaunchIntentForPackage(
+                    baseContext.packageName
+                )
+                intent!!.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                intent!!.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                finish()
+                startActivity(intent)
             }
         }
 
@@ -95,11 +108,12 @@ class SetLanguageActivity : AppCompatActivity() {
 
             },
             onFailure = {
-                if(it.code() == 403){
-                    toast("재로그인을 해주세요")
+                if(it.code() == 403) {
+                    toast(resources.getString(R.string.errorReLogin))
                 } else {
-                    toast("언어 수정에 실패했습니다")
+                    toast(resources.getString(R.string.errorClient))
                 }
+
             },
             onError = {
                 networkErrorToast()

@@ -1,6 +1,7 @@
 package com.kravelteam.kravel_android.util
 
 import com.kravelteam.kravel_android.KravelApplication.Companion.GlobalApp
+import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.data.response.ErrorResponse
 import retrofit2.Call
 import retrofit2.Callback
@@ -62,6 +63,7 @@ fun <T> Call<T>.safeLoginEnqueue(
 }
 
 internal val onErrorStub: (Throwable) -> Unit = {
-    GlobalApp.toast("네트워크 에러가 발생하였습니다")
+
+    GlobalApp.toast(GlobalApp.resources.getString(R.string.errorNetwork))
     Timber.e("network error : $it")
 }

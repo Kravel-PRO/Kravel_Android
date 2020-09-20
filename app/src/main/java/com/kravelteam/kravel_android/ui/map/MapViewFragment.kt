@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.airbnb.lottie.LottieAnimationView
@@ -45,6 +46,9 @@ import kotlinx.android.synthetic.main.fragment_map_info.view.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 import com.naver.maps.map.MapFragment
+import kotlinx.android.synthetic.main.activity_photo_review.*
+import java.lang.Math.round
+import kotlin.math.roundToInt
 
 
 class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
@@ -70,6 +74,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
     private var checkBottomSheetClick : Boolean = false
     private var checkFirst : Boolean = true
     private val networkManager : NetworkManager by inject()
+    private var scale : Double = 5.0
     private lateinit var childFragment : FragmentManager
     private var part: String = "place"
     override fun onCreateView(
@@ -123,7 +128,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
         img_reset.setOnClickListener {
             if(!checkReset) {
                 Timber.e("CameraMove?")
-                initRecycler(nearLocation!!.latitude,nearLocation!!.longitude)
+                initRecycler(nearLocation!!.latitude,nearLocation!!.longitude,scale)
                 checkReset = true
             }
         }
@@ -202,6 +207,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
             mapMarker?.map = null
         }
         Timber.e("BottomSheetClick!!")
+
         networkManager.getPlaceDetailList(placeId).safeEnqueue (
             onSuccess = {
                 txt_bottom_title.text = it.data.result.title
@@ -255,17 +261,20 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
 
             },
             onFailure = {
-                Timber.e("실패")
+                if(it.code() == 403) {
+                    toast(resources.getString(R.string.errorReLogin))
+                } else {
+                    toast(resources.getString(R.string.errorClient))
+                }
 
             },
             onError = {
                 networkErrorToast()
             }
         )
+        cl_bottom_seat_place.setVisible()
         togglebtn_gps.setGone()
         img_reset.setGone()
-        cl_bottom_seat_place.setVisible()
-
 
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         bottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
@@ -308,7 +317,11 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
                         checkScrap = false
                         GlideApp.with(GlobalApp).load(R.drawable.ic_scrap).into(cl_bottom_seat_place.img_user_scrap)
                     }, onFailure = {
-                        Timber.e("실패")
+                        if(it.code() == 403) {
+                            toast(resources.getString(R.string.errorReLogin))
+                        } else {
+                            toast(resources.getString(R.string.errorClient))
+                        }
 
                     },
                     onError = {
@@ -324,7 +337,11 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
                         GlideApp.with(KravelApplication.GlobalApp).load(R.drawable.ic_scrap_fill).into(cl_bottom_seat_place.img_user_scrap)
 
                     }, onFailure = {
-                        Timber.e("실패")
+                        if(it.code() == 403) {
+                            toast(resources.getString(R.string.errorReLogin))
+                        } else {
+                            toast(resources.getString(R.string.errorClient))
+                        }
 
                     },
                     onError = {
@@ -340,12 +357,22 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
         networkManager.getPlaceReview(placeId,0,7,"reviewLikes-count,desc").safeEnqueue(
             onSuccess = {
                 if(!it.data.result.content.isNullOrEmpty()) {
+                    txt_bottom_photo_empty.setGone()
                     photoAdapter.initData(it.data.result.content)
+                    cl_bottom_seat_place.rv_home_photo_review.setVisible()
                     return@safeEnqueue
+                } else {
+                    cl_bottom_seat_place.rv_home_photo_review.setGone()
+                    txt_bottom_photo_empty.setVisible()
+
                 }
             },
             onFailure = {
-                Timber.e("실패")
+                if(it.code() == 403) {
+                    toast(resources.getString(R.string.errorReLogin))
+                } else {
+                    toast(resources.getString(R.string.errorClient))
+                }
 
             },
             onError = {
@@ -369,7 +396,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
         animMapInfoLottie.setVisible()
     }
 
-    private fun initRecycler(latitude: Double, longitude: Double) {
+    private fun initRecycler(latitude: Double, longitude: Double, scale : Double) {
         nearAdapter.setOnItemClickListener(object : MapPlaceRecyclerview.OnItemClickListener {
             override fun onItemClick(v: View, data: PlaceContentResponse, pos: Int) {
                 Intent(GlobalApp,PlaceDetailActivity::class.java).apply {
@@ -381,12 +408,16 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
             }
 
         })
-        networkManager.getPlaceList(latitude, longitude).safeEnqueue (
+        networkManager.getPlaceList(latitude, longitude,scale,scale).safeEnqueue (
             onSuccess = {
                 nearAdapter.initData(it.data!!.result!!.content)
             },
             onFailure = {
-                Timber.e("실패")
+                if(it.code() == 403) {
+                    toast(resources.getString(R.string.errorReLogin))
+                } else {
+                    toast(resources.getString(R.string.errorClient))
+                }
 
             },
             onError = {
@@ -396,7 +427,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
     }
 
     private fun initMarker(latitude: Double, longitude: Double) {
-        networkManager.getMapMarkerList(latitude,longitude).safeEnqueue (
+        networkManager.getMapMarkerList().safeEnqueue (
             onSuccess = {
                 for(i in 0..it.data.result.size-1) {
                     val marker = com.naver.maps.map.overlay.Marker()
@@ -443,7 +474,11 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
 
             },
             onFailure = {
-                Timber.e("실패")
+                if(it.code() == 403) {
+                    toast(resources.getString(R.string.errorReLogin))
+                } else {
+                    toast(resources.getString(R.string.errorClient))
+                }
 
             },
             onError = {
@@ -502,9 +537,12 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
                 }
                 else {
                     naverMap.locationTrackingMode = None
+                    val projection = naverMap.projection
+                    val masterPerDp = projection.metersPerDp
+                    scale = (masterPerDp/12)/88/2
                     nearLocation = LatLng(naverMap.cameraPosition.target.latitude ,naverMap.cameraPosition.target.longitude)
                     initMarker(nearLocation!!.latitude,nearLocation!!.longitude)
-                    initRecycler(nearLocation!!.latitude,nearLocation!!.longitude)
+                    initRecycler(nearLocation!!.latitude,nearLocation!!.longitude,scale)
                 }
                 checkFirst = false
             }
@@ -527,7 +565,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
                 if(checkArea(mLatitude,mLongitude)) {
                     togglebtn_gps.isSelected = false
                     initMarker(mLatitude,mLongitude)
-                    initRecycler(mLatitude,mLongitude)
+                    initRecycler(mLatitude,mLongitude,0.025)
                     trackingmode = false
                 } else {
                     naverMap.locationTrackingMode = None
@@ -538,6 +576,11 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
             if(reason == CameraUpdate.REASON_GESTURE || reason == CameraUpdate.REASON_LOCATION) {
                 nearLocation = LatLng(naverMap.cameraPosition.target.latitude ,naverMap.cameraPosition.target.longitude)
                 initMarker(nearLocation!!.latitude,nearLocation!!.longitude)
+                val projection = naverMap.projection
+                val masterPerDp = projection.metersPerDp
+                scale = (((masterPerDp/12)/88/2)).toString().substring(0,5).toDouble()
+
+                Timber.e("scale :: ${scale}")
                 if(preMarker != null) {
                     preMarker!!.icon = OverlayImage.fromResource(R.drawable.ic_mark_default)
                     val preMarkerData = preMarker!!.tag as TagMarkerData
@@ -606,7 +649,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
             bottomSheetBack()
             true
         } else {
-            false
+            true
         }
     }
 

@@ -118,7 +118,7 @@ class HomeFragment : Fragment() {
             }
 
         })
-        networkManager.getPlaceList(latitude!!,longitude!!).safeEnqueue (
+        networkManager.getPlaceList(latitude!!,longitude!!,0.025,0.03).safeEnqueue (
             onSuccess = {
                 rv_near_place.apply {
                     adapter = nearAdapter
@@ -140,7 +140,11 @@ class HomeFragment : Fragment() {
                 }
             },
             onFailure = {
-               Timber.e("실패")
+               if(it.code() == 403) {
+                   toast(resources.getString(R.string.errorReLogin))
+               } else {
+                   toast(resources.getString(R.string.errorClient))
+               }
 
             },
             onError = {
@@ -162,21 +166,29 @@ class HomeFragment : Fragment() {
             }
 
         })
-        /**
-         *  바꿔야함 !!
-         */
-        networkManager.getPopularPlaceList().safeEnqueue (
+        networkManager.getPopularPlaceList(true).safeEnqueue (
             onSuccess = {
                 rv_popular_place.apply {
                     adapter = popularAdapter
                     addItemDecoration(VerticalItemDecorator(12))
                 }
 
-                popularAdapter.initData(it.data!!.result.content)
+                if(it.data.result.content.isNullOrEmpty()) {
+                    cl_home_popular_empty.setVisible()
+                    rv_popular_place.setGone()
+                } else {
+                    popularAdapter.initData(it.data!!.result.content)
+                    cl_home_popular_empty.setGone()
+                    rv_popular_place.setVisible()
+                }
 
             },
             onFailure = {
-                Timber.e("실패")
+                if(it.code() == 403) {
+                    toast(resources.getString(R.string.errorReLogin))
+                } else {
+                    toast(resources.getString(R.string.errorClient))
+                }
             },
             onError = {
                 networkErrorToast()
@@ -200,14 +212,22 @@ class HomeFragment : Fragment() {
                     addItemDecoration(VerticalItemDecorator(4))
                     addItemDecoration(HorizontalItemDecorator(4))
                 }
-                photoAdapter.initData(it.data.result.content)
+
                 if(it.data.result.content.isNullOrEmpty()) {
-                    txt_home_photo1.setGone()
-                    txt_home_photo2.setGone()
+                    txt_home_photo_review_empty.setVisible()
+                    rv_home_photo_review.setGone()
+                } else {
+                    photoAdapter.initData(it.data.result.content)
+                    txt_home_photo_review_empty.setGone()
+                    rv_home_photo_review.setVisible()
                 }
             },
             onFailure = {
-                Timber.e("실패")
+                if(it.code() == 403) {
+                    toast(resources.getString(R.string.errorReLogin))
+                } else {
+                    toast(resources.getString(R.string.errorClient))
+                }
             },
             onError = {
                 networkErrorToast()

@@ -16,6 +16,7 @@ import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.NewPhotoReviewRecyclerview
 import com.kravelteam.kravel_android.util.networkErrorToast
 import com.kravelteam.kravel_android.util.safeEnqueue
+import com.kravelteam.kravel_android.util.toast
 import kotlinx.android.synthetic.main.activity_photo_review.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
@@ -50,7 +51,11 @@ class PhotoReviewActivity : AppCompatActivity() {
 
             },
             onFailure = {
-                Timber.e("실패")
+                if(it.code() == 403) {
+                    toast(resources.getString(R.string.errorReLogin))
+                } else {
+                    toast(resources.getString(R.string.errorClient))
+                }
             },
             onError = {
                 networkErrorToast()
@@ -70,6 +75,11 @@ class PhotoReviewActivity : AppCompatActivity() {
                           data.like = false
                       },
                       onFailure = {
+                          if(it.code() == 403) {
+                              toast(resources.getString(R.string.errorReLogin))
+                          } else {
+                              toast(resources.getString(R.string.errorClient))
+                          }
                           Timber.e("data id :: "+data.reviewId)
                           Timber.e("place id :: "+ data.place.placeId)
                           Timber.e("실패")
@@ -86,6 +96,11 @@ class PhotoReviewActivity : AppCompatActivity() {
                             data.like = true
                         },
                         onFailure = {
+                            if(it.code() == 403) {
+                                toast(resources.getString(R.string.errorReLogin))
+                            } else {
+                                toast(resources.getString(R.string.errorClient))
+                            }
                             Timber.e("data id :: "+data.reviewId)
                             Timber.e("place id :: "+ data.place.placeId)
                             Timber.e("실패")

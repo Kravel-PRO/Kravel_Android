@@ -124,4 +124,11 @@
     <string name="PhotoReview">"PhotoReview  "</string>
     <string name="Count">" "</string>
     <string name="setLanguageTitle">Please set the language</string>
+    <string name="homePhotoReviewWarning1">There\'s no photo review yet!\n Let\'s wait for a nice snapshot.</string>
+    <string name="mapPhotoReveiwEmpty">There\'s no photo review yet!\n Post a great proof shot!</string>
+    <string name="signupEmailWarning">" This email already exists!"</string>
+    <string name="homePopularEmpty">Please wait a little bit! \n We\'ll find a special place!</string>
+    <string name="errorReLogin">"Please log in again! "</string>
+    <string name="errorClient">" An error occurred! Please contact the developer."</string>
+    <string name="errorNetwork">A network error has occurred!</string>
 </resources>
