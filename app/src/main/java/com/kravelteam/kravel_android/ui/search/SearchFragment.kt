@@ -24,6 +24,7 @@ import com.kravelteam.kravel_android.ui.adapter.CelebRecyclerview
 import com.kravelteam.kravel_android.ui.adapter.SearchViewPagerAdapter
 import com.kravelteam.kravel_android.ui.adapter.SearchWordRecyclerview
 import com.kravelteam.kravel_android.ui.base.BaseFragment
+import com.kravelteam.kravel_android.ui.map.fragmentBackPressed
 import com.kravelteam.kravel_android.util.*
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.coroutines.CoroutineScope
@@ -31,7 +32,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
-class SearchFragment : Fragment(){
+class SearchFragment : Fragment(), fragmentBackPressed {
 
     private val networkManager : NetworkManager by inject()
 
@@ -71,5 +72,9 @@ class SearchFragment : Fragment(){
         edt_search_word_area.setOnDebounceClickListener {
             startActivity(SearchContentActivity::class)
         }
+    }
+
+    override fun onBackPressed() : Boolean {
+        return true
     }
 }

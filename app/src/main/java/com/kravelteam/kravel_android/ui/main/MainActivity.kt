@@ -94,20 +94,18 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
       //  super.onBackPressed()
         val fragment = this.supportFragmentManager.findFragmentById(R.id.fl_main)
+
         (fragment as? fragmentBackPressed)?.onBackPressed()?.not()?.let {
-            checkFragment = true
-        }
-        if(!checkFragment) {
-            if (System.currentTimeMillis() > backKeyPressedTime + 2000) {
-                backKeyPressedTime = System.currentTimeMillis()
-                this.toast("뒤로 버튼을 한번 더 누르시면 종료됩니다.")
-                return
-            } else {
-                this.finish()
+            if (it == false) {
+                if (System.currentTimeMillis() > backKeyPressedTime + 2000) {
+                    backKeyPressedTime = System.currentTimeMillis()
+                    this.toast(resources.getString(R.string.backbuttonWarning))
+                    return
+                } else {
+                    this.finish()
+                }
             }
         }
-
-
     }
 
 }

@@ -33,6 +33,11 @@ class FinishSignUpActivity : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
+    }
+
     companion object {
         const val REQUEST_ACTIVITY_MAIN = 1002
     }

@@ -6,12 +6,10 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import com.kravelteam.kravel_android.R
-import com.kravelteam.kravel_android.common.GlideApp
-import com.kravelteam.kravel_android.common.HorizontalItemDecorator
-import com.kravelteam.kravel_android.common.VerticalItemDecorator
-import com.kravelteam.kravel_android.common.setOnDebounceClickListener
+import com.kravelteam.kravel_android.common.*
 import com.kravelteam.kravel_android.data.request.ReviewLikeBody
 import com.kravelteam.kravel_android.data.response.PhotoReviewData
+import com.kravelteam.kravel_android.network.AuthManager
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.NewPhotoReviewRecyclerview
 import com.kravelteam.kravel_android.util.networkErrorToast
@@ -25,6 +23,7 @@ class PhotoReviewActivity : AppCompatActivity() {
     private val networkManager : NetworkManager by inject()
     private val photoAdapter : NewPhotoReviewRecyclerview by lazy { NewPhotoReviewRecyclerview() }
     private var position: Int = 0
+    private val authManager : AuthManager by inject()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_photo_review)
@@ -40,6 +39,7 @@ class PhotoReviewActivity : AppCompatActivity() {
         }
     }
     private fun initPhotoReivew() {
+        newToken(authManager,networkManager)
         networkManager.getPhotoReview(0,20,"createdDate,desc").safeEnqueue (
             onSuccess = {
 
@@ -76,7 +76,8 @@ class PhotoReviewActivity : AppCompatActivity() {
                 val imgLike = v!!.findViewById<ImageView>(R.id.img_rv_photo_like)
                 val txtHeart = v!!.findViewById<TextView>(R.id.txt_rv_photo_like)
                 if(data.like) {
-                  networkManager.postLikes(data.place.placeId,data.reviewId,ReviewLikeBody(false)).safeEnqueue(
+                    newToken(authManager,networkManager)
+                    networkManager.postLikes(data.place.placeId,data.reviewId,ReviewLikeBody(false)).safeEnqueue(
                       onSuccess = {
                           GlideApp.with(v).load(R.drawable.btn_like_unclick).into(imgLike)
                           data.likeCount = data.likeCount -1
@@ -98,6 +99,7 @@ class PhotoReviewActivity : AppCompatActivity() {
                           networkErrorToast()
                       })
                 } else {
+                    newToken(authManager,networkManager)
                     networkManager.postLikes(data.place.placeId,data.reviewId,ReviewLikeBody(true)).safeEnqueue(
                         onSuccess = {
                             GlideApp.with(v).load(R.drawable.btn_like).into(imgLike)

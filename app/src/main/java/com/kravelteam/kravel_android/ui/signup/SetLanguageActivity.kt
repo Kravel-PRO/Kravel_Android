@@ -8,6 +8,7 @@ import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.kravelteam.kravel_android.R
+import com.kravelteam.kravel_android.common.newToken
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.request.LanguageBody
 import com.kravelteam.kravel_android.network.AuthManager
@@ -94,6 +95,7 @@ class SetLanguageActivity : AppCompatActivity() {
         initEnableBtn()
     }
     private fun requestServer(lang : String) {
+        newToken(authManager,networkManager)
         networkManager.requestLanguage(type = "speech",data = LanguageBody(lang)).safeLoginEnqueue(
             onSuccess = {
                 authManager.token = it

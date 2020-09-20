@@ -43,7 +43,7 @@ class SignUpActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
 
-        img_signup_back.setOnClickListener {
+        img_signup_back.setOnDebounceClickListener {
             finish()
         }
 
@@ -293,11 +293,6 @@ class SignUpActivity : AppCompatActivity() {
             checkedBtn()
             if(checkBtn) {
                 requestSignUp()
-                Timber.e("id :::: " + email)
-                Timber.e("pw :::: " + pw)
-                Timber.e("nickname :::" + nickname)
-                Timber.e("gender ::: "+ gender)
-
             }
         }
 

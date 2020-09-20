@@ -7,9 +7,11 @@ import android.view.View
 import com.kravelteam.kravel_android.KravelApplication
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.VerticalItemDecorator
+import com.kravelteam.kravel_android.common.newToken
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.mock.NewPhotoReview
 import com.kravelteam.kravel_android.data.response.PlaceContentResponse
+import com.kravelteam.kravel_android.network.AuthManager
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.NearPlaceDetailRecyclerview
 import com.kravelteam.kravel_android.ui.adapter.NearPlaceRecyclerview
@@ -27,7 +29,7 @@ class NearPlaceActivity : AppCompatActivity() {
     private var latitude : Double = 0.0
     private var longitude : Double = 0.0
     private val networkManager : NetworkManager by inject()
-
+    private val authManager : AuthManager by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +57,7 @@ class NearPlaceActivity : AppCompatActivity() {
             }
 
         })
+        newToken(authManager,networkManager)
         networkManager.getPlaceList(latitude,longitude,0.025,0.03).safeEnqueue(
             onSuccess = {
                 rv_near_place.apply {

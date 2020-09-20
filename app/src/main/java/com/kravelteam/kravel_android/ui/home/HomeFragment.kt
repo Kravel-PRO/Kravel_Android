@@ -26,15 +26,18 @@ import com.kravelteam.kravel_android.KravelApplication.Companion.GlobalApp
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.HorizontalItemDecorator
 import com.kravelteam.kravel_android.common.VerticalItemDecorator
+import com.kravelteam.kravel_android.common.newToken
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.mock.PopularPlaceData
 import com.kravelteam.kravel_android.data.response.PhotoResponse
 import com.kravelteam.kravel_android.data.response.PlaceContentResponse
+import com.kravelteam.kravel_android.network.AuthManager
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.NearPlaceRecyclerview
 import com.kravelteam.kravel_android.ui.adapter.PhotoReviewRecyclerview
 import com.kravelteam.kravel_android.ui.adapter.PopularRecyclerview
 import com.kravelteam.kravel_android.ui.map.PlaceDetailActivity
+import com.kravelteam.kravel_android.ui.map.fragmentBackPressed
 import com.kravelteam.kravel_android.util.*
 import kotlinx.android.synthetic.main.dialog_gps_permission.view.*
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -45,7 +48,7 @@ import timber.log.Timber
 /**
  * A simple [Fragment] subclass.
  */
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), fragmentBackPressed {
     private var mFusedLocationProviderClient: FusedLocationProviderClient? = null
     lateinit var mLastLocation: Location
     internal lateinit var mLocationRequest: LocationRequest
@@ -55,6 +58,8 @@ class HomeFragment : Fragment() {
     private lateinit var photoAdapter : PhotoReviewRecyclerview
     private val nearAdapter : NearPlaceRecyclerview by lazy { NearPlaceRecyclerview() }
     private val networkManager : NetworkManager by inject()
+    private val authManager : AuthManager by inject()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -67,7 +72,15 @@ class HomeFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         photoAdapter = PhotoReviewRecyclerview("new","", -1)
-
+        rv_home_photo.apply {
+            adapter = photoAdapter
+            addItemDecoration(VerticalItemDecorator(4))
+            addItemDecoration(HorizontalItemDecorator(4))
+        }
+        rv_popular_place.apply {
+            adapter = popularAdapter
+            addItemDecoration(VerticalItemDecorator(12))
+        }
         mLocationRequest = LocationRequest()
         val locationManager = requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
         if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -118,6 +131,7 @@ class HomeFragment : Fragment() {
             }
 
         })
+        newToken(authManager,networkManager)
         networkManager.getPlaceList(latitude!!,longitude!!,0.025,0.03).safeEnqueue (
             onSuccess = {
                 rv_near_place.apply {
@@ -166,12 +180,10 @@ class HomeFragment : Fragment() {
             }
 
         })
+        newToken(authManager,networkManager)
         networkManager.getPopularPlaceList(true).safeEnqueue (
             onSuccess = {
-                rv_popular_place.apply {
-                    adapter = popularAdapter
-                    addItemDecoration(VerticalItemDecorator(12))
-                }
+
 
                 if(it.data.result.content.isNullOrEmpty()) {
                     cl_home_popular_empty.setVisible()
@@ -203,23 +215,18 @@ class HomeFragment : Fragment() {
         private const val FASTEST_INTERVAL: Long = 1000
     }
     private fun initPhotoRecycler() {
-
+        newToken(authManager,networkManager)
         networkManager.getPhotoReview(0,7,"createdDate,desc").safeEnqueue (
             onSuccess = {
-                Timber.e("사진리뷰")
-                rv_home_photo_review.apply {
-                    adapter = photoAdapter
-                    addItemDecoration(VerticalItemDecorator(4))
-                    addItemDecoration(HorizontalItemDecorator(4))
-                }
+
 
                 if(it.data.result.content.isNullOrEmpty()) {
-                    txt_home_photo_review_empty.setVisible()
-                    rv_home_photo_review.setGone()
+                    txt_home_photo_review_empty!!.setVisible()
+                    rv_home_photo.setGone()
                 } else {
                     photoAdapter.initData(it.data.result.content)
-                    txt_home_photo_review_empty.setGone()
-                    rv_home_photo_review.setVisible()
+                    txt_home_photo_review_empty!!.setGone()
+                    rv_home_photo.setVisible()
                 }
             },
             onFailure = {
@@ -308,6 +315,10 @@ class HomeFragment : Fragment() {
         } else {
             true
         }
+    }
+
+    override fun onBackPressed() : Boolean {
+        return true
     }
 
 
