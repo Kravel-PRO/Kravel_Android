@@ -24,6 +24,7 @@ import timber.log.Timber
 class PhotoReviewActivity : AppCompatActivity() {
     private val networkManager : NetworkManager by inject()
     private val photoAdapter : NewPhotoReviewRecyclerview by lazy { NewPhotoReviewRecyclerview() }
+    private var position: Int = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_photo_review)
@@ -42,12 +43,21 @@ class PhotoReviewActivity : AppCompatActivity() {
         networkManager.getPhotoReview(0,20,"createdDate,desc").safeEnqueue (
             onSuccess = {
 
+                val data = it.data.result.content
                 rv_photo_review.apply {
                     adapter = photoAdapter
                     addItemDecoration(VerticalItemDecorator(4))
                     addItemDecoration(HorizontalItemDecorator(4))
                 }
-                photoAdapter.initData(it.data.result.content)
+                photoAdapter.initData(data)
+                if(intent.getIntExtra("position",0) != 0) {
+                    toast("실행")
+                    data.forEachIndexed { index, data ->
+                        if (data.reviewId == intent.getIntExtra("position", 0))
+                            position = index
+                    }
+                    rv_photo_review.scrollToPosition(position)
+                }
 
             },
             onFailure = {

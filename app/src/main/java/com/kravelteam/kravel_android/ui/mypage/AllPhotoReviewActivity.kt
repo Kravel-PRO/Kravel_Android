@@ -26,6 +26,7 @@ class AllPhotoReviewActivity : AppCompatActivity() {
     private var checkReview = ""
     private var checkPart = ""
     private var id : Int = -1
+    private var position: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -146,6 +147,7 @@ class AllPhotoReviewActivity : AppCompatActivity() {
                 } else {
                     img_my_photo_review_empty_icon.setGone()
                     textView2.setGone()
+
                     allPhotoReviewAdapter.initData(it.data.result.content)
                 }
             },
@@ -161,7 +163,16 @@ class AllPhotoReviewActivity : AppCompatActivity() {
     private fun initGetCelebPhotoReview(){
         networkManager.getCelebPhotoReview(id,0,60,"reviewLikes-count,desc").safeEnqueue(
             onSuccess = {
-                allPhotoReviewAdapter.initData(it.data.result.content)
+                val data = it.data.result.content
+                allPhotoReviewAdapter.initData(data)
+                if(intent.getIntExtra("position",0) != 0) {
+                    toast("실행")
+                    data.forEachIndexed{ index, data ->
+                        if(data.reviewId == intent.getIntExtra("position",0))
+                            position = index
+                    }
+                    rv_my_photo_review.scrollToPosition(position)
+                }
             },
             onFailure = {
                 toast("실패")
@@ -175,7 +186,16 @@ class AllPhotoReviewActivity : AppCompatActivity() {
     private fun initGetMediaPhotoReview(){
         networkManager.requestMediaPhotoReview(id,0,60,"reviewLikes-count,desc").safeEnqueue(
             onSuccess = {
-                allPhotoReviewAdapter.initData(it.data.result.content)
+                val data = it.data.result.content
+                allPhotoReviewAdapter.initData(data)
+                if(intent.getIntExtra("position",0) != 0) {
+                    toast("실행")
+                    data.forEachIndexed{ index, data ->
+                        if(data.reviewId == intent.getIntExtra("position",0))
+                            position = index
+                    }
+                    rv_my_photo_review.scrollToPosition(position)
+                }
             },
             onFailure = {
                 toast("실패")
@@ -189,7 +209,16 @@ class AllPhotoReviewActivity : AppCompatActivity() {
     private fun initGetPlacePhotoReview(){
         networkManager.getPlaceReview(id,0,60,"reviewLikes-count,desc").safeEnqueue(
             onSuccess = {
-                allPhotoReviewAdapter.initData(it.data.result.content)
+                val data = it.data.result.content
+                allPhotoReviewAdapter.initData(data)
+                if(intent.getIntExtra("position",0) != 0) {
+                    toast("실행")
+                    data.forEachIndexed{ index, data ->
+                        if(data.reviewId == intent.getIntExtra("position",0))
+                            position = index
+                    }
+                    rv_my_photo_review.scrollToPosition(position)
+                }
             },
             onFailure = {
                 toast("실패")

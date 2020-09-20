@@ -62,6 +62,22 @@ class PhotoReviewRecyclerview(val review: String, val part: String?, val id: Int
             }
             txtMore.setGone()
             view.setGone()
+            itemView.setOnDebounceClickListener {
+                if((review == "my") or (review == "default")) {
+                    Intent(GlobalApp, AllPhotoReviewActivity::class.java).apply {
+                        putExtra("review", review)
+                        putExtra("part",part)
+                        putExtra("id",id)
+                        putExtra("position",item.reviewId)
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    }.run { GlobalApp.startActivity(this) }
+                } else if (review == "new") {
+                    Intent(GlobalApp, PhotoReviewActivity::class.java).apply {
+                        putExtra("position",item.reviewId)
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    }.run { GlobalApp.startActivity(this) }
+                }
+            }
         }
         fun bind2(item: PhotoReviewData){
             if(!item.imageUrl.isNullOrEmpty()) {
@@ -75,14 +91,15 @@ class PhotoReviewRecyclerview(val review: String, val part: String?, val id: Int
                         putExtra("review", review)
                         putExtra("part",part)
                         putExtra("id",id)
+                        putExtra("position",0)
                         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     }.run { GlobalApp.startActivity(this) }
                 } else if (review == "new") {
                     Intent(GlobalApp, PhotoReviewActivity::class.java).apply {
+                        putExtra("position",0)
                         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     }.run { GlobalApp.startActivity(this) }
                 }
-
             }
         }
     }
