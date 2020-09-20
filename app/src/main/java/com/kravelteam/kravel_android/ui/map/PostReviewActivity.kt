@@ -83,7 +83,7 @@ class PostReviewActivity : AppCompatActivity() {
 
             networkManager.requestPostPhotoReview(placeId,picture).safeEnqueue(
                 onSuccess = {
-                    toast("성공")
+                    toast("포토리뷰 업로드를 완료했습니다!")
                     Intent(KravelApplication.GlobalApp, AllPhotoReviewActivity::class.java).apply {
                         putExtra("review", "default")
                         putExtra("part",part)
@@ -93,10 +93,16 @@ class PostReviewActivity : AppCompatActivity() {
                     finish()
                 },
                 onFailure = {
-                    toast("이미지 업로드에 실패했습니다. 다시 시도 부탁드립니다.")
+                    if(it.code() == 400){
+                        toast("이미지를 확인해주세요!")
+                    } else if(it.code() == 403){
+                        toast("재로그인을 해주세요!")
+                    } else {
+                        toast("포토리뷰 작성에 실패했습니다")
+                    }
                 },
                 onError = {
-                    toast("이미지 업로드에 실패했습니다. 다시 시도 부탁드립니다.")
+                    networkErrorToast()
                 }
             )
         }

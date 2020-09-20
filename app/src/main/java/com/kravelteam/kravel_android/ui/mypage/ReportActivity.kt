@@ -164,10 +164,16 @@ class ReportActivity : AppCompatActivity() {
                     finish()
                 },
                 onFailure = {
-                    toast("네트워크 에러 발생")
+                    if(it.code() == 400){
+                        toast("이미지를 확인해주세요!")
+                    } else if(it.code() == 403){
+                        toast("재로그인을 해주세요!")
+                    } else {
+                        toast("제보하기에 실패했습니다")
+                    }
                 },
                 onError = {
-                    toast("네트워크 에러 발생")
+                    networkErrorToast()
                 }
             )
         }

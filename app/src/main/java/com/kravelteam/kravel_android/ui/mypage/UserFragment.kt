@@ -19,6 +19,7 @@ import com.kravelteam.kravel_android.ui.signup.SetLanguageActivity
 import com.kravelteam.kravel_android.util.networkErrorToast
 import com.kravelteam.kravel_android.util.safeEnqueue
 import com.kravelteam.kravel_android.util.startActivity
+import com.kravelteam.kravel_android.util.toast
 import kotlinx.android.synthetic.main.dialog_logout.view.*
 import kotlinx.android.synthetic.main.fragment_user.*
 import org.koin.android.ext.android.inject
@@ -61,7 +62,11 @@ class UserFragment : Fragment() {
 
             },
             onFailure = {
-
+                if(it.code() == 403) {
+                    toast("재로그인을 해주세요!")
+                } else {
+                    toast("업데이트에 실패했습니다")
+                }
             },
             onError = {
                 networkErrorToast()

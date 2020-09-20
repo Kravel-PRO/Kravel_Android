@@ -66,6 +66,7 @@ class SetLanguageActivity : AppCompatActivity() {
                     authManager.setLang = "ENG"
                 }
             } else {
+                startActivity(LoginActivity::class,true)
                 authManager.first = true
                 if(Kor) {
                     authManager.setLang = "KOR"
