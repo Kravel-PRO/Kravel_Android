@@ -11,10 +11,12 @@ import android.widget.RadioGroup
 import androidx.core.content.ContextCompat
 import com.kravelteam.kravel_android.KravelApplication.Companion.GlobalApp
 import com.kravelteam.kravel_android.R
+import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.request.SignUpRequest
 import com.kravelteam.kravel_android.network.AuthManager
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.util.safeEnqueue
+import com.kravelteam.kravel_android.util.safeLoginEnqueue
 import com.kravelteam.kravel_android.util.toJson
 import com.kravelteam.kravel_android.util.toast
 import kotlinx.android.synthetic.main.activity_sign_up.*
@@ -287,7 +289,7 @@ class SignUpActivity : AppCompatActivity() {
         )
 
 
-        btn_signup.setOnClickListener {
+        btn_signup.setOnDebounceClickListener {
             checkedBtn()
             if(checkBtn) {
                 requestSignUp()
@@ -317,17 +319,18 @@ class SignUpActivity : AppCompatActivity() {
     }
     private fun requestSignUp(){
         val data = SignUpRequest(email,pw,nickname,gender,authManager.setLang)
-        networkManager.requestSignUp(data).safeEnqueue(
+        networkManager.requestSignUp(data).safeLoginEnqueue(
             onSuccess = {
-                toast("성공")
+                authManager.token =it
                 Intent(GlobalApp,FinishSignUpActivity::class.java).run {
                     startActivityForResult(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
                         REQUEST_FINISH_SIGN_UP) }
             },
             onFailure = {
-                when(it.errorBody().toJson().error?.code){
+                Timber.e("${it.code()}")
+                when(it.code()){
                     400 -> {
-                        toast("이미 존재하는 이메일입니다")
+                        toast(resources.getString(R.string.signupEmailWarning))
                     }
                 }
             },

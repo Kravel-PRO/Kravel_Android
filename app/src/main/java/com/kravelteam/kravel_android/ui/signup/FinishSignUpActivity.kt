@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.kravelteam.kravel_android.KravelApplication.Companion.GlobalApp
 import com.kravelteam.kravel_android.R
+import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.ui.main.MainActivity
 import kotlinx.android.synthetic.main.activity_finish_sign_up.*
 
@@ -18,7 +19,7 @@ class FinishSignUpActivity : AppCompatActivity() {
 
         setResult(Activity.RESULT_OK)
 
-        btn_signup_finish.setOnClickListener {
+        btn_signup_finish.setOnDebounceClickListener {
                Intent(GlobalApp,MainActivity::class.java).run {
                    startActivityForResult(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
                        REQUEST_ACTIVITY_MAIN) }

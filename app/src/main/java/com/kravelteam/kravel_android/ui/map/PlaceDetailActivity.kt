@@ -15,8 +15,7 @@ import com.kravelteam.kravel_android.data.request.ScrapBody
 import com.kravelteam.kravel_android.network.AuthManager
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.*
-import com.kravelteam.kravel_android.util.networkErrorToast
-import com.kravelteam.kravel_android.util.safeEnqueue
+import com.kravelteam.kravel_android.util.*
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.MapFragment
@@ -104,7 +103,11 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                             checkScrap = false
                             GlideApp.with(img_map_detail_scrap).load(R.drawable.ic_scrap).into(img_map_detail_scrap)
                         }, onFailure = {
-                        Timber.e("실패")
+                            if(it.code() == 403) {
+                                toast(resources.getString(R.string.errorReLogin))
+                            } else {
+                                toast(resources.getString(R.string.errorClient))
+                            }
 
                     },
                         onError = {
@@ -120,7 +123,11 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                         GlideApp.with(img_map_detail_scrap).load(R.drawable.ic_scrap_fill).into(img_map_detail_scrap)
 
                     }, onFailure = {
-                        Timber.e("실패")
+                        if(it.code() == 403) {
+                            toast(resources.getString(R.string.errorReLogin))
+                        } else {
+                            toast(resources.getString(R.string.errorClient))
+                        }
 
                     },
                     onError = {
@@ -184,7 +191,11 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
             },
             onFailure = {
-                Timber.e("실패")
+                if(it.code() == 403) {
+                    toast(resources.getString(R.string.errorReLogin))
+                } else {
+                    toast(resources.getString(R.string.errorClient))
+                }
 
             },
             onError = {
@@ -223,7 +234,13 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                 val parserHandler = XmlPullParserHandler()
                 val neardatas = parserHandler.parse(url.openStream())
 
-                nearplaceAdapter.initData(neardatas)
+                if(neardatas.isNullOrEmpty()) {
+                    cl_bottom_near_place.setGone()
+                } else{
+                    nearplaceAdapter.initData(neardatas)
+                    cl_bottom_near_place.setVisible()
+                }
+
                 nearplaceAdapter.notifyDataSetChanged()
             }
         }
@@ -259,17 +276,24 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
     }
     private fun initPhotoRecycler() {
 
-
         networkManager.getPlaceReview(placeId,0,7,"reviewLikes-count,desc").safeEnqueue(
             onSuccess = {
 
-
                 if (!it.data.result.content.isNullOrEmpty()) {
                     photoAdapter.initData(it.data.result.content)
+                    txt_map_detail_photo_review_empty.setGone()
+                    rv_map_detail_photo.setVisible()
+                } else {
+                    rv_map_detail_photo.setGone()
+                    txt_map_detail_photo_review_empty.setVisible()
                 }
             },
             onFailure = {
-                Timber.e("실패")
+                if(it.code() == 403) {
+                    toast(resources.getString(R.string.errorReLogin))
+                } else {
+                    toast(resources.getString(R.string.errorClient))
+                }
 
             },
             onError = {

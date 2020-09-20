@@ -103,14 +103,18 @@ class NetworkManager(authManager: AuthManager) {
 
     fun getPlaceList(
         latitude : Double,
-        longitude : Double
-    ) = retrofit.getPlaceList(latitude, longitude)
+        longitude : Double,
+        width : Double,
+        height : Double
+    ) = retrofit.getPlaceList(latitude, longitude,width, height)
 
     fun getPlaceDetailList(
         placeId : Int
     ) = retrofit.getPlaceDetailList(placeId)
 
-    fun getPopularPlaceList() = retrofit.getPopularPlaceList()
+    fun getPopularPlaceList(
+        bool : Boolean
+    ) = retrofit.getPopularPlaceList(bool)
 
     fun getPhotoReview(
         page : Int,
@@ -150,9 +154,7 @@ class NetworkManager(authManager: AuthManager) {
     ) = retrofit.requestMyPhotoReviews(page, size, sort)
 
     fun getMapMarkerList(
-        latitude : Double,
-        longitude : Double
-    ) = retrofit.getMapMarkerList(latitude, longitude)
+    ) = retrofit.getMapMarkerList()
 
     fun postScrap(
         placeId: Int,

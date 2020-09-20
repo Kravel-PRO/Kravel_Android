@@ -85,12 +85,15 @@ class AllPhotoReviewRecyclerview(
                 txtPlaceName.setGone()
                 imgLike.isSelected = item.like
                 imgLike.setOnDebounceClickListener {
+                    var now = item.likeCount
                     if(it.isSelected) {
+                        now--
                         it.isSelected = false
-                        txtLikeCount.text = (item.likeCount-1).toString()
+                        txtLikeCount.text = (now).toString()
                     } else {
+                        now++
                         it.isSelected = true
-                        txtLikeCount.text = (item.likeCount+1).toString()
+                        txtLikeCount.text = (now).toString()
                     }
                     onLike(imgLike.isSelected,item.reviewId)
                 }
