@@ -12,6 +12,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.os.Handler
 import android.provider.MediaStore
 import android.webkit.MimeTypeMap
 import android.widget.Toast
@@ -49,9 +50,12 @@ class CameraActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_camera)
 
+        Timber.e(intent.getStringExtra("placeName"))
         //필터
         intent.getStringExtra("filter")?.let {
             GlideApp.with(applicationContext).load(it).into(img_camera_concept_ill)
+            txt_camera_unselect_concept.setVisible()
+            txt_camera_unselect_concept.text = intent.getStringExtra("placeName")
         }
 
         cameraProviderFuture = ProcessCameraProvider.getInstance(this)
@@ -86,6 +90,12 @@ class CameraActivity : AppCompatActivity(){
 
         img_camera_cancel.setOnDebounceClickListener {
             finish()
+        }
+    }
+
+    private fun showEx(){
+        txt_camera_concept_example.setOnDebounceClickListener {
+
         }
     }
 
@@ -138,6 +148,7 @@ class CameraActivity : AppCompatActivity(){
             values
         ).build()
 
+        cl_camer_capture.setVisible()
         //카메라 셔터
         val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
         val volume = audioManager.getStreamVolume(AudioManager.STREAM_NOTIFICATION)
@@ -147,17 +158,20 @@ class CameraActivity : AppCompatActivity(){
             }
             shoot?.start()
         }
-
-        //깜빡이는 애니메이션 넣어주기
+        Handler().postDelayed({
+            cl_camer_capture.setGone()
+        },100)
 
         // 이미지 캡쳐
         imageCapture.takePicture(
             outputOptions, ContextCompat.getMainExecutor(this), object : ImageCapture.OnImageSavedCallback {
                 override fun onError(exc: ImageCaptureException) {
                     Timber.e("실패 ${exc.message}")
+                    toast("이미지 저장에 실패했습니다")
                 }
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
+
                     val savedUri = Uri.fromFile(f)
 
                     GlideApp.with(applicationContext).load(output.savedUri).into(img_gallery_take_picture)
@@ -173,6 +187,7 @@ class CameraActivity : AppCompatActivity(){
                     ) { _, uri ->
                         Timber.e( "저장된 곳: $uri")
                     }
+                    toast("이미지를 저장했습니다")
                 }
             })
 
@@ -229,7 +244,7 @@ class CameraActivity : AppCompatActivity(){
         txt_camera_unselect_concept.setOnDebounceClickListener {
             txt_camera_unselect_concept.setInvisible()
             txt_camera_unselect_basic.setVisible()
-            txt_camera_select.text = "기생충"
+            txt_camera_select.text = intent.getStringExtra("placeName")
             img_camera_concept_ill.setVisible()
             cl_camera_concept_example.setVisible()
             txt_camera_concept_example.setVisible()

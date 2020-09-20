@@ -21,6 +21,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.koin.android.ext.android.inject
+import timber.log.Timber
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.InputStream
@@ -77,9 +78,9 @@ class PostReviewActivity : AppCompatActivity() {
             val inputStream: InputStream = contentResolver.openInputStream(selectedPicUri!!)!!
             val bitmap = BitmapFactory.decodeStream(inputStream,null,options)
             val byteArrayOutputStream = ByteArrayOutputStream()
-            bitmap!!.compress(Bitmap.CompressFormat.JPEG,20,byteArrayOutputStream)
+            bitmap!!.compress(Bitmap.CompressFormat.JPEG,100,byteArrayOutputStream)
             val photoBody = RequestBody.create("image/jpg".toMediaTypeOrNull(),byteArrayOutputStream.toByteArray())
-            val picture = MultipartBody.Part.createFormData("file", File(selectedPicUri.toString()).name,photoBody)
+            val picture = MultipartBody.Part.createFormData("file", File(selectedPicUri.toString()).name+".jpg",photoBody)
 
             networkManager.requestPostPhotoReview(placeId,picture).safeEnqueue(
                 onSuccess = {

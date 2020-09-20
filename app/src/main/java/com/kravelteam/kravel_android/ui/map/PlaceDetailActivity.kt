@@ -41,6 +41,8 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
     private var longitude : Double = 0.0
     private var checkScrap : Boolean = false
     private var part: String = "place"
+    private var placeName : String = ""
+    private var filterImg: String? = null
     private val authManager : AuthManager by inject()
     private val  image = mutableListOf<String>()
 
@@ -84,7 +86,8 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
         img_map_detail_photo.setOnClickListener {
             Intent(GlobalApp,CameraActivity::class.java).apply {
-                putExtra("filter","필터 이미지")
+                putExtra("filter",filterImg)
+                putExtra("placeName",placeName)
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }.run { GlobalApp.startActivity(this) }
         }
@@ -140,6 +143,10 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                 txt_map_detail_title.text = it.data.result.title
                 txt_map_detail_address.text = it.data.result.location
                 txt_map_detail_address2.text = it.data.result.location
+                it.data.result.filterImageUrl?.let {
+                    filterImg = it
+                }
+                placeName = it.data.result.title
                 if (!it.data.result.imageUrl.isNullOrBlank()) {
                     image.add(it.data.result.imageUrl)
                 }

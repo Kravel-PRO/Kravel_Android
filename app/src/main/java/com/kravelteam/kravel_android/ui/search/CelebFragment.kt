@@ -54,7 +54,7 @@ class CelebFragment() : Fragment() {
         }
 
         newToken(authManager,networkManager)
-        networkManager.requestCelebList().safeEnqueue(
+        networkManager.requestCelebList(0,100).safeEnqueue(
             onSuccess = {
                 if(!it.data.result.content.isNullOrEmpty()) celebAdapter.initData(it.data.result.content)
             },

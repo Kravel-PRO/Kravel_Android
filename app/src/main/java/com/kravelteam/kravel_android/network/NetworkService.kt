@@ -78,7 +78,10 @@ interface NetworkService {
      * 셀럽 리스트
      */
     @GET("/api/celebrities")
-    fun requestCelebList() : Call<BaseResponse<CelebListResponse>>
+    fun requestCelebList(
+        @Query("page") page: Int,
+        @Query("size") size: Int
+    ) : Call<BaseResponse<CelebListResponse>>
 
     /**
      * 셀럽 상세
@@ -105,7 +108,11 @@ interface NetworkService {
      * 미디어 리스트
      */
     @GET("/api/medias")
-    fun requestMediaList() : Call<BaseResponse<MediaListResponse>>
+    fun requestMediaList(
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+        @Query("sort") sort: String
+    ) : Call<BaseResponse<MediaListResponse>>
 
     /**
      * 미디어 상세
@@ -214,6 +221,14 @@ interface NetworkService {
     ) : Call<BaseResponse<Int>>
 
     /**
+     * 포토리뷰 삭제
+     */
+    @DELETE("/api/reviews/{reviewId}")
+    fun requestDeletePhotoReview(
+        @Path("reviewId") reviewId : Int
+    ) : Call<BaseResponse<Int>>
+
+    /**
      * 내 스크랩 정보
      */
     @GET("/api/member/scraps")
@@ -223,7 +238,11 @@ interface NetworkService {
      * 내 포토 리뷰
      */
     @GET("/api/member/reviews")
-    fun requestMyPhotoReviews() : Call<BaseResponse<PhotoReviewResponse>>
+    fun requestMyPhotoReviews(
+        @Query("page") page : Int,
+        @Query("size") size : Int,
+        @Query("sort") sort : String
+    ) : Call<BaseResponse<PhotoReviewResponse>>
 
     /**
      * 장소 상세 - 스크랩

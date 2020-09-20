@@ -77,6 +77,8 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
     private var scale : Double = 5.0
     private lateinit var childFragment : FragmentManager
     private var part: String = "place"
+    private var filterImg: String? = null
+    private var placeName : String = ""
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -137,7 +139,8 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
 
         img_bottom_photo.setOnDebounceClickListener {
              Intent(GlobalApp,CameraActivity::class.java).apply {
-                 putExtra("filter","필터 이미지")
+                 putExtra("filter",filterImg)
+                 putExtra("placeName",placeName)
                  addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
              }.run { GlobalApp.startActivity(this) }
         }
@@ -212,6 +215,10 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
             onSuccess = {
                 txt_bottom_title.text = it.data.result.title
                 txt_bottom_map_address1.text = it.data.result.location
+                it.data.result.filterImageUrl?.let {
+                    filterImg = it
+                }
+                placeName = it.data.result.title
                 if(!it.data.result.imageUrl.isNullOrBlank()) {
                     GlideApp.with(img_bottom_place).load(it.data.result.imageUrl).into(img_bottom_place)
                 }

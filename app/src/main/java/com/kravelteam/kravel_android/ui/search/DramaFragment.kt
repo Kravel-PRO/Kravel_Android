@@ -49,7 +49,7 @@ class DramaFragment() : Fragment() {
         }
 
 
-        networkManager.requestMediaList().safeEnqueue(
+        networkManager.requestMediaList(0,100,"year,desc").safeEnqueue(
             onSuccess = {
                 if(!it.data.result.content.isNullOrEmpty()) dramaAdapter.initData(it.data.result.content)
             },
