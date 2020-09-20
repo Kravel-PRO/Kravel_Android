@@ -3,6 +3,8 @@ package com.kravelteam.kravel_android.ui.search
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import com.airbnb.lottie.LottieAnimationView
 import com.kravelteam.kravel_android.KravelApplication
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.*
@@ -24,6 +26,7 @@ class SearchDetailActivity : AppCompatActivity() {
     private lateinit var photoAdapter: PhotoReviewRecyclerview
     private val networkManager : NetworkManager by inject()
     private val authManager: AuthManager by inject()
+    private lateinit var lottie : LottieAnimationView
 
     private var id : Int = 0
     private var part : String = ""
@@ -35,10 +38,26 @@ class SearchDetailActivity : AppCompatActivity() {
         part = intent.getStringExtra("part")
         photoAdapter = PhotoReviewRecyclerview("default",part,id)
         txt_search_detail_title2.text = txt_search_detail_title2.text.toString().setCustomFontSubString(resources.getString(R.string.homeNewPhotoReview2),R.font.notosans_cjk_kr_bold,18)
+        lottie = lottie_detail_loading
+
 
         initRecycler()
         initPlaceMoreBtn()
         initSetting()
+    }
+    private fun onLoading(){
+        lottie.apply {
+            setAnimation("heart_loading.json")
+            playAnimation()
+            loop(true)
+        }
+        root.setGone()
+        lottie_detail_loading.setVisible()
+    }
+
+    private fun offLoading(){
+        root.setVisible()
+        lottie_detail_loading.setGone()
     }
 
     private fun initSetting(){
@@ -66,6 +85,7 @@ class SearchDetailActivity : AppCompatActivity() {
         }
 
         if(part == "celeb"){ //셀럽 디테일 상세 정보
+            onLoading()
             if (newToken(authManager,networkManager)) {
             networkManager.requestCelebDetail(id,0,7).safeEnqueue(
                 onSuccess = {it ->
@@ -82,6 +102,7 @@ class SearchDetailActivity : AppCompatActivity() {
                             btn_search_detail_more.setGone()
                         }
                     }
+                    offLoading()
                 },
                 onFailure = {
                     if(it.code() == 403) {
@@ -122,6 +143,7 @@ class SearchDetailActivity : AppCompatActivity() {
                 toast(resources.getString(R.string.errorNetwork))
             }
         } else { //미디어 디테일 상세 정보
+            onLoading()
             if (newToken(authManager,networkManager)) {
             networkManager.requestMediaDetail(id).safeEnqueue(
                 onSuccess = { it ->
@@ -137,6 +159,7 @@ class SearchDetailActivity : AppCompatActivity() {
                             placeAdapter.initData(it.places.toMutableList())
                             btn_search_detail_more.setGone()
                         }
+                        offLoading()
                     }
                 },
                 onFailure = {

@@ -5,8 +5,10 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.widget.TextView
+import com.airbnb.lottie.LottieAnimationView
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.newToken
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
@@ -16,6 +18,7 @@ import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.AllPhotoReviewRecyclerview
 import com.kravelteam.kravel_android.util.*
 import kotlinx.android.synthetic.main.activity_all_photo_review.*
+import kotlinx.android.synthetic.main.activity_all_photo_review.lottie_detail_loading
 import kotlinx.android.synthetic.main.dialog_logout.view.*
 import org.koin.android.ext.android.inject
 
@@ -28,10 +31,13 @@ class AllPhotoReviewActivity : AppCompatActivity() {
     private var checkPart = ""
     private var id : Int = -1
     private var position: Int = 0
+    private lateinit var lottie : LottieAnimationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_all_photo_review)
+
+        lottie = lottie_detail_loading
 
         checkReview = intent.getStringExtra("review")!!
         initRecycler()
@@ -69,6 +75,21 @@ class AllPhotoReviewActivity : AppCompatActivity() {
         }
 
         initSetting()
+    }
+
+    private fun onLoading(){
+        lottie.apply {
+            setAnimation("heart_loading.json")
+            playAnimation()
+            loop(true)
+        }
+        root.setGone()
+        lottie_detail_loading.setVisible()
+    }
+
+    private fun offLoading(){
+        root.setVisible()
+        lottie_detail_loading.setGone()
     }
 
     private fun initSetting(){
@@ -159,6 +180,7 @@ class AllPhotoReviewActivity : AppCompatActivity() {
     }
 
     private fun initGetMyPhotoReview(){
+        onLoading()
         if (newToken(authManager,networkManager)) {
             networkManager.requestMyPhotoReviews(0,100,"createdDate,desc").safeEnqueue(
                 onSuccess = {
@@ -170,6 +192,7 @@ class AllPhotoReviewActivity : AppCompatActivity() {
 
                         allPhotoReviewAdapter.initData(it.data.result.content)
                     }
+                    offLoading()
                 },
                 onFailure = {
                     if(it.code() == 403) {
@@ -188,6 +211,7 @@ class AllPhotoReviewActivity : AppCompatActivity() {
     }
 
     private fun initGetCelebPhotoReview(){
+        onLoading()
         if (newToken(authManager,networkManager)) {
             networkManager.getCelebPhotoReview(id,0,60,"reviewLikes-count,desc").safeEnqueue(
                 onSuccess = {
@@ -200,6 +224,7 @@ class AllPhotoReviewActivity : AppCompatActivity() {
                         }
                         rv_my_photo_review.scrollToPosition(position)
                     }
+                    offLoading()
                 },
                 onFailure = {
                     if(it.code() == 403) {
@@ -218,6 +243,7 @@ class AllPhotoReviewActivity : AppCompatActivity() {
     }
 
     private fun initGetMediaPhotoReview(){
+        onLoading()
         if (newToken(authManager,networkManager)) {
             networkManager.requestMediaPhotoReview(id,0,60,"reviewLikes-count,desc").safeEnqueue(
                 onSuccess = {
@@ -230,6 +256,7 @@ class AllPhotoReviewActivity : AppCompatActivity() {
                         }
                         rv_my_photo_review.scrollToPosition(position)
                     }
+                    offLoading()
                 },
                 onFailure = {
                     if(it.code() == 403) {
@@ -248,8 +275,13 @@ class AllPhotoReviewActivity : AppCompatActivity() {
     }
 
     private fun initGetPlacePhotoReview(){
+        onLoading()
         if (newToken(authManager,networkManager)) {
-            networkManager.getPlaceReview(id,0,60,"reviewLikes-count,desc").safeEnqueue(
+            var sort = "reviewLikes-count,desc"
+            intent.getStringExtra("sort")?.let {
+                sort = it
+            }
+            networkManager.getPlaceReview(id,0,60,sort).safeEnqueue(
                 onSuccess = {
                     val data = it.data.result.content
                     allPhotoReviewAdapter.initData(data)
@@ -260,6 +292,7 @@ class AllPhotoReviewActivity : AppCompatActivity() {
                         }
                         rv_my_photo_review.scrollToPosition(position)
                     }
+                    offLoading()
                 },
                 onFailure = {
                     if(it.code() == 403) {
