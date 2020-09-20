@@ -56,7 +56,7 @@ class SearchDetailActivity : AppCompatActivity() {
     }
 
     private fun offLoading(){
-        root.setVisible()
+        root.fadeInWithVisible(500)
         lottie_detail_loading.setGone()
     }
 
@@ -94,12 +94,24 @@ class SearchDetailActivity : AppCompatActivity() {
                         txt_search_detail_title.text = it.celebrity.celebrityName
                         txt_search_detail_sub2.text = resources.getString(R.string.visitedPlace)
 
-                        if( it.places.size == DATA_COUNT ){
-                            placeAdapter.initData(it.places.dropLast(1).toMutableList())
-                            btn_search_detail_more.setVisible()
-                        } else {
-                            placeAdapter.initData(it.places.toMutableList())
-                            btn_search_detail_more.setGone()
+                        when {
+                            it.places.size == DATA_COUNT -> {
+                                placeAdapter.initData(it.places.dropLast(1).toMutableList())
+                                btn_search_detail_more.setVisible()
+                                img_search_place_empty.setGone()
+                                txt_search_place_empty.setGone()
+                            }
+                            it.places.isNullOrEmpty() -> {
+                                btn_search_detail_more.setGone()
+                                img_search_place_empty.setVisible()
+                                txt_search_place_empty.setVisible()
+                            }
+                            else -> {
+                                placeAdapter.initData(it.places.toMutableList())
+                                btn_search_detail_more.setGone()
+                                img_search_place_empty.setGone()
+                                txt_search_place_empty.setGone()
+                            }
                         }
                     }
                     offLoading()
@@ -128,6 +140,9 @@ class SearchDetailActivity : AppCompatActivity() {
                     }
                     if(!it.data.result.content.isNullOrEmpty()) {
                         photoAdapter.initData(it.data.result.content)
+                        txt_search_photo_empty.setGone()
+                    } else {
+                        txt_search_photo_empty.setVisible()
                     }
                 },
                 onFailure = {
@@ -155,12 +170,24 @@ class SearchDetailActivity : AppCompatActivity() {
                         txt_search_detail_title.text = it.media.title
                         txt_search_detail_sub2.text = resources.getString(R.string.filmSite)
 
-                        if( it.places.size == DATA_COUNT ){
-                            placeAdapter.initData(it.places.dropLast(1).toMutableList())
-                            btn_search_detail_more.setVisible()
-                        } else {
-                            placeAdapter.initData(it.places.toMutableList())
-                            btn_search_detail_more.setGone()
+                        when {
+                            it.places.size == DATA_COUNT -> {
+                                placeAdapter.initData(it.places.dropLast(1).toMutableList())
+                                btn_search_detail_more.setVisible()
+                                img_search_place_empty.setGone()
+                                txt_search_place_empty.setGone()
+                            }
+                            it.places.isNullOrEmpty() -> {
+                                btn_search_detail_more.setGone()
+                                img_search_place_empty.setVisible()
+                                txt_search_place_empty.setVisible()
+                            }
+                            else -> {
+                                placeAdapter.initData(it.places.toMutableList())
+                                btn_search_detail_more.setGone()
+                                img_search_place_empty.setGone()
+                                txt_search_place_empty.setGone()
+                            }
                         }
                         offLoading()
                     }
@@ -187,9 +214,11 @@ class SearchDetailActivity : AppCompatActivity() {
                         addItemDecoration(HorizontalItemDecorator(4))
                         addItemDecoration(VerticalItemDecorator(4))
                     }
-                    val data = it.data.result.content
-                    data.isNullOrEmpty().let {
-                        photoAdapter.initData(data)
+                    if(!it.data.result.content.isNullOrEmpty()) {
+                        photoAdapter.initData(it.data.result.content)
+                        txt_search_photo_empty.setGone()
+                    } else {
+                        txt_search_photo_empty.setVisible()
                     }
                 },
                 onFailure = {

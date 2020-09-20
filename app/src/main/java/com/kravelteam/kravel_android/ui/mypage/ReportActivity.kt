@@ -187,7 +187,6 @@ class ReportActivity : AppCompatActivity() {
             networkManager.requestReport(pictureList, title, contents, address, tags, inquireCategory).safeEnqueue(
                 onSuccess = {
                     toast(resources.getString(R.string.successReport))
-                    offLoading()
                     finish()
                 },
                 onFailure = {
@@ -214,6 +213,11 @@ class ReportActivity : AppCompatActivity() {
                 offLoading()
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        offLoading()
     }
 
     companion object {

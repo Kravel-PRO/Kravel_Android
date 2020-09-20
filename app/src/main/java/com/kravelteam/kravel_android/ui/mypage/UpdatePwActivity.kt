@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
+import com.airbnb.lottie.LottieAnimationView
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.newToken
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
@@ -13,6 +14,7 @@ import com.kravelteam.kravel_android.network.AuthManager
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.util.*
 import kotlinx.android.synthetic.main.activity_update_pw.*
+import kotlinx.android.synthetic.main.activity_update_pw.lottie_detail_loading
 import kotlinx.android.synthetic.main.dialog_login_fail.view.*
 import org.koin.android.ext.android.inject
 
@@ -20,6 +22,7 @@ class UpdatePwActivity : AppCompatActivity() {
 
     private val networkManager : NetworkManager by inject()
     private val authManager: AuthManager by inject()
+    private lateinit var lottie : LottieAnimationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,10 +32,28 @@ class UpdatePwActivity : AppCompatActivity() {
         initEnableBtn()
         initUpdatePw()
 
+        lottie = lottie_detail_loading
+
         img_update_pw_back.setOnDebounceClickListener {
             finish()
         }
     }
+
+    private fun onLoading(){
+        lottie.apply {
+            setAnimation("heart_loading.json")
+            playAnimation()
+            loop(true)
+        }
+        lottie_background.setVisible()
+        lottie_detail_loading.setVisible()
+    }
+
+    private fun offLoading(){
+        lottie_detail_loading.setGone()
+        lottie_background.setGone()
+    }
+
     private fun initChangeEditText(){
         edt_update_pw_content.onTextChangeListener(
             onTextChanged = {
@@ -80,6 +101,7 @@ class UpdatePwActivity : AppCompatActivity() {
             if(edt_update_pw_change.text.length < 6){
                 toast(resources.getString(R.string.hintPw))
             } else {
+                onLoading()
                 val data = UpdateInfo(
                     edt_update_pw_content.text.toString(),
                     edt_update_pw_change_check.text.toString(),
@@ -103,13 +125,16 @@ class UpdatePwActivity : AppCompatActivity() {
                                     toast(resources.getString(R.string.errorClient))
                                 }
                             }
+                            offLoading()
                         },
                         onError = {
                             networkErrorToast()
+                            offLoading()
                         }
                     )
                 } else {
                     toast(resources.getString(R.string.errorNetwork))
+                    offLoading()
                 }
             }
 
@@ -132,5 +157,10 @@ class UpdatePwActivity : AppCompatActivity() {
             setCancelable(false)
             show()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        offLoading()
     }
 }

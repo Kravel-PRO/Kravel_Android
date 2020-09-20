@@ -4,17 +4,16 @@ import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
+import com.airbnb.lottie.LottieAnimationView
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.newToken
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.request.UpdateInfo
 import com.kravelteam.kravel_android.network.AuthManager
 import com.kravelteam.kravel_android.network.NetworkManager
-import com.kravelteam.kravel_android.util.networkErrorToast
-import com.kravelteam.kravel_android.util.onTextChangeListener
-import com.kravelteam.kravel_android.util.safeEnqueue
-import com.kravelteam.kravel_android.util.toast
+import com.kravelteam.kravel_android.util.*
 import kotlinx.android.synthetic.main.activity_update_info.*
+import kotlinx.android.synthetic.main.activity_update_info.lottie_detail_loading
 import org.koin.android.ext.android.inject
 
 @Suppress("DEPRECATION")
@@ -22,6 +21,7 @@ class UpdateInfoActivity : AppCompatActivity() {
 
     private val networkManager : NetworkManager by inject()
     private val authManager : AuthManager by inject()
+    private lateinit var lottie : LottieAnimationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +34,24 @@ class UpdateInfoActivity : AppCompatActivity() {
         initEnableBtn()
         initUpdateUserInfo()
 
+        lottie = lottie_detail_loading
+
         img_update_info_back.setOnDebounceClickListener { finish() }
+    }
+
+    private fun onLoading(){
+        lottie.apply {
+            setAnimation("heart_loading.json")
+            playAnimation()
+            loop(true)
+        }
+        lottie_background.setVisible()
+        lottie_detail_loading.setVisible()
+    }
+
+    private fun offLoading(){
+        lottie_background.setGone()
+        lottie_detail_loading.setGone()
     }
 
     private fun initSetting(){
@@ -96,6 +113,7 @@ class UpdateInfoActivity : AppCompatActivity() {
             if(edt_update_info_nickname.text.length>8){
                 toast(resources.getString(R.string.hintNickname))
             } else {
+                onLoading()
                 val gender = if(rb_update_info_man.isChecked){
                     "MAN"
                 } else "WOMAN"
@@ -109,8 +127,8 @@ class UpdateInfoActivity : AppCompatActivity() {
                 if (newToken(authManager,networkManager)) {
                     networkManager.requestUpdateInfo("nickNameAndGender", data).safeEnqueue(
                         onSuccess = {
-                            toast(resources.getString(R.string.successUpdate))
                             finish()
+                            toast(resources.getString(R.string.successUpdate))
                         },
                         onFailure = {
                             if(it.code() == 403) {
@@ -121,13 +139,19 @@ class UpdateInfoActivity : AppCompatActivity() {
                         },
                         onError = {
                             networkErrorToast()
+                            offLoading()
                         }
                     )
                 } else {
                     toast(resources.getString(R.string.errorNetwork))
+                    offLoading()
                 }
             }
-
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        offLoading()
     }
 }

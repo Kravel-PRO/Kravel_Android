@@ -41,6 +41,7 @@ class CelebFragment() : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initRecycler()
+        rv_celeb_list.fadeInWithVisible(600)
     }
 
     private fun initRecycler(){

@@ -55,7 +55,7 @@ class SearchResultFragment : Fragment() {
     }
 
     private fun offLoading(){
-        root.setVisible()
+        root.fadeInWithVisible(600)
         lottie_detail_loading.setGone()
     }
 

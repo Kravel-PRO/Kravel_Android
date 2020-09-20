@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.core.animation.doOnEnd
+import com.airbnb.lottie.LottieAnimationView
 import com.auth0.android.jwt.JWT
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
@@ -20,11 +21,9 @@ import com.kravelteam.kravel_android.network.AuthManager
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.main.MainActivity
 import com.kravelteam.kravel_android.ui.signup.SignUpActivity
-import com.kravelteam.kravel_android.util.networkErrorToast
-import com.kravelteam.kravel_android.util.safeLoginEnqueue
-import com.kravelteam.kravel_android.util.startActivity
-import com.kravelteam.kravel_android.util.toast
+import com.kravelteam.kravel_android.util.*
 import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.activity_login.lottie_detail_loading
 import kotlinx.android.synthetic.main.dialog_login_fail.view.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
@@ -34,13 +33,30 @@ class LoginActivity : AppCompatActivity() {
 
     private val networkManager : NetworkManager by inject()
     private val authManager : AuthManager by inject()
+    private lateinit var lottie : LottieAnimationView
 
     private var showCheck: Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        lottie = lottie_detail_loading
         init()
+    }
+
+    private fun onLoading(){
+        lottie.apply {
+            setAnimation("heart_loading.json")
+            playAnimation()
+            loop(true)
+        }
+        lottie_background.setVisible()
+        lottie_detail_loading.setVisible()
+    }
+
+    private fun offLoading(){
+        lottie_background.setGone()
+        lottie_detail_loading.setGone()
     }
 
     //초기 설정
@@ -65,7 +81,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         btn_login_other_view.setOnDebounceClickListener {
-
+            onLoading()
             val loginData = LoginRequest(
                 loginEmail = edt_login_email.text.toString(),
                 loginPw = edt_login_pw.text.toString()
@@ -87,9 +103,11 @@ class LoginActivity : AppCompatActivity() {
                     } else {
                         toast(resources.getString(R.string.errorClient))
                     }
+                    offLoading()
                 },
                 onError = {
                     networkErrorToast()
+                    offLoading()
                 }
             )
         }
@@ -202,5 +220,10 @@ class LoginActivity : AppCompatActivity() {
             setCancelable(false)
             show()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        offLoading()
     }
 }

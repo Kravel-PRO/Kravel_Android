@@ -28,5 +28,7 @@
     <color name="colorBlue">#4a90e2</color>
     <color name="colorOpacityBrown">#BD979797</color>
     <color name="colorOpacity50White">#80ffffff</color>
+    <color name="colorOpacity30White">#4DFFFFFF</color>
+    <color name="colorOpacity20White">#33FFFFFF</color>
 
 </resources>

@@ -53,7 +53,7 @@ class ScrapActivity : AppCompatActivity() {
     }
 
     private fun offLoading(){
-        root.setVisible()
+        root.fadeInWithVisible(500)
         lottie_detail_loading.setGone()
     }
 
