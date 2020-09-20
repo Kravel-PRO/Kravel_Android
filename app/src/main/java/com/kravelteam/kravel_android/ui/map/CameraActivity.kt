@@ -23,6 +23,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.net.toFile
 import com.google.common.util.concurrent.ListenableFuture
+import com.kravelteam.kravel_android.KravelApplication
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.GlideApp
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
@@ -91,11 +92,17 @@ class CameraActivity : AppCompatActivity(){
         img_camera_cancel.setOnDebounceClickListener {
             finish()
         }
+
+        showEx()
     }
 
     private fun showEx(){
         txt_camera_concept_example.setOnDebounceClickListener {
-
+            Intent(KravelApplication.GlobalApp,ExampleActivity::class.java).apply {
+                intent.getStringExtra("subImg")?.let {
+                    putExtra("imgEx",it)
+                }
+            }.run { startActivity(this) }
         }
     }
 

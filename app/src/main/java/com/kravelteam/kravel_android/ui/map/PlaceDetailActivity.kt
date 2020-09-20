@@ -42,6 +42,7 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
     private var checkScrap : Boolean = false
     private var part: String = "place"
     private var placeName : String = ""
+    private var subImg: String? = null
     private var filterImg: String? = null
     private val authManager : AuthManager by inject()
     private val  image = mutableListOf<String>()
@@ -73,6 +74,7 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             Intent(GlobalApp,PostReviewActivity::class.java).apply{
                 putExtra("placeId",placeId)
                 putExtra("part",part)
+                putExtra("subImg",subImg)
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }.run {
                 GlobalApp.startActivity(this)
@@ -145,6 +147,9 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                 txt_map_detail_address2.text = it.data.result.location
                 it.data.result.filterImageUrl?.let {
                     filterImg = it
+                }
+                it.data.result.subImageUrl?.let{
+                    subImg = it
                 }
                 placeName = it.data.result.title
                 if (!it.data.result.imageUrl.isNullOrBlank()) {

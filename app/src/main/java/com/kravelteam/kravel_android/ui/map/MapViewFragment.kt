@@ -79,6 +79,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
     private var part: String = "place"
     private var filterImg: String? = null
     private var placeName : String = ""
+    private var subImg: String? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -141,6 +142,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
              Intent(GlobalApp,CameraActivity::class.java).apply {
                  putExtra("filter",filterImg)
                  putExtra("placeName",placeName)
+                 putExtra("subImg",subImg)
                  addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
              }.run { GlobalApp.startActivity(this) }
         }
@@ -217,6 +219,9 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
                 txt_bottom_map_address1.text = it.data.result.location
                 it.data.result.filterImageUrl?.let {
                     filterImg = it
+                }
+                it.data.result.subImageUrl?.let{
+                    subImg = it
                 }
                 placeName = it.data.result.title
                 if(!it.data.result.imageUrl.isNullOrBlank()) {
