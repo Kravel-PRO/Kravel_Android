@@ -15,6 +15,7 @@ import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.network.AuthManager
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.login.LoginActivity
+import com.kravelteam.kravel_android.ui.map.fragmentBackPressed
 import com.kravelteam.kravel_android.ui.signup.SetLanguageActivity
 import com.kravelteam.kravel_android.util.networkErrorToast
 import com.kravelteam.kravel_android.util.safeEnqueue
@@ -27,7 +28,7 @@ import org.koin.android.ext.android.inject
 /**
  * A simple [Fragment] subclass.
  */
-class UserFragment : Fragment() {
+class UserFragment : Fragment(), fragmentBackPressed {
 
     private val authManager : AuthManager by inject()
     private val networkManager : NetworkManager by inject()
@@ -136,6 +137,10 @@ class UserFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         initGetUserInfo()
+    }
+
+    override fun onBackPressed() : Boolean {
+        return true
     }
 
 }
