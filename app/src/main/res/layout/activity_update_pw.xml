@@ -71,13 +71,16 @@
             android:id="@+id/edt_update_pw_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:background="@drawable/signup_edit_style"
             android:hint="@string/hintPw"
-            android:textColor="@color/colorBlack"
             android:inputType="textPassword"
+            android:paddingRight="16dp"
+            android:textColor="@color/colorBlack"
+            android:lines="1"
             android:textSize="15sp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/txt_update_pw_explan" />
+            app:layout_constraintTop_toBottomOf="@+id/txt_update_pw_explan"
+            tools:layout_editor_absoluteX="16dp" />
 
         <TextView
             android:id="@+id/txt_update_pw_change"
@@ -99,7 +102,9 @@
             android:hint="@string/hintPw"
             android:textColorHint="@color/colorDarkGrey"
             android:inputType="textPassword"
+            android:lines="1"
             android:textColor="@color/colorBlack"
+            android:paddingRight="16dp"
             android:textSize="15sp"
             app:layout_constraintTop_toBottomOf="@+id/txt_update_pw_change"
             tools:layout_editor_absoluteX="16dp" />
@@ -126,6 +131,8 @@
             android:textColor="@color/colorBlack"
             android:textSize="15sp"
             android:layout_marginTop="8dp"
+            android:lines="1"
+            android:paddingRight="16dp"
             app:layout_constraintTop_toBottomOf="@+id/txt_update_pw_change_check"
             tools:layout_editor_absoluteX="16dp" />
 

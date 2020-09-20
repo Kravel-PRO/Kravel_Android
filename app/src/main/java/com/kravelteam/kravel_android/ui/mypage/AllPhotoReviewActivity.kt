@@ -200,9 +200,11 @@ class AllPhotoReviewActivity : AppCompatActivity() {
                     } else {
                         toast(resources.getString(R.string.errorClient))
                     }
+                    offLoading()
                 },
                 onError = {
                     networkErrorToast()
+                    offLoading()
                 }
             )
         } else {
@@ -233,13 +235,16 @@ class AllPhotoReviewActivity : AppCompatActivity() {
                     } else {
                         toast(resources.getString(R.string.errorClient))
                     }
+                    offLoading()
                 },
                 onError = {
                     networkErrorToast()
+                    offLoading()
                 }
             )
         } else {
             toast(resources.getString(R.string.errorNetwork))
+            offLoading()
         }
     }
 
@@ -266,13 +271,16 @@ class AllPhotoReviewActivity : AppCompatActivity() {
                     } else {
                         toast(resources.getString(R.string.errorClient))
                     }
+                    offLoading()
                 },
                 onError = {
                     networkErrorToast()
+                    offLoading()
                 }
             )
         } else {
             toast(resources.getString(R.string.errorNetwork))
+            offLoading()
         }
     }
 
@@ -303,13 +311,16 @@ class AllPhotoReviewActivity : AppCompatActivity() {
                     } else {
                         toast(resources.getString(R.string.errorClient))
                     }
+                    offLoading()
                 },
                 onError = {
                     networkErrorToast()
+                    offLoading()
                 }
             )
         } else {
             toast(resources.getString(R.string.errorNetwork))
+            offLoading()
         }
     }
 }

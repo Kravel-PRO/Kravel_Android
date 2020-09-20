@@ -93,18 +93,20 @@ class UpdateInfoActivity : AppCompatActivity() {
 
     private fun initUpdateUserInfo(){
         btn_update_info_complete.setOnDebounceClickListener {
-            val gender = if(rb_update_info_man.isChecked){
-                "MAN"
-            } else "WOMAN"
+            if(edt_update_info_nickname.text.length>8){
+                toast(resources.getString(R.string.hintNickname))
+            } else {
+                val gender = if(rb_update_info_man.isChecked){
+                    "MAN"
+                } else "WOMAN"
 
-            val data = UpdateInfo(
-                "",
-                "",
-                gender,
-                edt_update_info_nickname.text.toString()
-            )
-            if (newToken(authManager,networkManager)) {
-                if (newToken(authManager, networkManager)) {
+                val data = UpdateInfo(
+                    "",
+                    "",
+                    gender,
+                    edt_update_info_nickname.text.toString()
+                )
+                if (newToken(authManager,networkManager)) {
                     networkManager.requestUpdateInfo("nickNameAndGender", data).safeEnqueue(
                         onSuccess = {
                             toast(resources.getString(R.string.successUpdate))
@@ -125,6 +127,7 @@ class UpdateInfoActivity : AppCompatActivity() {
                     toast(resources.getString(R.string.errorNetwork))
                 }
             }
+
         }
     }
 }

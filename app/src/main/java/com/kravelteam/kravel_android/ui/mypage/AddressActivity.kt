@@ -26,6 +26,7 @@ class AddressActivity : AppCompatActivity() {
         img_address_back.setOnDebounceClickListener { finish() }
         cl_address_sample_space.setVisible()
         cl_address_result_space.setGone()
+        edt_address_search
 
         initSearch()
         initChangeEdit()
@@ -45,7 +46,7 @@ class AddressActivity : AppCompatActivity() {
 
     private fun initSearch(){
         edt_address_search.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_NEXT) {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 initSearchAddress()
             }
             true

@@ -128,13 +128,16 @@ class PostReviewActivity : AppCompatActivity() {
                             toast(resources.getString(R.string.errorClient))
                         }
                     }
+                    offLoading()
                 },
                 onError = {
                     networkErrorToast()
+                    offLoading()
                 }
             )
             } else {
                 toast(resources.getString(R.string.errorNetwork))
+                offLoading()
             }
         }
 

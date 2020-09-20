@@ -9,6 +9,7 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
+import com.airbnb.lottie.LottieAnimationView
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.GlideApp
 import com.kravelteam.kravel_android.common.newToken
@@ -17,10 +18,10 @@ import com.kravelteam.kravel_android.network.AuthManager
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.util.*
 import kotlinx.android.synthetic.main.activity_report.*
+import kotlinx.android.synthetic.main.activity_report.lottie_detail_loading
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import org.json.JSONObject
 import org.koin.android.ext.android.inject
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -39,9 +40,13 @@ class ReportActivity : AppCompatActivity() {
     private val authManager : AuthManager by inject()
     private val networkManager : NetworkManager by inject()
 
+    private lateinit var lottie : LottieAnimationView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_report)
+
+        lottie = lottie_detail_loading
 
         initChangeEditText()
         initUploadImg()
@@ -50,6 +55,21 @@ class ReportActivity : AppCompatActivity() {
         img_report_back.setOnDebounceClickListener {
             finish()
         }
+    }
+
+    private fun onLoading(){
+        lottie.apply {
+            setAnimation("heart_loading.json")
+            playAnimation()
+            loop(true)
+        }
+        root.setGone()
+        lottie_detail_loading.setVisible()
+    }
+
+    private fun offLoading(){
+        root.setVisible()
+        lottie_detail_loading.setGone()
     }
 
     private fun initChangeEditText(){
@@ -145,6 +165,7 @@ class ReportActivity : AppCompatActivity() {
 
     private fun initReport(){
         btn_report_complete.setOnDebounceClickListener {
+            onLoading()
             //이미지 파일 내보내기
             val options = BitmapFactory.Options()
             val inputStream: InputStream = contentResolver.openInputStream(selectedPicUri!!)!!
@@ -165,7 +186,8 @@ class ReportActivity : AppCompatActivity() {
             if (newToken(authManager,networkManager)) {
             networkManager.requestReport(pictureList, title, contents, address, tags, inquireCategory).safeEnqueue(
                 onSuccess = {
-                    toast("제보가 완료되었습니다! 감사합니다!")
+                    toast(resources.getString(R.string.successReport))
+                    offLoading()
                     finish()
                 },
                 onFailure = {
@@ -180,13 +202,16 @@ class ReportActivity : AppCompatActivity() {
                             toast(resources.getString(R.string.errorClient))
                         }
                     }
+                    offLoading()
                 },
                 onError = {
                     networkErrorToast()
+                    offLoading()
                 }
             )
             } else {
                 toast(resources.getString(R.string.errorNetwork))
+                offLoading()
             }
         }
     }

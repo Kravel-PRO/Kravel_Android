@@ -110,9 +110,11 @@ class SearchDetailActivity : AppCompatActivity() {
                     } else {
                         toast(resources.getString(R.string.errorClient))
                     }
+                    offLoading()
                 },
                 onError = {
                     networkErrorToast()
+                    offLoading()
                 }
             )
 
@@ -141,6 +143,7 @@ class SearchDetailActivity : AppCompatActivity() {
             )
             } else {
                 toast(resources.getString(R.string.errorNetwork))
+                offLoading()
             }
         } else { //미디어 디테일 상세 정보
             onLoading()
@@ -168,9 +171,11 @@ class SearchDetailActivity : AppCompatActivity() {
                     } else {
                         toast(resources.getString(R.string.errorClient))
                     }
+                    offLoading()
                 },
                 onError = {
                     networkErrorToast()
+                    offLoading()
                 }
             )
 
@@ -200,6 +205,7 @@ class SearchDetailActivity : AppCompatActivity() {
             )
             } else {
                 toast(resources.getString(R.string.errorNetwork))
+                offLoading()
             }
         }
     }

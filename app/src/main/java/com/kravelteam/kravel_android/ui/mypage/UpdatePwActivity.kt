@@ -77,37 +77,42 @@ class UpdatePwActivity : AppCompatActivity() {
 
     private fun initUpdatePw(){
         btn_update_pw_complete.setOnDebounceClickListener {
-            val data = UpdateInfo(
-                edt_update_pw_content.text.toString(),
-                edt_update_pw_change_check.text.toString(),
-                "",
-                "")
-            if (newToken(authManager,networkManager)) {
-                networkManager.requestUpdateInfo("password",data).safeEnqueue(
-                    onSuccess = {
-                        finish()
-                        toast(resources.getString(R.string.successUpdate))
-                    },
-                    onFailure = {
-                        when {
-                            it.code() == 403 -> {
-                                toast(resources.getString(R.string.errorReLogin))
-                            }
-                            it.code() == 400 -> {
-                                initDialog()
-                            }
-                            else -> {
-                                toast(resources.getString(R.string.errorClient))
-                            }
-                        }
-                    },
-                    onError = {
-                        networkErrorToast()
-                    }
-                )
+            if(edt_update_pw_change.text.length < 6){
+                toast(resources.getString(R.string.hintPw))
             } else {
-                toast(resources.getString(R.string.errorNetwork))
+                val data = UpdateInfo(
+                    edt_update_pw_content.text.toString(),
+                    edt_update_pw_change_check.text.toString(),
+                    "",
+                    "")
+                if (newToken(authManager,networkManager)) {
+                    networkManager.requestUpdateInfo("password",data).safeEnqueue(
+                        onSuccess = {
+                            finish()
+                            toast(resources.getString(R.string.successUpdate))
+                        },
+                        onFailure = {
+                            when {
+                                it.code() == 403 -> {
+                                    toast(resources.getString(R.string.errorReLogin))
+                                }
+                                it.code() == 400 -> {
+                                    initDialog()
+                                }
+                                else -> {
+                                    toast(resources.getString(R.string.errorClient))
+                                }
+                            }
+                        },
+                        onError = {
+                            networkErrorToast()
+                        }
+                    )
+                } else {
+                    toast(resources.getString(R.string.errorNetwork))
+                }
             }
+
         }
     }
 
