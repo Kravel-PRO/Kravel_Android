@@ -72,7 +72,15 @@ class HomeFragment : Fragment(), fragmentBackPressed {
         super.onActivityCreated(savedInstanceState)
 
         photoAdapter = PhotoReviewRecyclerview("new","", -1)
-
+        rv_home_photo.apply {
+            adapter = photoAdapter
+            addItemDecoration(VerticalItemDecorator(4))
+            addItemDecoration(HorizontalItemDecorator(4))
+        }
+        rv_popular_place.apply {
+            adapter = popularAdapter
+            addItemDecoration(VerticalItemDecorator(12))
+        }
         mLocationRequest = LocationRequest()
         val locationManager = requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
         if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -175,10 +183,7 @@ class HomeFragment : Fragment(), fragmentBackPressed {
         newToken(authManager,networkManager)
         networkManager.getPopularPlaceList(true).safeEnqueue (
             onSuccess = {
-                rv_popular_place.apply {
-                    adapter = popularAdapter
-                    addItemDecoration(VerticalItemDecorator(12))
-                }
+
 
                 if(it.data.result.content.isNullOrEmpty()) {
                     cl_home_popular_empty.setVisible()
@@ -213,18 +218,14 @@ class HomeFragment : Fragment(), fragmentBackPressed {
         newToken(authManager,networkManager)
         networkManager.getPhotoReview(0,7,"createdDate,desc").safeEnqueue (
             onSuccess = {
-                rv_home_photo.apply {
-                    adapter = photoAdapter
-                    addItemDecoration(VerticalItemDecorator(4))
-                    addItemDecoration(HorizontalItemDecorator(4))
-                }
+
 
                 if(it.data.result.content.isNullOrEmpty()) {
-                    txt_home_photo_review_empty.setVisible()
+                    txt_home_photo_review_empty!!.setVisible()
                     rv_home_photo.setGone()
                 } else {
                     photoAdapter.initData(it.data.result.content)
-                    txt_home_photo_review_empty.setGone()
+                    txt_home_photo_review_empty!!.setGone()
                     rv_home_photo.setVisible()
                 }
             },
