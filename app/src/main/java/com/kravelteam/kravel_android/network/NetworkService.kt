@@ -172,7 +172,7 @@ interface NetworkService {
      */
     @GET("/api/places")
     fun getPopularPlaceList(
-        @Query("review-count") bool : Boolean
+        @Query("sort") sort : String
     ) : Call<BaseResponse<PlaceDataResponse>>
 
     /**

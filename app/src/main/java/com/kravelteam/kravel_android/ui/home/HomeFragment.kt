@@ -183,12 +183,11 @@ class HomeFragment : Fragment(), fragmentBackPressed {
             }
 
         })
+
         if(newToken(authManager,networkManager)) {
-            networkManager.getPopularPlaceList(true).safeEnqueue(
+            networkManager.getPopularPlaceList("review-count,desc").safeEnqueue (
                 onSuccess = {
-
-
-                    if (it.data.result.content.isNullOrEmpty()) {
+                    if(it.data.result.content.isNullOrEmpty()) {
                         cl_home_popular_empty.setVisible()
                         rv_popular_place.setGone()
                     } else {
@@ -196,7 +195,6 @@ class HomeFragment : Fragment(), fragmentBackPressed {
                         cl_home_popular_empty.setGone()
                         rv_popular_place.setVisible()
                     }
-
                 },
                 onFailure = {
                     if (it.code() == 403) {
