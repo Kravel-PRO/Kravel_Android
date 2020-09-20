@@ -181,7 +181,7 @@ class HomeFragment : Fragment(), fragmentBackPressed {
 
         })
         newToken(authManager,networkManager)
-        networkManager.getPopularPlaceList(true).safeEnqueue (
+        networkManager.getPopularPlaceList("review-count,desc").safeEnqueue (
             onSuccess = {
 
 

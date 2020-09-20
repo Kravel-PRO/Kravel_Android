@@ -113,8 +113,8 @@ class NetworkManager(authManager: AuthManager) {
     ) = retrofit.getPlaceDetailList(placeId)
 
     fun getPopularPlaceList(
-        bool : Boolean
-    ) = retrofit.getPopularPlaceList(bool)
+        sort : String
+    ) = retrofit.getPopularPlaceList(sort)
 
     fun getPhotoReview(
         page : Int,
