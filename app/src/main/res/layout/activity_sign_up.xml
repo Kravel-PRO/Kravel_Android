@@ -198,6 +198,7 @@
             android:background="@drawable/signup_edit_style"
             android:textSize="15sp"
             android:includeFontPadding="false"
+            android:inputType="text"
             android:fontFamily="@font/notosans_cjk_kr_regular"
             android:hint="@string/hintNickname"
             />
