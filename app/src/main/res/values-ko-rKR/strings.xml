@@ -43,7 +43,7 @@
     <string name="mainWord3">Kravel만의 장소를 둘러보세요.</string>
     <string name="homeNearPlace1">"나와 가까운 "</string>
     <string name="homeNearPlace2">Kravel</string>
-    <string name="homeMoreBtn">더 보기 ></string>
+    <string name="homeMoreBtn">더 보기</string>
     <string name="homePopularPlace1">"요즘 여기가 "</string>
     <string name="homePopularPlace2">인기 있어요!</string>
     <string name="homeNewPhotoReview1">"새롭게 올라온 "</string>
@@ -142,4 +142,9 @@
     <string name="deletePhoto">삭제되었습니다.</string>
     <string name="successUpdate">수정이 완료되었습니다.</string>
     <string name="successReport">제보해주셔서 감사합니다 :)</string>
+    <string name="gpsPermittionWarning">위치 권한 설정을 해주세요.</string>
+    <string name="networkWarningTitle">네트워크 연결이 끊겼습니다.</string>
+    <string name="gpsWarningTitle">GPS 연결이 끊겼습니다.</string>
+    <string name="networkWarningCotent">네트워크 상태를 확인해주세요. \n 문제가 계속되면 잠시 후 다시 시도해주세요.</string>
+    <string name="gpsWarningContent">해당기기의 GPS가 꺼져있어 \n 위치정보를 가져올 수 없습니다. \n GPS를 사용하시겠습니까?</string>
 </resources>
