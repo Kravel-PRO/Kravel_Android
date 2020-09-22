@@ -11,8 +11,8 @@ android {
         applicationId 'com.kravelteam.kravel_android'
         minSdkVersion 24
         targetSdkVersion 29
-        versionCode 3
-        versionName "0.0.2"
+        versionCode 4
+        versionName "0.0.8"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
