@@ -1,7 +1,10 @@
 package com.kravelteam.kravel_android.ui.map
 
+import android.Manifest
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.location.LocationManager
@@ -10,9 +13,11 @@ import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.airbnb.lottie.LottieAnimationView
@@ -26,6 +31,7 @@ import com.kravelteam.kravel_android.data.response.PlaceContentResponse
 import com.kravelteam.kravel_android.network.AuthManager
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.adapter.*
+import com.kravelteam.kravel_android.ui.home.HomeFragment
 import com.kravelteam.kravel_android.util.*
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
@@ -43,9 +49,7 @@ import kotlinx.android.synthetic.main.fragment_map_info.view.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 import com.naver.maps.map.MapFragment
-import kotlinx.android.synthetic.main.activity_photo_review.*
-import java.lang.Math.round
-import kotlin.math.roundToInt
+import kotlinx.android.synthetic.main.fragment_home.*
 
 
 class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
@@ -77,6 +81,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
     private var part: String = "place"
     private var filterImg: String? = null
     private var placeName : String = ""
+    private lateinit var lottie : LottieAnimationView
     private var subImg: String? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -93,6 +98,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
             val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
             StrictMode.setThreadPolicy(policy)
         }
+        lottie = lottie_map_loading
         childFragment = childFragmentManager
         mapFragment = childFragment.findFragmentById(R.id.map) as MapFragment?
             ?: MapFragment.newInstance().also {
@@ -106,33 +112,52 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
 
         val locationManager = requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            buildAlterMessageNoGPS()
+        if(checkPermissionForLocation(requireContext())) {
+            if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                buildAlterMessageNoGPS()
+            }
         }
 
-
-
         togglebtn_gps.setOnDebounceClickListener {
-            if(checkArea(mLatitude,mLongitude)) {
-                if (!trackingmode) {
-                    trackingmode = true
-                    naverMap.locationTrackingMode = Follow
+            if(checkPermissionForLocation(requireContext())) {
+                if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    if (checkArea(mLatitude, mLongitude)) {
+                        if (!trackingmode) {
+                            trackingmode = true
+                            togglebtn_gps.isSelected = true
+                            naverMap.locationTrackingMode = Follow
 
+                        } else {
+                            togglebtn_gps.isSelected = false
+                            trackingmode = false
+                            naverMap.locationTrackingMode = NoFollow
+                        }
+                    } else {
+                        togglebtn_gps.isSelected = false
+                        initAreaWarningDailog()
+                    }
                 } else {
-                    trackingmode = false
-                    naverMap.locationTrackingMode = NoFollow
+                    buildAlterMessageNoGPS()
                 }
             } else {
-                togglebtn_gps.isSelected = false
-                initAreaWarningDailog()
+                togglebtn_gps.isSelected =false
             }
         }
 
         img_reset.setOnClickListener {
-            if(!checkReset) {
-                Timber.e("CameraMove?")
-                initRecycler(nearLocation!!.latitude,nearLocation!!.longitude,scale)
-                checkReset = true
+            if(checkPermissionForLocation(requireContext())) {
+                if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    if (!checkReset) {
+                        Timber.e("CameraMove?")
+                        initRecycler(nearLocation!!.latitude, nearLocation!!.longitude, scale)
+                        checkReset = true
+                    }
+                } else {
+                    buildAlterMessageNoGPS()
+
+                }
+            }  else {
+                ActivityCompat.requestPermissions(requireActivity(), arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),1000)
             }
         }
 
@@ -150,6 +175,22 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
         init()
 
     }
+
+    private fun onLoading(){
+        lottie.apply {
+            setAnimation("heart_loading.json")
+            playAnimation()
+            loop(true)
+        }
+            root.setGone()
+        lottie_map_loading.setVisible()
+    }
+
+    private fun offLoading(){
+        lottie_map_loading.setGone()
+        root.fadeInWithVisible(500)
+    }
+
     private fun checkArea(latitude: Double, longitude: Double) : Boolean {
         var checkAreaBool = false
         var checkLat = false
@@ -201,6 +242,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
         }
     }
     private fun initBottomSheet(marker: Marker) {
+
         val markerInfo : TagMarkerData = marker!!.tag as TagMarkerData
         val placeId =  markerInfo.placeId
         mapFragment_Bottom = childFragment.findFragmentById(R.id.mapView) as MapFragment?
@@ -292,8 +334,6 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
             toast(resources.getString(R.string.errorNetwork))
         }
         cl_bottom_seat_place.setVisible()
-        togglebtn_gps.setGone()
-        img_reset.setGone()
 
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         bottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
@@ -441,10 +481,12 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
             }
 
         })
+
         if(newToken(authManager,networkManager)) {
             networkManager.getPlaceList(latitude, longitude, scale, scale).safeEnqueue(
                 onSuccess = {
                     nearAdapter.initData(it.data!!.result!!.content)
+
                 },
                 onFailure = {
                     if (it.code() == 403) {
@@ -453,17 +495,21 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
                         toast(resources.getString(R.string.errorClient))
                     }
 
+
                 },
                 onError = {
                     networkErrorToast()
+
                 }
             )
         } else {
             toast(resources.getString(R.string.errorNetwork))
+
         }
     }
 
     private fun initMarker() {
+        onLoading()
         if(newToken(authManager,networkManager)) {
             networkManager.getMapMarkerList().safeEnqueue(
                 onSuccess = {
@@ -513,37 +559,47 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
                         marker.onClickListener = listener
 
                     }
+                    offLoading()
 
                 },
                 onFailure = {
                     if (it.code() == 403) {
                         toast(resources.getString(R.string.errorReLogin))
+
                     } else {
                         toast(resources.getString(R.string.errorClient))
                     }
+                    offLoading()
+
 
                 },
                 onError = {
                     networkErrorToast()
+                    offLoading()
+
                 }
 
             )
         } else {
             toast(resources.getString(R.string.errorNetwork))
+            offLoading()
+
         }
     }
     /*
     핸드폰 gps 가 꺼져있을 시 , gps를 키기위한 함수
      */
     private fun buildAlterMessageNoGPS() {
-        val dialog = androidx.appcompat.app.AlertDialog.Builder(requireActivity()).create()
-        val view = LayoutInflater.from(GlobalApp).inflate(R.layout.dialog_gps_permission, null)
+        val dialog = AlertDialog.Builder(context).create()
+        val view = LayoutInflater.from(context).inflate(R.layout.dialog_gps_permission, null)
         view.cl_gps_transparent.setBackgroundColor(Color.TRANSPARENT)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         view.btn_gps_yes.setOnDebounceClickListener {
             startActivityForResult(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS),11)
+            dialog.cancel()
         }
         view.btn_gps_no.setOnDebounceClickListener {
+            naverMap.locationTrackingMode = None
             dialog.cancel()
         }
 
@@ -561,10 +617,17 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
     ) {
        if(locationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
 
-           mLatitude = locationSource.lastLocation!!.latitude!!
-           mLongitude = locationSource.lastLocation!!.longitude!!
-           if(!locationSource.isActivated) {
+           if(grantResults.size>0 && grantResults[0]==PackageManager.PERMISSION_GRANTED) {
+               mLatitude = locationSource.lastLocation!!.latitude!!
+               mLongitude = locationSource.lastLocation!!.longitude!!
+               if (!locationSource.isActivated) {
+                   Timber.e("locationSourcefalse??")
+                   naverMap.locationTrackingMode = None
+               }
+           } else {
                naverMap.locationTrackingMode = None
+               mLatitude = 37.566198
+               mLongitude = 126.990556
            }
            return
        }
@@ -586,7 +649,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
                     naverMap.locationTrackingMode = None
                     val projection = naverMap.projection
                     val masterPerDp = projection.metersPerDp
-                    scale = (((masterPerDp/12)/88/2)).toString().substring(0,5).toDouble()
+                    scale = (((masterPerDp/12)/88/2)).toString().substring(0,5).toDouble()*7
                     nearLocation = LatLng(naverMap.cameraPosition.target.latitude ,naverMap.cameraPosition.target.longitude)
                     initRecycler(nearLocation!!.latitude,nearLocation!!.longitude,scale)
                 }
@@ -605,53 +668,35 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
                 togglebtn_gps.isSelected = false
                 trackingmode = false
             }
-            if(reason == CameraUpdate.REASON_LOCATION){
-                mLatitude = locationSource.lastLocation!!.latitude
-                mLongitude = locationSource.lastLocation!!.longitude
-                if(checkArea(mLatitude,mLongitude)) {
-                    togglebtn_gps.isSelected = false
-                    initRecycler(mLatitude,mLongitude,0.025)
-                    trackingmode = false
-                } else {
-                    naverMap.locationTrackingMode = None
+            if(checkPermissionForLocation(requireContext())) {
+                if (reason == CameraUpdate.REASON_LOCATION) {
+                    mLatitude = locationSource.lastLocation!!.latitude
+                    mLongitude = locationSource.lastLocation!!.longitude
+                    if (checkArea(mLatitude, mLongitude)) {
+                        initRecycler(mLatitude, mLongitude, 0.025)
+                        trackingmode = false
+                    } else {
+                        naverMap.locationTrackingMode = None
+                    }
+
                 }
 
-            }
 
-            if(reason == CameraUpdate.REASON_GESTURE || reason == CameraUpdate.REASON_LOCATION) {
-                nearLocation = LatLng(naverMap.cameraPosition.target.latitude ,naverMap.cameraPosition.target.longitude)
-                val projection = naverMap.projection
-                val masterPerDp = projection.metersPerDp
-                scale = (((masterPerDp/12)/88/2)).toString().substring(0,5).toDouble()
+                if (reason == CameraUpdate.REASON_GESTURE || reason == CameraUpdate.REASON_LOCATION) {
+                    nearLocation = LatLng(
+                        naverMap.cameraPosition.target.latitude,
+                        naverMap.cameraPosition.target.longitude
+                    )
+                    val projection = naverMap.projection
+                    val masterPerDp = projection.metersPerDp
+                    scale = (((masterPerDp / 12) / 88 / 2)).toString().substring(0, 5).toDouble()*7
 
-                Timber.e("scale :: ${scale}")
-                if(preMarker != null) {
-                    preMarker!!.icon = OverlayImage.fromResource(R.drawable.ic_mark_default)
-                    val preMarkerData = preMarker!!.tag as TagMarkerData
-                    preMarkerData.markerClick = false
-                    preMarker = null
-                    rv_map_near_place.setVisible()
-                    cl_bottom_seat_place.setGone()
-                    togglebtn_gps.setVisible()
-                    img_reset.setVisible()
+                    Timber.e("scale :: ${scale}")
+                    checkReset = false
                 }
-                checkReset = false
             }
         }
 
-
-        naverMap.setOnMapClickListener { pointF, latLng ->
-            if(preMarker != null) {
-                preMarker!!.icon = OverlayImage.fromResource(R.drawable.ic_mark_default)
-                val preMarkerData = preMarker!!.tag as TagMarkerData
-                preMarkerData.markerClick = false
-                preMarker = null
-                rv_map_near_place.setVisible()
-                cl_bottom_seat_place.setGone()
-                togglebtn_gps.setVisible()
-                img_reset.setVisible()
-            }
-        }
     }
 
 
@@ -682,12 +727,20 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
             preMarker = null
             childFragmentManager.beginTransaction().remove(mapFragment_Bottom!!).commit()
             rv_map_near_place.setVisible()
-            cl_bottom_seat_place.setGone()
-            togglebtn_gps.setVisible()
-            img_reset.setVisible()
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
         checkBottom = false
     }
+
+    private fun checkPermissionForLocation(context: Context): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) { true  }
+            else { false }
+        } else {
+            true
+        }
+    }
+
     override fun onBackPressed() : Boolean {
         return if (checkBottom) {
             bottomSheetBack()
