@@ -23,6 +23,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isNotEmpty
 import androidx.core.view.marginBottom
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.airbnb.lottie.LottieAnimationView
 import com.google.android.gms.location.*
 import com.kravelteam.kravel_android.KravelApplication
@@ -96,7 +97,7 @@ class HomeFragment : Fragment(), fragmentBackPressed {
 
         mLocationRequest = LocationRequest()
         val locationManager = requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+        if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && checkPermissionForLocation(requireContext())) {
             buildAlterMessageNoGPS()
         }
 
@@ -105,6 +106,19 @@ class HomeFragment : Fragment(), fragmentBackPressed {
         }
         initPopularRecycler()
         initPhotoRecycler()
+
+        sw_refresh_layout.setOnRefreshListener(object : SwipeRefreshLayout.OnRefreshListener{
+            override fun onRefresh() {
+                initPopularRecycler()
+                initPhotoRecycler()
+                if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && checkPermissionForLocation(requireContext())) {
+                    startLocationUpdates()
+                }
+                sw_refresh_layout.isRefreshing = false
+
+            }
+
+        })
 
 
     }
@@ -179,7 +193,9 @@ class HomeFragment : Fragment(), fragmentBackPressed {
                                 }
                             }
                         } else {
-                            cl_home_near_place.setGone()
+                            if (cl_home_near_place != null) {
+                                cl_home_near_place.setGone()
+                            }
                         }
 
 

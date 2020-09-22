@@ -329,9 +329,6 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         marker.position = LatLng(latitude, longitude)
         val uiSettings = naverMap.uiSettings
         uiSettings.isZoomControlEnabled = false
-        uiSettings.isTiltGesturesEnabled = false
-        uiSettings.isZoomGesturesEnabled = false
-        uiSettings.isScrollGesturesEnabled = false
         naverMap.moveCamera(CameraUpdate.scrollTo(marker.position))
         marker.map = naverMap
         marker.icon = OverlayImage.fromResource(R.drawable.ic_mark_focus)

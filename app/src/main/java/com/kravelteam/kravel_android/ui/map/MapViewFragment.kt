@@ -70,7 +70,6 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
     private val nearAdapter: MapPlaceRecyclerview by lazy { MapPlaceRecyclerview() }
     private var checkScrap : Boolean = false // BottomSheet
     private var mapMarker : Marker? = null
-    private var checkReset : Boolean = false
     private var nearLocation : LatLng? = null
     private var checkBottom : Boolean =false
     private var checkBottomSheetClick : Boolean = false
@@ -121,7 +120,7 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
         togglebtn_gps.setOnDebounceClickListener {
             if(checkPermissionForLocation(requireContext())) {
                 if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                    if (checkArea(mLatitude, mLongitude)) {
+                    if (checkArea(locationSource.lastLocation!!.latitude!!, locationSource.lastLocation!!.longitude!!)) {
                         if (!trackingmode) {
                             trackingmode = true
                             togglebtn_gps.isSelected = true
@@ -147,14 +146,21 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
         img_reset.setOnClickListener {
             if(checkPermissionForLocation(requireContext())) {
                 if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                    if (!checkReset) {
                         Timber.e("CameraMove?")
-                        initRecycler(nearLocation!!.latitude, nearLocation!!.longitude, scale)
-                        checkReset = true
+                    Timber.e("checkBottom ::${checkBottom}")
+                    if(checkBottom) {
+                            bottomSheetBack()
+                            Timber.e("bottomSheet?Reset!!?")
+                        }
+                    if(nearLocation!=null) {
+                        initRecycler(
+                            nearLocation!!.latitude,
+                            nearLocation!!.longitude,
+                            scale
+                        )
                     }
-                } else {
+                    } else {
                     buildAlterMessageNoGPS()
-
                 }
             }  else {
                 ActivityCompat.requestPermissions(requireActivity(), arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),1000)
@@ -280,9 +286,6 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
                         }
                         val uiSettings = navermap.uiSettings
                         uiSettings.isZoomControlEnabled = false
-                        uiSettings.isTiltGesturesEnabled = false
-                        uiSettings.isZoomGesturesEnabled = false
-                        uiSettings.isScrollGesturesEnabled = false
                         val Marker =
                             Marker(LatLng(it.data.result.latitude, it.data.result.longitude))
                         navermap.moveCamera(CameraUpdate.scrollTo(Marker!!.position))
@@ -343,8 +346,8 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
                         bottomSheetBack()
                     }
                     BottomSheetBehavior.STATE_EXPANDED -> {
-                        initAnimation()
                         checkBottomSheetClick = true
+                        initAnimation()
                         childFragmentManager.beginTransaction().remove(mapFragment_Bottom!!).commit()
                         Handler().postDelayed({
                             Intent(GlobalApp,PlaceDetailActivity::class.java).apply {
@@ -465,11 +468,12 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
             playAnimation()
             loop(true)
         }
-        root.setGone()
+        cl_bottom_seat_place.root.setGone()
         animMapInfoLottie.setVisible()
     }
 
     private fun initRecycler(latitude: Double, longitude: Double, scale : Double) {
+        Timber.e("initNearRecyclerStart ")
         nearAdapter.setOnItemClickListener(object : MapPlaceRecyclerview.OnItemClickListener {
             override fun onItemClick(v: View, data: PlaceContentResponse, pos: Int) {
                 Intent(GlobalApp,PlaceDetailActivity::class.java).apply {
@@ -644,14 +648,14 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
             if(checkFirst) {
                 if(checkArea(it.latitude,it.longitude)) {
                     naverMap.locationTrackingMode = Follow
+                    initRecycler(it.latitude, it.longitude, 0.025)
                 }
                 else {
                     naverMap.locationTrackingMode = None
                     val projection = naverMap.projection
                     val masterPerDp = projection.metersPerDp
-                    scale = (((masterPerDp/12)/88/2)).toString().substring(0,5).toDouble()*7
                     nearLocation = LatLng(naverMap.cameraPosition.target.latitude ,naverMap.cameraPosition.target.longitude)
-                    initRecycler(nearLocation!!.latitude,nearLocation!!.longitude,scale)
+                    initRecycler(nearLocation!!.latitude,nearLocation!!.longitude,0.025)
                 }
                 checkFirst = false
             }
@@ -673,7 +677,6 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
                     mLatitude = locationSource.lastLocation!!.latitude
                     mLongitude = locationSource.lastLocation!!.longitude
                     if (checkArea(mLatitude, mLongitude)) {
-                        initRecycler(mLatitude, mLongitude, 0.025)
                         trackingmode = false
                     } else {
                         naverMap.locationTrackingMode = None
@@ -689,10 +692,12 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
                     )
                     val projection = naverMap.projection
                     val masterPerDp = projection.metersPerDp
-                    scale = (((masterPerDp / 12) / 88 / 2)).toString().substring(0, 5).toDouble()*7
-
+                    scale = (((masterPerDp / 12) / 88 / 2)).toString().substring(0, 5).toDouble()
+                    if(scale < 0.01) scale = scale + 0.05
+                    else {
+                        scale = scale+ 0.03
+                    }
                     Timber.e("scale :: ${scale}")
-                    checkReset = false
                 }
             }
         }
@@ -706,11 +711,13 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
 
     override fun onResume() {
         super.onResume()
-        bottomSheetBehavior.isFitToContents = false
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        root.setVisible()
-        animMapInfo.setGone()
-        img_bottom_bar.setVisible()
+        if(preMarker!=null) {
+            bottomSheetBehavior.isFitToContents = false
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            cl_bottom_seat_place.root.setVisible()
+            animMapInfoLottie.setGone()
+            cl_bottom_seat_place.img_bottom_bar.setVisible()
+        }
         if(checkBottomSheetClick) {
             initBottomSheet(preMarker!!)
             Timber.e("bottomsheet reset")
