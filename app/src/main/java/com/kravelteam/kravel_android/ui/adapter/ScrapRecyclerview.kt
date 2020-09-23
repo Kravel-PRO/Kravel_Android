@@ -1,13 +1,17 @@
 package com.kravelteam.kravel_android.ui.adapter
 
+import android.content.Intent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.kravelteam.kravel_android.KravelApplication
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.GlideApp
+import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.response.MyScrapData
+import com.kravelteam.kravel_android.ui.map.PlaceDetailActivity
 import com.kravelteam.kravel_android.util.dpToPx
 import com.kravelteam.kravel_android.util.inflate
 import com.kravelteam.kravel_android.util.setRound
@@ -41,6 +45,14 @@ class ScrapRecyclerview: RecyclerView.Adapter<ScrapRecyclerview.ViewHolder>(){
             GlideApp.with(itemView).load(item.imageUrl).into(img)
             img.setRound(10.dpToPx().toFloat())
             txtPlaceName.text = item.title
+            itemView.setOnDebounceClickListener {
+                Intent(KravelApplication.GlobalApp, PlaceDetailActivity::class.java).apply {
+                    putExtra("placeId",item.placeId)
+                    putExtra("mode","home")
+                }.run {
+                    KravelApplication.GlobalApp.startActivity(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                }
+            }
         }
     }
 }

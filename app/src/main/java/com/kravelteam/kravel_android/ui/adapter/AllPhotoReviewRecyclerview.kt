@@ -17,6 +17,7 @@ import com.kravelteam.kravel_android.util.setGone
 import com.kravelteam.kravel_android.util.setVisible
 import com.kravelteam.kravel_android.util.startActivity
 import kotlinx.android.synthetic.main.dialog_logout.view.*
+import timber.log.Timber
 
 class AllPhotoReviewRecyclerview(
     val checkReview: String,
@@ -79,18 +80,24 @@ class AllPhotoReviewRecyclerview(
                 imgLike.setVisible()
                 txtPlaceName.setGone()
                 imgLike.isSelected = item.like
+
+                Timber.e("${item.reviewId}, ${item.like}")
+
                 imgLike.setOnDebounceClickListener {
-                    onLike(imgLike.isSelected,item.reviewId) {
+
+                    Timber.e("${item.reviewId}, ${item.like}")
+
+                    onLike(!imgLike.isSelected,item.reviewId) {
+                        it.isSelected = !it.isSelected
                         var now = item.likeCount
                         if(it.isSelected) {
-                            now--
-                            it.isSelected = false
+                            now++
                             txtLikeCount.text = (now).toString()
                         } else {
-                            now++
-                            it.isSelected = true
+                            now--
                             txtLikeCount.text = (now).toString()
                         }
+                        item.likeCount = now
                     }
                 }
             }

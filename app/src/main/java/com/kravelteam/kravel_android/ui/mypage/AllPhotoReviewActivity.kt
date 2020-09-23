@@ -40,6 +40,7 @@ class AllPhotoReviewActivity : AppCompatActivity() {
         lottie = lottie_detail_loading
 
         checkReview = intent.getStringExtra("review")!!
+        position = intent.getIntExtra("position",0)
         initRecycler()
 
         if(checkReview == "my") { //내 포토리뷰
@@ -219,14 +220,14 @@ class AllPhotoReviewActivity : AppCompatActivity() {
                 onSuccess = {
                     val data = it.data.result.content
                     allPhotoReviewAdapter.initData(data)
-                    if(intent.getIntExtra("position",0) != 0) {
+                    if(position != 0) {
                         data.forEachIndexed{ index, data ->
                             if(data.reviewId == intent.getIntExtra("position",0))
                                 position = index
                         }
-                        rv_my_photo_review.setVisible()
-                        rv_my_photo_review.scrollToPosition(position)
                     }
+                    rv_my_photo_review.setVisible()
+                    rv_my_photo_review.scrollToPosition(position)
                     offLoading()
                 },
                 onFailure = {
@@ -255,14 +256,14 @@ class AllPhotoReviewActivity : AppCompatActivity() {
                 onSuccess = {
                     val data = it.data.result.content
                     allPhotoReviewAdapter.initData(data)
-                    if(intent.getIntExtra("position",0) != 0) {
+                    if(position != 0) {
                         data.forEachIndexed{ index, data ->
                             if(data.reviewId == intent.getIntExtra("position",0))
                                 position = index
                         }
-                        rv_my_photo_review.setVisible()
-                        rv_my_photo_review.scrollToPosition(position)
                     }
+                    rv_my_photo_review.setVisible()
+                    rv_my_photo_review.scrollToPosition(position)
                     offLoading()
                 },
                 onFailure = {
@@ -295,14 +296,14 @@ class AllPhotoReviewActivity : AppCompatActivity() {
                 onSuccess = {
                     val data = it.data.result.content
                     allPhotoReviewAdapter.initData(data)
-                    if(intent.getIntExtra("position",0) != 0) {
+                    if(position != 0) {
                         data.forEachIndexed{ index, data ->
                             if(data.reviewId == intent.getIntExtra("position",0))
                                 position = index
                         }
-                        rv_my_photo_review.setVisible()
-                        rv_my_photo_review.scrollToPosition(position)
                     }
+                    rv_my_photo_review.setVisible()
+                    rv_my_photo_review.scrollToPosition(position)
                     offLoading()
                 },
                 onFailure = {

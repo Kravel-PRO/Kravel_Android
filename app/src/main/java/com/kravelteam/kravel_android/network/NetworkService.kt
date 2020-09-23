@@ -120,7 +120,9 @@ interface NetworkService {
      */
     @GET("/api/medias/{id}")
     fun requestMediaDetail(
-        @Path("id") id: Int
+        @Path("id") id: Int,
+        @Query("page") page: Int,
+        @Query("size") size: Int
     ) : Call<BaseResponse<MediaDetailResponse>>
 
     /**

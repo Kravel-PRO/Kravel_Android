@@ -105,36 +105,37 @@ class PostReviewActivity : AppCompatActivity() {
             val picture = MultipartBody.Part.createFormData("file", File(selectedPicUri.toString()).name+".jpg",photoBody)
 
             if (newToken(authManager,networkManager)) {
-            networkManager.requestPostPhotoReview(placeId,picture).safeEnqueue(
-                onSuccess = {
-                    Intent(KravelApplication.GlobalApp, AllPhotoReviewActivity::class.java).apply {
-                        putExtra("review", "default")
-                        putExtra("part",part)
-                        putExtra("id", placeId)
-                        putExtra("sort","createdDate,desc")
-                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    }.run { KravelApplication.GlobalApp.startActivity(this) }
-                    finish()
-                },
-                onFailure = {
-                    when {
-                        it.code() == 400 -> {
-                            toast(resources.getString(R.string.errorImg))
+                networkManager.requestPostPhotoReview(placeId,picture).safeEnqueue(
+                    onSuccess = {
+                        Intent(KravelApplication.GlobalApp, AllPhotoReviewActivity::class.java).apply {
+                            putExtra("review", "default")
+                            putExtra("part",part)
+                            putExtra("id", placeId)
+                            putExtra("position",0)
+                            putExtra("sort","createdDate,desc")
+                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        }.run { KravelApplication.GlobalApp.startActivity(this) }
+                        finish()
+                    },
+                    onFailure = {
+                        when {
+                            it.code() == 400 -> {
+                                toast(resources.getString(R.string.errorImg))
+                            }
+                            it.code() == 403 -> {
+                                toast(resources.getString(R.string.errorReLogin))
+                            }
+                            else -> {
+                                toast(resources.getString(R.string.errorClient))
+                            }
                         }
-                        it.code() == 403 -> {
-                            toast(resources.getString(R.string.errorReLogin))
-                        }
-                        else -> {
-                            toast(resources.getString(R.string.errorClient))
-                        }
+                        offLoading()
+                    },
+                    onError = {
+                        networkErrorToast()
+                        offLoading()
                     }
-                    offLoading()
-                },
-                onError = {
-                    networkErrorToast()
-                    offLoading()
-                }
-            )
+                )
             } else {
                 toast(resources.getString(R.string.errorNetwork))
                 offLoading()
@@ -159,6 +160,11 @@ class PostReviewActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        offLoading()
     }
 
     override fun onDestroy() {
