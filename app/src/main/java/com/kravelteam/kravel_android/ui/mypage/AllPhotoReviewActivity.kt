@@ -37,15 +37,17 @@ class AllPhotoReviewActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_all_photo_review)
 
-        lottie = lottie_detail_loading
-
-        checkReview = intent.getStringExtra("review")!!
-        position = intent.getIntExtra("position",0)
+        initSetting()
         initRecycler()
+        initServer(false)
+        swipe()
 
+    }
+
+    private fun initServer(refresh : Boolean){
         if(checkReview == "my") { //내 포토리뷰
 
-            initGetMyPhotoReview()
+            initGetMyPhotoReview(refresh)
             txt_my_photo_review_title.text = resources.getString(R.string.myPhotoReview)
 
         } else if(checkReview == "default"){ //포토리뷰
@@ -58,24 +60,41 @@ class AllPhotoReviewActivity : AppCompatActivity() {
             when (checkPart) {
                 "celeb" -> { //셀럽 리뷰 불러오기
 
-                    initGetCelebPhotoReview()
+                    initGetCelebPhotoReview(refresh)
 
                 }
                 "media" -> { // 미디어 리뷰 불러오기
 
-                    initGetMediaPhotoReview()
+                    initGetMediaPhotoReview(refresh)
 
                 }
                 "place" -> { //장소 리뷰 불러오기
 
-                    initGetPlacePhotoReview()
+                    initGetPlacePhotoReview(refresh)
 
                 }
             }
 
         }
+    }
 
-        initSetting()
+    private fun initSetting(){
+
+        lottie = lottie_detail_loading
+
+        checkReview = intent.getStringExtra("review")!!
+        position = intent.getIntExtra("position",0)
+
+        img_my_photo_review_back.setOnDebounceClickListener {
+            finish()
+        }
+    }
+
+    private fun swipe(){
+        swipe.setOnRefreshListener {
+            initServer(true)
+            swipe.isRefreshing = false
+        }
     }
 
     private fun onLoading(){
@@ -91,12 +110,6 @@ class AllPhotoReviewActivity : AppCompatActivity() {
     private fun offLoading(){
         root.fadeInWithVisible(500)
         lottie_detail_loading.setGone()
-    }
-
-    private fun initSetting(){
-        img_my_photo_review_back.setOnDebounceClickListener {
-            finish()
-        }
     }
 
     private fun initRecycler(){
@@ -180,8 +193,10 @@ class AllPhotoReviewActivity : AppCompatActivity() {
         textView2.setVisible()
     }
 
-    private fun initGetMyPhotoReview(){
-        onLoading()
+    private fun initGetMyPhotoReview(refresh : Boolean){
+        if(!refresh){
+            onLoading()
+        }
         if (newToken(authManager,networkManager)) {
             networkManager.requestMyPhotoReviews(0,100,"createdDate,desc").safeEnqueue(
                 onSuccess = {
@@ -213,8 +228,10 @@ class AllPhotoReviewActivity : AppCompatActivity() {
         }
     }
 
-    private fun initGetCelebPhotoReview(){
-        onLoading()
+    private fun initGetCelebPhotoReview(refresh : Boolean){
+        if(!refresh){
+            onLoading()
+        }
         if (newToken(authManager,networkManager)) {
             networkManager.getCelebPhotoReview(id,0,60,"reviewLikes-count,desc").safeEnqueue(
                 onSuccess = {
@@ -249,8 +266,10 @@ class AllPhotoReviewActivity : AppCompatActivity() {
         }
     }
 
-    private fun initGetMediaPhotoReview(){
-        onLoading()
+    private fun initGetMediaPhotoReview(refresh : Boolean){
+        if(!refresh){
+            onLoading()
+        }
         if (newToken(authManager,networkManager)) {
             networkManager.requestMediaPhotoReview(id,0,60,"reviewLikes-count,desc").safeEnqueue(
                 onSuccess = {
@@ -285,8 +304,10 @@ class AllPhotoReviewActivity : AppCompatActivity() {
         }
     }
 
-    private fun initGetPlacePhotoReview(){
-        onLoading()
+    private fun initGetPlacePhotoReview(refresh : Boolean){
+        if(!refresh){
+            onLoading()
+        }
         if (newToken(authManager,networkManager)) {
             var sort = "reviewLikes-count,desc"
             intent.getStringExtra("sort")?.let {

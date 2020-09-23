@@ -36,16 +36,25 @@ class SearchDetailActivity : AppCompatActivity() {
 
         id = intent.getIntExtra("id",0)
         part = intent.getStringExtra("part")
-        Timber.e("$part")
         photoAdapter = PhotoReviewRecyclerview("default",part,id)
         txt_search_detail_title2.text = txt_search_detail_title2.text.toString().setCustomFontSubString(resources.getString(R.string.homeNewPhotoReview2),R.font.notosans_cjk_kr_bold,18)
         lottie = lottie_detail_loading
 
+        swipe()
 
         initRecycler()
         initPlaceMoreBtn()
         initSetting()
     }
+
+    private fun swipe(){
+        swipe.setOnRefreshListener {
+
+            initServer(true)
+            swipe.isRefreshing = false
+        }
+    }
+
     private fun onLoading(){
         lottie.apply {
             setAnimation("heart_loading.json")
@@ -78,9 +87,11 @@ class SearchDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun initServer(){
+    private fun initServer(refresh: Boolean){
         if(part == "celeb"){ //셀럽 디테일 상세 정보
-            onLoading()
+            if(!refresh){
+                onLoading()
+            }
             if (newToken(authManager,networkManager)) {
                 networkManager.requestCelebDetail(id,0,7).safeEnqueue(
                     onSuccess = {it ->
@@ -151,7 +162,9 @@ class SearchDetailActivity : AppCompatActivity() {
                 offLoading()
             }
         } else { //미디어 디테일 상세 정보
-            onLoading()
+            if(!refresh){
+                onLoading()
+            }
             if (newToken(authManager,networkManager)) {
                 networkManager.requestMediaDetail(id,0,7).safeEnqueue(
                     onSuccess = { it ->
@@ -237,12 +250,12 @@ class SearchDetailActivity : AppCompatActivity() {
             addItemDecoration(VerticalItemDecorator(4))
         }
 
-        initServer()
+        initServer(false)
     }
 
     override fun onResume() {
         super.onResume()
-        initServer()
+        initServer(false)
     }
     companion object {
         private const val DATA_COUNT = 7
