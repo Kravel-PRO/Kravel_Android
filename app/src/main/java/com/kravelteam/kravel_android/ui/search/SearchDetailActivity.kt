@@ -36,6 +36,7 @@ class SearchDetailActivity : AppCompatActivity() {
 
         id = intent.getIntExtra("id",0)
         part = intent.getStringExtra("part")
+        Timber.e("$part")
         photoAdapter = PhotoReviewRecyclerview("default",part,id)
         txt_search_detail_title2.text = txt_search_detail_title2.text.toString().setCustomFontSubString(resources.getString(R.string.homeNewPhotoReview2),R.font.notosans_cjk_kr_bold,18)
         lottie = lottie_detail_loading
@@ -77,85 +78,74 @@ class SearchDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun initRecycler(){
-        rv_search_detail_place.apply {
-            adapter = placeAdapter
-            addItemDecoration(HorizontalItemDecorator(8))
-            addItemDecoration(VerticalItemDecorator(16))
-        }
-
+    private fun initServer(){
         if(part == "celeb"){ //셀럽 디테일 상세 정보
             onLoading()
             if (newToken(authManager,networkManager)) {
-            networkManager.requestCelebDetail(id,0,7).safeEnqueue(
-                onSuccess = {it ->
-                    it.data.result.let {
-                        GlideApp.with(this).load(it.celebrity.imageUrl).into(img_search_detail_title)
-                        txt_search_detail_title.text = it.celebrity.celebrityName
-                        txt_search_detail_sub2.text = resources.getString(R.string.visitedPlace)
+                networkManager.requestCelebDetail(id,0,7).safeEnqueue(
+                    onSuccess = {it ->
+                        it.data.result.let {
+                            GlideApp.with(this).load(it.celebrity.imageUrl).into(img_search_detail_title)
+                            txt_search_detail_title.text = it.celebrity.celebrityName
+                            txt_search_detail_sub2.text = resources.getString(R.string.visitedPlace)
 
-                        when {
-                            it.places.size == DATA_COUNT -> {
-                                placeAdapter.initData(it.places.dropLast(1).toMutableList())
-                                btn_search_detail_more.setVisible()
-                                img_search_place_empty.setGone()
-                                txt_search_place_empty.setGone()
-                            }
-                            it.places.isNullOrEmpty() -> {
-                                btn_search_detail_more.setGone()
-                                img_search_place_empty.setVisible()
-                                txt_search_place_empty.setVisible()
-                            }
-                            else -> {
-                                placeAdapter.initData(it.places.toMutableList())
-                                btn_search_detail_more.setGone()
-                                img_search_place_empty.setGone()
-                                txt_search_place_empty.setGone()
+                            when {
+                                it.places.size == DATA_COUNT -> {
+                                    placeAdapter.initData(it.places.dropLast(1).toMutableList())
+                                    btn_search_detail_more.setVisible()
+                                    img_search_place_empty.setGone()
+                                    txt_search_place_empty.setGone()
+                                }
+                                it.places.isNullOrEmpty() -> {
+                                    btn_search_detail_more.setGone()
+                                    img_search_place_empty.setVisible()
+                                    txt_search_place_empty.setVisible()
+                                }
+                                else -> {
+                                    placeAdapter.initData(it.places.toMutableList())
+                                    btn_search_detail_more.setGone()
+                                    img_search_place_empty.setGone()
+                                    txt_search_place_empty.setGone()
+                                }
                             }
                         }
+                        offLoading()
+                    },
+                    onFailure = {
+                        if(it.code() == 403) {
+                            toast(resources.getString(R.string.errorReLogin))
+                        } else {
+                            toast(resources.getString(R.string.errorClient))
+                        }
+                        offLoading()
+                    },
+                    onError = {
+                        networkErrorToast()
+                        offLoading()
                     }
-                    offLoading()
-                },
-                onFailure = {
-                    if(it.code() == 403) {
-                        toast(resources.getString(R.string.errorReLogin))
-                    } else {
-                        toast(resources.getString(R.string.errorClient))
-                    }
-                    offLoading()
-                },
-                onError = {
-                    networkErrorToast()
-                    offLoading()
-                }
-            )
+                )
 
 
-            networkManager.getCelebPhotoReview(id,0,7,"reviewLikes-count,desc").safeEnqueue(
-                onSuccess = {
-                    rv_search_detail_photo_review.apply{
-                        adapter = photoAdapter
-                        addItemDecoration(HorizontalItemDecorator(4))
-                        addItemDecoration(VerticalItemDecorator(4))
+                networkManager.getCelebPhotoReview(id,0,7,"reviewLikes-count,desc").safeEnqueue(
+                    onSuccess = {
+                        if(!it.data.result.content.isNullOrEmpty()) {
+                            photoAdapter.initData(it.data.result.content)
+                            txt_search_photo_empty.setGone()
+                        } else {
+                            txt_search_photo_empty.setVisible()
+                        }
+                    },
+                    onFailure = {
+                        if(it.code() == 403) {
+                            toast(resources.getString(R.string.errorReLogin))
+                        } else {
+                            toast(resources.getString(R.string.errorClient))
+                        }
+                    },
+                    onError = {
+                        networkErrorToast()
                     }
-                    if(!it.data.result.content.isNullOrEmpty()) {
-                        photoAdapter.initData(it.data.result.content)
-                        txt_search_photo_empty.setGone()
-                    } else {
-                        txt_search_photo_empty.setVisible()
-                    }
-                },
-                onFailure = {
-                    if(it.code() == 403) {
-                        toast(resources.getString(R.string.errorReLogin))
-                    } else {
-                        toast(resources.getString(R.string.errorClient))
-                    }
-                },
-                onError = {
-                    networkErrorToast()
-                }
-            )
+                )
             } else {
                 toast(resources.getString(R.string.errorNetwork))
                 offLoading()
@@ -163,80 +153,96 @@ class SearchDetailActivity : AppCompatActivity() {
         } else { //미디어 디테일 상세 정보
             onLoading()
             if (newToken(authManager,networkManager)) {
-            networkManager.requestMediaDetail(id).safeEnqueue(
-                onSuccess = { it ->
-                    it.data.result.let {
-                        GlideApp.with(this).load(it.media.imageUrl).into(img_search_detail_title)
-                        txt_search_detail_title.text = it.media.title
-                        txt_search_detail_sub2.text = resources.getString(R.string.filmSite)
+                networkManager.requestMediaDetail(id,0,7).safeEnqueue(
+                    onSuccess = { it ->
+                        it.data.result.let {
+                            GlideApp.with(this).load(it.media.imageUrl).into(img_search_detail_title)
+                            txt_search_detail_title.text = it.media.title
+                            txt_search_detail_sub2.text = resources.getString(R.string.filmSite)
 
-                        when {
-                            it.places.size == DATA_COUNT -> {
-                                placeAdapter.initData(it.places.dropLast(1).toMutableList())
-                                btn_search_detail_more.setVisible()
-                                img_search_place_empty.setGone()
-                                txt_search_place_empty.setGone()
+                            when {
+                                it.places.size == DATA_COUNT -> {
+                                    placeAdapter.initData(it.places.dropLast(1).toMutableList())
+                                    btn_search_detail_more.setVisible()
+                                    img_search_place_empty.setGone()
+                                    txt_search_place_empty.setGone()
+                                }
+                                it.places.isNullOrEmpty() -> {
+                                    btn_search_detail_more.setGone()
+                                    img_search_place_empty.setVisible()
+                                    txt_search_place_empty.setVisible()
+                                }
+                                else -> {
+                                    placeAdapter.initData(it.places.toMutableList())
+                                    btn_search_detail_more.setGone()
+                                    img_search_place_empty.setGone()
+                                    txt_search_place_empty.setGone()
+                                }
                             }
-                            it.places.isNullOrEmpty() -> {
-                                btn_search_detail_more.setGone()
-                                img_search_place_empty.setVisible()
-                                txt_search_place_empty.setVisible()
-                            }
-                            else -> {
-                                placeAdapter.initData(it.places.toMutableList())
-                                btn_search_detail_more.setGone()
-                                img_search_place_empty.setGone()
-                                txt_search_place_empty.setGone()
-                            }
+                            offLoading()
+                        }
+                    },
+                    onFailure = {
+                        if(it.code() == 403) {
+                            toast(resources.getString(R.string.errorReLogin))
+                        } else {
+                            toast(resources.getString(R.string.errorClient))
                         }
                         offLoading()
+                    },
+                    onError = {
+                        networkErrorToast()
+                        offLoading()
                     }
-                },
-                onFailure = {
-                    if(it.code() == 403) {
-                        toast(resources.getString(R.string.errorReLogin))
-                    } else {
-                        toast(resources.getString(R.string.errorClient))
-                    }
-                    offLoading()
-                },
-                onError = {
-                    networkErrorToast()
-                    offLoading()
-                }
-            )
+                )
 
 
-            networkManager.requestMediaPhotoReview(id,0,7,"reviewLikes-count,desc").safeEnqueue(
-                onSuccess = {
-                    rv_search_detail_photo_review.apply{
-                        adapter = photoAdapter
-                        addItemDecoration(HorizontalItemDecorator(4))
-                        addItemDecoration(VerticalItemDecorator(4))
+                networkManager.requestMediaPhotoReview(id,0,7,"reviewLikes-count,desc").safeEnqueue(
+                    onSuccess = {
+                        if(!it.data.result.content.isNullOrEmpty()) {
+                            photoAdapter.initData(it.data.result.content)
+                            txt_search_photo_empty.setGone()
+                        } else {
+                            txt_search_photo_empty.setVisible()
+                        }
+                    },
+                    onFailure = {
+                        if(it.code() == 403) {
+                            toast(resources.getString(R.string.errorReLogin))
+                        } else {
+                            toast(resources.getString(R.string.errorClient))
+                        }
+                    },
+                    onError = {
+                        networkErrorToast()
                     }
-                    if(!it.data.result.content.isNullOrEmpty()) {
-                        photoAdapter.initData(it.data.result.content)
-                        txt_search_photo_empty.setGone()
-                    } else {
-                        txt_search_photo_empty.setVisible()
-                    }
-                },
-                onFailure = {
-                    if(it.code() == 403) {
-                        toast(resources.getString(R.string.errorReLogin))
-                    } else {
-                        toast(resources.getString(R.string.errorClient))
-                    }
-                },
-                onError = {
-                    networkErrorToast()
-                }
-            )
+                )
             } else {
                 toast(resources.getString(R.string.errorNetwork))
                 offLoading()
             }
         }
+    }
+
+    private fun initRecycler(){
+        rv_search_detail_place.apply {
+            adapter = placeAdapter
+            addItemDecoration(HorizontalItemDecorator(8))
+            addItemDecoration(VerticalItemDecorator(16))
+        }
+
+        rv_search_detail_photo_review.apply{
+            adapter = photoAdapter
+            addItemDecoration(HorizontalItemDecorator(4))
+            addItemDecoration(VerticalItemDecorator(4))
+        }
+
+        initServer()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        initServer()
     }
     companion object {
         private const val DATA_COUNT = 7

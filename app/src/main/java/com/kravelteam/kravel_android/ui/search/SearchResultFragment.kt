@@ -1,6 +1,7 @@
 package com.kravelteam.kravel_android.ui.search
 
 import android.os.Bundle
+import android.os.Handler
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -92,8 +93,8 @@ class SearchResultFragment : Fragment() {
                         rv_search_result.setVisible()
 
                         searchResultAdapter.initData(searchData)
-                        offLoading()
                     }
+                    offLoading()
                 },
                 onFailure = {
                     when {
