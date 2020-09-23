@@ -8,7 +8,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/cl_map">
+        android:id="@+id/root">
 
 
     <fragment
@@ -41,6 +41,7 @@
                 app:layout_constraintRight_toRightOf="parent"
                 android:background="@drawable/map_gps"
                 app:layout_constraintHorizontal_bias="0.9"
+                app:layout_goneMarginBottom="124dp"
                 android:textOff=""
                 android:textOn="" />
 
@@ -72,13 +73,17 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 
 
         <include layout="@layout/fragment_map_info"
             android:visibility="gone"/>
 
+
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottie_map_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

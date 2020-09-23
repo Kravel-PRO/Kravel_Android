@@ -1,6 +1,8 @@
 package com.kravelteam.kravel_android.ui.home
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -19,7 +21,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
+import androidx.core.view.isNotEmpty
 import androidx.core.view.marginBottom
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.airbnb.lottie.LottieAnimationView
 import com.google.android.gms.location.*
 import com.kravelteam.kravel_android.KravelApplication
@@ -75,7 +79,7 @@ class HomeFragment : Fragment(), fragmentBackPressed {
         super.onActivityCreated(savedInstanceState)
 
         lottie = lottie_detail_loading
-
+        cl_home_near_place.setGone()
         photoAdapter = PhotoReviewRecyclerview("new","", -1)
         rv_home_photo.apply {
             adapter = photoAdapter
@@ -86,9 +90,14 @@ class HomeFragment : Fragment(), fragmentBackPressed {
             adapter = popularAdapter
             addItemDecoration(VerticalItemDecorator(12))
         }
+        rv_near_place.apply {
+            adapter = nearAdapter
+            addItemDecoration(HorizontalItemDecorator(16))
+        }
+
         mLocationRequest = LocationRequest()
         val locationManager = requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+        if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && checkPermissionForLocation(requireContext())) {
             buildAlterMessageNoGPS()
         }
 
@@ -97,7 +106,20 @@ class HomeFragment : Fragment(), fragmentBackPressed {
         }
         initPopularRecycler()
         initPhotoRecycler()
-        cl_home_near_place.setGone()
+
+        sw_refresh_layout.setOnRefreshListener(object : SwipeRefreshLayout.OnRefreshListener{
+            override fun onRefresh() {
+                initPopularRecycler()
+                initPhotoRecycler()
+                if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && checkPermissionForLocation(requireContext())) {
+                    startLocationUpdates()
+                }
+                sw_refresh_layout.isRefreshing = false
+
+            }
+
+        })
+
 
     }
 
@@ -119,12 +141,14 @@ class HomeFragment : Fragment(), fragmentBackPressed {
   핸드폰 gps 가 꺼져있을 시 , gps를 키기위한 함수
    */
     private fun buildAlterMessageNoGPS() {
-        val dialog = androidx.appcompat.app.AlertDialog.Builder(requireActivity()).create()
-        val view = LayoutInflater.from(KravelApplication.GlobalApp).inflate(R.layout.dialog_gps_permission, null)
+        val dialog = AlertDialog.Builder(context).create()
+        val view = LayoutInflater.from(context).inflate(R.layout.dialog_gps_permission, null)
         view.cl_gps_transparent.setBackgroundColor(Color.TRANSPARENT)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         view.btn_gps_yes.setOnDebounceClickListener {
             startActivityForResult(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS),11)
+            dialog.cancel()
+
         }
         view.btn_gps_no.setOnDebounceClickListener {
             dialog.cancel()
@@ -139,55 +163,59 @@ class HomeFragment : Fragment(), fragmentBackPressed {
     }
     private fun initNearRecycler(latitude : Double?, longitude : Double?) {
 
-        stoplocationUpdates()
-        nearAdapter.setOnItemClickListener(object : NearPlaceRecyclerview.OnItemClickListener {
-            override fun onItemClick(v: View, data: PlaceContentResponse, pos: Int) {
-                Intent(GlobalApp,PlaceDetailActivity::class.java).apply {
-                    putExtra("placeId",data.placeId)
-                    putExtra("mode","home")
-                }.run {
-                    GlobalApp.startActivity(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+            stoplocationUpdates()
+            nearAdapter.setOnItemClickListener(object : NearPlaceRecyclerview.OnItemClickListener {
+                override fun onItemClick(v: View, data: PlaceContentResponse, pos: Int) {
+                    Intent(GlobalApp, PlaceDetailActivity::class.java).apply {
+                        putExtra("placeId", data.placeId)
+                        putExtra("mode", "home")
+                    }.run {
+                        GlobalApp.startActivity(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                    }
                 }
+
+            })
+            if (newToken(authManager, networkManager)) {
+                networkManager.getPlaceList(latitude!!, longitude!!, 0.025, 0.03).safeEnqueue(
+                    onSuccess = {
+                        if (!it.data!!.result.content.isNullOrEmpty()) {
+                            nearAdapter.initData(it.data!!.result.content)
+                            if(cl_home_near_place!=null) {
+                                cl_home_near_place.setVisible()
+
+                                cl_home_near.setOnDebounceClickListener {
+                                    Intent(GlobalApp, NearPlaceActivity::class.java).apply {
+                                        putExtra("latitude", latitude!!)
+                                        putExtra("longitude", longitude!!)
+                                    }.run {
+                                        GlobalApp.startActivity(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                                    }
+                                }
+                            }
+                        } else {
+                            if (cl_home_near_place != null) {
+                                cl_home_near_place.setGone()
+                            }
+                        }
+
+
+                    },
+                    onFailure = {
+                        if (it.code() == 403) {
+                            toast(resources.getString(R.string.errorReLogin))
+                        } else {
+                            toast(resources.getString(R.string.errorClient))
+                        }
+
+                    },
+                    onError = {
+                        networkErrorToast()
+                    }
+                )
+            } else {
+                toast(resources.getString(R.string.errorNetwork))
             }
 
-        })
-        if(newToken(authManager,networkManager)) {
-            networkManager.getPlaceList(latitude!!, longitude!!, 0.025, 0.03).safeEnqueue(
-                onSuccess = {
-                    rv_near_place.apply {
-                        adapter = nearAdapter
-                        addItemDecoration(HorizontalItemDecorator(16))
-                    }
-
-                    if (!it.data!!.result.content.isNullOrEmpty()) {
-                        nearAdapter.initData(it.data!!.result.content)
-                        cl_home_near_place.setVisible()
-                    }
-
-                    txt_home_near_place_more.setOnDebounceClickListener {
-                        Intent(GlobalApp, NearPlaceActivity::class.java).apply {
-                            putExtra("latitude", latitude!!)
-                            putExtra("longitude", longitude!!)
-                        }.run {
-                            GlobalApp.startActivity(this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-                        }
-                    }
-                },
-                onFailure = {
-                    if (it.code() == 403) {
-                        toast(resources.getString(R.string.errorReLogin))
-                    } else {
-                        toast(resources.getString(R.string.errorClient))
-                    }
-
-                },
-                onError = {
-                    networkErrorToast()
-                }
-            )
-        }else{
-            toast(resources.getString(R.string.errorNetwork))
-        }
     }
     private fun initPopularRecycler() {
 
@@ -310,8 +338,6 @@ class HomeFragment : Fragment(), fragmentBackPressed {
         Timber.e("longitude : ${longitude}")
         if(latitude!=null && longitude!=null) {
             initNearRecycler(latitude, longitude)
-
-
         }
     }
 
@@ -334,14 +360,17 @@ class HomeFragment : Fragment(), fragmentBackPressed {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
             if (context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                Timber.e("gps 권한 True - checkPermission ")
                 true
             } else {
                 // Show the permission request
                 ActivityCompat.requestPermissions(requireActivity(), arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
                     REQUEST_PERMISSION_LOCATION)
+                Timber.e("gps 권한 false - checkPermission ")
                 false
             }
         } else {
+
             true
         }
     }
