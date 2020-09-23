@@ -1,10 +1,12 @@
 package com.kravelteam.kravel_android.ui.home
 
+import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.*
 import com.kravelteam.kravel_android.data.request.ReviewLikeBody
@@ -16,6 +18,7 @@ import com.kravelteam.kravel_android.util.networkErrorToast
 import com.kravelteam.kravel_android.util.safeEnqueue
 import com.kravelteam.kravel_android.util.toast
 import kotlinx.android.synthetic.main.activity_photo_review.*
+import kotlinx.android.synthetic.main.fragment_home.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
@@ -37,6 +40,15 @@ class PhotoReviewActivity : AppCompatActivity() {
         img_photo_review_back.setOnDebounceClickListener {
             finish()
         }
+
+        sw_new_photo_review.setOnRefreshListener(object : SwipeRefreshLayout.OnRefreshListener{
+            override fun onRefresh() {
+                initPhotoReivew()
+                sw_new_photo_review.isRefreshing = false
+
+            }
+
+        })
     }
     private fun initPhotoReivew() {
         if(newToken(authManager,networkManager)) {
