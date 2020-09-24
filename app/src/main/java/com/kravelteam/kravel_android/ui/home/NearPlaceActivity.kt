@@ -1,9 +1,11 @@
 package com.kravelteam.kravel_android.ui.home
 
 import android.content.Intent
+import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.kravelteam.kravel_android.KravelApplication
 import com.kravelteam.kravel_android.R
 import com.kravelteam.kravel_android.common.VerticalItemDecorator
@@ -20,6 +22,9 @@ import com.kravelteam.kravel_android.util.networkErrorToast
 import com.kravelteam.kravel_android.util.safeEnqueue
 import com.kravelteam.kravel_android.util.toast
 import kotlinx.android.synthetic.main.activity_near_place.*
+import kotlinx.android.synthetic.main.activity_near_place.rv_near_place
+import kotlinx.android.synthetic.main.activity_photo_review.*
+import kotlinx.android.synthetic.main.fragment_home.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
@@ -42,6 +47,7 @@ class NearPlaceActivity : AppCompatActivity() {
         img_near_place_back.setOnDebounceClickListener {
             finish()
         }
+
     }
     private fun initRecycler() {
 
