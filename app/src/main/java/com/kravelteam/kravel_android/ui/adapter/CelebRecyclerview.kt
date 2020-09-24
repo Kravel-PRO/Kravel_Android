@@ -13,11 +13,12 @@ import com.kravelteam.kravel_android.common.GlideApp
 import com.kravelteam.kravel_android.common.setOnDebounceClickListener
 import com.kravelteam.kravel_android.data.response.CelebResponse
 import com.kravelteam.kravel_android.data.response.MediaResponse
+import com.kravelteam.kravel_android.ui.main.MainActivity
 import com.kravelteam.kravel_android.ui.search.SearchDetailActivity
 import com.kravelteam.kravel_android.util.inflate
 import java.net.URL
 
-class CelebRecyclerview() : RecyclerView.Adapter<CelebRecyclerview.ViewHolder>() {
+class CelebRecyclerview : RecyclerView.Adapter<CelebRecyclerview.ViewHolder>() {
 
     private var data: List<CelebResponse> = emptyList()
 
