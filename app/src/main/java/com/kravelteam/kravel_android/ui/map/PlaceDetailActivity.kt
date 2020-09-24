@@ -248,7 +248,7 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         val handler: Handler = object : Handler() {
-            override fun handleMessage(msg: Message?) {
+            override fun handleMessage(msg: Message?){
 
                 val parserHandler = XmlPullParserHandler()
                 val neardatas = parserHandler.parse(url.openStream())
