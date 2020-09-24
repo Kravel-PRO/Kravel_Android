@@ -231,8 +231,9 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         val local = authManager.setLang
+        Timber.e("local? ::$local")
         var url : URL? = null
-        if(local == "ko") {
+        if(local == "KOR") {
             url= URL(
                 "http://api.visitkorea.or.kr/openapi/service/rest/KorService/locationBasedList?&MobileOS=AND&MobileApp=Kravel&radius=1000"
                         + "&ServiceKey=" + resources.getString(R.string.open_api_kor_place)
