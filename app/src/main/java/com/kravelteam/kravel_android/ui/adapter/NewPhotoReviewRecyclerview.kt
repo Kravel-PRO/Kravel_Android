@@ -1,5 +1,6 @@
 package com.kravelteam.kravel_android.ui.adapter
 
+import android.content.Intent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
@@ -18,6 +19,7 @@ import com.kravelteam.kravel_android.data.response.PhotoReviewData
 import com.kravelteam.kravel_android.data.response.PhotoReviewResponse
 import com.kravelteam.kravel_android.data.response.PlaceContentResponse
 import com.kravelteam.kravel_android.network.NetworkManager
+import com.kravelteam.kravel_android.ui.map.PlaceDetailActivity
 import com.kravelteam.kravel_android.util.*
 import org.koin.core.context.GlobalContext
 import org.koin.experimental.property.inject
@@ -69,7 +71,11 @@ class NewPhotoReviewRecyclerview() :  RecyclerView.Adapter<NewPhotoReviewRecycle
             }
 
             txtPhotoLike.text = item.likeCount.toString()
-
+            var tags = ""
+            item.place.tags?.split(",")?.forEach {
+                tags += "#$it "
+            }
+            txtTag.text = tags
             val pos = adapterPosition
             if(pos!= RecyclerView.NO_POSITION)
             {
