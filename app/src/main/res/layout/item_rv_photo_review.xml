@@ -5,6 +5,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+
+
+
     <ImageView
         android:id="@+id/img_rv_photo"
         android:layout_width="match_parent"
@@ -24,6 +27,8 @@
         android:background="@drawable/selector_photo_review_like"
         app:layout_constraintBottom_toBottomOf="@id/img_rv_photo"
         app:layout_constraintRight_toRightOf="@id/img_rv_photo"/>
+
+
 
     <TextView
         android:id="@+id/txt_rv_photo_title"
@@ -65,10 +70,12 @@
 
 
    <TextView
-       android:layout_width="wrap_content"
+       android:layout_width="match_parent"
        android:layout_height="wrap_content"
        android:id="@+id/txt_rv_photo_tag"
        android:textSize="12sp"
+       android:maxLines="1"
+       android:ellipsize="end"
        android:textColor="@color/colorBlack"
        android:fontFamily="@font/notosans_cjk_kr_regular"
        app:layout_constraintLeft_toLeftOf="parent"
