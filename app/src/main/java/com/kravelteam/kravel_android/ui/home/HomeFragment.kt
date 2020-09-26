@@ -176,7 +176,7 @@ class HomeFragment : Fragment(), fragmentBackPressed {
 
             })
             if (newToken(authManager, networkManager)) {
-                networkManager.getPlaceList(latitude!!, longitude!!, 0.025, 0.03).safeEnqueue(
+                networkManager.getPlaceList(latitude!!, longitude!!, 0.05, 0.05).safeEnqueue(
                     onSuccess = {
                         if (!it.data!!.result.content.isNullOrEmpty()) {
                             nearAdapter.initData(it.data!!.result.content)

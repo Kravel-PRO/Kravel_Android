@@ -10,9 +10,11 @@ import android.graphics.drawable.ColorDrawable
 import android.location.LocationManager
 import android.os.*
 import android.provider.Settings
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -49,6 +51,7 @@ import kotlinx.android.synthetic.main.fragment_map_info.view.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 import com.naver.maps.map.MapFragment
+import kotlinx.android.synthetic.main.custom_toast_layout.*
 import kotlinx.android.synthetic.main.fragment_home.*
 
 
@@ -489,8 +492,21 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
         if(newToken(authManager,networkManager)) {
             networkManager.getPlaceList(latitude, longitude, scale, scale).safeEnqueue(
                 onSuccess = {
-                    nearAdapter.initData(it.data!!.result!!.content)
+                    if (it.data!!.result!!.content.isNullOrEmpty()) {
+                        nearAdapter.initData(it.data!!.result!!.content)
+                        val t = Toast(context)
+                        val inflater : LayoutInflater = GlobalApp.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+                        val layout = inflater.inflate(R.layout.custom_toast_layout,requireActivity().findViewById(R.id.cl_custom_toast))
+                        val btn = layout.findViewById<TextView>(R.id.txt_content)
+                        btn.text = resources.getString(R.string.nearPlaceWarning)
+                        t.setGravity(Gravity.BOTTOM or  Gravity.CENTER_HORIZONTAL,0,0)
+                        t.duration = Toast.LENGTH_SHORT
+                        t.view = layout
+                        t.show()
 
+                    } else {
+                        nearAdapter.initData(it.data!!.result!!.content)
+                    }
                 },
                 onFailure = {
                     if (it.code() == 403) {
@@ -648,14 +664,12 @@ class MapViewFragment : Fragment(),OnMapReadyCallback, fragmentBackPressed{
             if(checkFirst) {
                 if(checkArea(it.latitude,it.longitude)) {
                     naverMap.locationTrackingMode = Follow
-                    initRecycler(it.latitude, it.longitude, 0.025)
+                    initRecycler(it.latitude, it.longitude, 0.05)
                 }
                 else {
                     naverMap.locationTrackingMode = None
-                    val projection = naverMap.projection
-                    val masterPerDp = projection.metersPerDp
                     nearLocation = LatLng(naverMap.cameraPosition.target.latitude ,naverMap.cameraPosition.target.longitude)
-                    initRecycler(nearLocation!!.latitude,nearLocation!!.longitude,0.025)
+                    initRecycler(nearLocation!!.latitude,nearLocation!!.longitude,0.05)
                 }
                 checkFirst = false
             }
