@@ -24,8 +24,7 @@ import java.util.*
 class SetLanguageActivity : AppCompatActivity() {
     private val authManager : AuthManager by inject()
     private var checkLang = false
-    private var Kor = false
-    private var Eng = false
+    private var strLang : String? = null
     private val networkManager : NetworkManager by inject()
     private lateinit var configuration: Configuration
 
@@ -39,11 +38,13 @@ class SetLanguageActivity : AppCompatActivity() {
             }
             cl_set_language_toolbar.setVisible()
             if(authManager.setLang == "KOR"){
+                strLang = "KOR"
                 rb_set_language_korea.isChecked = true
                 rb_set_language_korea.setTextColor(resources.getColor(R.color.colorCoral))
                 rb_set_language_english.setTextColor(resources.getColor(R.color.colorDarkGrey))
                 checkLang=true
             } else {
+                strLang ="ENG"
                 rb_set_language_english.isChecked = true
                 rb_set_language_korea.setTextColor(resources.getColor(R.color.colorDarkGrey))
                 rb_set_language_english.setTextColor(resources.getColor(R.color.colorCoral))
@@ -55,13 +56,12 @@ class SetLanguageActivity : AppCompatActivity() {
         configuration = Configuration()
         btn_set_language_start.setOnDebounceClickListener {
             if(intent.getStringExtra("my")=="my"){
-                if(Kor) {
+                if(strLang == "KOR") {
                     val ko = Locale.KOREA
                     configuration.locale = ko
                     requestServer("KOR")
                     authManager.setLang = "KOR"
-                }
-                if(Eng) {
+                } else {
                     val en = Locale.US
                     configuration.locale = en
                     requestServer("ENG")
@@ -69,12 +69,11 @@ class SetLanguageActivity : AppCompatActivity() {
                 }
             } else {
                 authManager.first = true
-                if(Kor) {
+                if(strLang == "KOR") {
                     authManager.setLang = "KOR"
                     val ko = Locale.KOREA
                     configuration.locale = ko
-                }
-                if(Eng) {
+                } else {
                     authManager.setLang = "ENG"
                     val en = Locale.US
                     configuration.locale = en
@@ -132,8 +131,12 @@ class SetLanguageActivity : AppCompatActivity() {
             if(isChecked) {
                 rb_set_language_korea.setTextColor(resources.getColor(R.color.colorCoral))
                 checkLang = true
+<<<<<<< HEAD
                 Kor = true
                 Eng = false
+=======
+                strLang = "KOR"
+>>>>>>> 9e5d5c834792fb8157c0aa057154283b43939eb7
                 initEnableBtn()
             } else {
                 rb_set_language_korea.setTextColor(resources.getColor(R.color.colorDarkGrey))
@@ -142,10 +145,15 @@ class SetLanguageActivity : AppCompatActivity() {
 
         rb_set_language_english.setOnCheckedChangeListener { _, isChecked ->
             if(isChecked) {
+
                 rb_set_language_english.setTextColor(resources.getColor(R.color.colorCoral))
                 checkLang = true
+<<<<<<< HEAD
                 Eng = true
                 Kor = false
+=======
+                strLang ="ENG"
+>>>>>>> 9e5d5c834792fb8157c0aa057154283b43939eb7
                 initEnableBtn()
             } else {
                 rb_set_language_english.setTextColor(resources.getColor(R.color.colorDarkGrey))
