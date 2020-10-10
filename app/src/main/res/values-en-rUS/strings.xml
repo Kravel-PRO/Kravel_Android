@@ -148,9 +148,6 @@
     <string name="gpsWarningTitle">"GPS connection has been lost. "</string>
     <string name="networkWarningCotent">" Please check the network status.\n If the problem persists, please try again later."</string>
     <string name="gpsWarningContent">Location information cannot be retrieved \n because the device\'s GPS is turned off. \n Would you like to use GPS?</string>
-<<<<<<< HEAD
     <string name="filter">filter</string>
-=======
     <string name="nearPlaceWarning">" There are no Kravel places around!\n Shall we explore another area?"</string>
->>>>>>> 9e5d5c834792fb8157c0aa057154283b43939eb7
 </resources>

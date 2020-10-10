@@ -131,12 +131,7 @@ class SetLanguageActivity : AppCompatActivity() {
             if(isChecked) {
                 rb_set_language_korea.setTextColor(resources.getColor(R.color.colorCoral))
                 checkLang = true
-<<<<<<< HEAD
-                Kor = true
-                Eng = false
-=======
                 strLang = "KOR"
->>>>>>> 9e5d5c834792fb8157c0aa057154283b43939eb7
                 initEnableBtn()
             } else {
                 rb_set_language_korea.setTextColor(resources.getColor(R.color.colorDarkGrey))
@@ -148,12 +143,7 @@ class SetLanguageActivity : AppCompatActivity() {
 
                 rb_set_language_english.setTextColor(resources.getColor(R.color.colorCoral))
                 checkLang = true
-<<<<<<< HEAD
-                Eng = true
-                Kor = false
-=======
                 strLang ="ENG"
->>>>>>> 9e5d5c834792fb8157c0aa057154283b43939eb7
                 initEnableBtn()
             } else {
                 rb_set_language_english.setTextColor(resources.getColor(R.color.colorDarkGrey))
