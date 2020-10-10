@@ -14,10 +14,7 @@ import com.kravelteam.kravel_android.data.request.LanguageBody
 import com.kravelteam.kravel_android.network.AuthManager
 import com.kravelteam.kravel_android.network.NetworkManager
 import com.kravelteam.kravel_android.ui.login.LoginActivity
-import com.kravelteam.kravel_android.util.networkErrorToast
-import com.kravelteam.kravel_android.util.safeLoginEnqueue
-import com.kravelteam.kravel_android.util.startActivity
-import com.kravelteam.kravel_android.util.toast
+import com.kravelteam.kravel_android.util.*
 import kotlinx.android.synthetic.main.activity_set_language.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
@@ -36,6 +33,10 @@ class SetLanguageActivity : AppCompatActivity() {
         setContentView(R.layout.activity_set_language)
 
         intent.getStringExtra("my")?.let {
+            img_set_lang_back.setOnDebounceClickListener {
+                finish()
+            }
+            cl_set_language_toolbar.setVisible()
             if(authManager.setLang == "KOR"){
                 strLang = "KOR"
                 rb_set_language_korea.isChecked = true
@@ -67,7 +68,6 @@ class SetLanguageActivity : AppCompatActivity() {
                     authManager.setLang = "ENG"
                 }
             } else {
-                startActivity(LoginActivity::class,true)
                 authManager.first = true
                 if(strLang == "KOR") {
                     authManager.setLang = "KOR"

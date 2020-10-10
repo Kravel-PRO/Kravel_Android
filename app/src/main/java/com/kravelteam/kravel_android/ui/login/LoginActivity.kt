@@ -118,6 +118,7 @@ class LoginActivity : AppCompatActivity() {
     //애니메이션 효과 -> after
     private fun afterAnimation(){
         cl_login_btn_space.visibility = View.GONE
+        kravel_logo.setGone()
         cl_login_edt_space.visibility = View.VISIBLE
         cl_login_title_space.visibility = View.VISIBLE
 
@@ -150,6 +151,7 @@ class LoginActivity : AppCompatActivity() {
             cl_login_edt_space.visibility = View.GONE
             cl_login_title_space.visibility = View.GONE
             cl_login_btn_space.visibility = View.VISIBLE
+            kravel_logo.setVisible()
         }
     }
 

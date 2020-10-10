@@ -5,103 +5,144 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.kravelteam.kravel_android.ui.signup.SetLanguageActivity"
-    android:paddingHorizontal="36dp"
     android:background="@color/colorWhite">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_set_language_top"
+        android:id="@+id/cl_set_language_toolbar"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintVertical_weight="2"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/rg_set_language">
+        app:layout_constraintBottom_toTopOf="@id/cl_set_language_content"
+        app:layout_constraintVertical_weight="0.78"
+        android:visibility="gone">
 
         <TextView
-            android:id="@+id/txt_set_language"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/notosans_cjk_kr_bold"
-            android:text="@string/setLanguageTitle"
-            android:textColor="@color/colorSignUpEditText"
-            android:textSize="20sp"
+            android:text="@string/setLanguage"
+            android:textColor="@color/colorBlack"
+            android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.82" />
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <ImageView
+            android:id="@+id/img_set_lang_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/btn_back"
+            android:layout_marginLeft="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <RadioGroup
-        android:id="@+id/rg_set_language"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintVertical_weight="2"
-        android:orientation="vertical"
-        android:gravity="center"
-        app:layout_constraintBottom_toTopOf="@+id/cl_set_language_bottom"
-        app:layout_constraintTop_toBottomOf="@+id/cl_set_language_top">
-
-        <RadioButton
-            android:id="@+id/rb_set_language_korea"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/selector_radio_round_background"
-            android:button="@android:color/transparent"
-            android:fontFamily="@font/notosans_cjk_kr_bold"
-            android:gravity="center"
-            android:text="안녕"
-            android:layout_marginVertical="10dp"
-            android:paddingTop="18dp"
-            android:paddingBottom="19dp"
-            android:textColor="@color/colorDarkGrey"
-            android:textSize="15sp" />
-
-
-        <RadioButton
-            android:id="@+id/rb_set_language_english"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/selector_radio_round_background"
-            android:button="@android:color/transparent"
-            android:fontFamily="@font/notosans_cjk_kr_bold"
-            android:gravity="center"
-            android:text="Hello"
-            android:layout_marginVertical="10dp"
-            android:paddingTop="18dp"
-            android:paddingBottom="17dp"
-            android:textColor="@color/colorDarkGrey"
-            android:textSize="15sp" />
-    </RadioGroup>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_set_language_bottom"
+        android:id="@+id/cl_set_language_content"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintVertical_weight="1.5"
+        app:layout_constraintTop_toBottomOf="@id/cl_set_language_toolbar"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rg_set_language">
+        app:layout_constraintVertical_weight="8.89"
+        android:paddingHorizontal="36dp">
 
-        <TextView
-            android:id="@+id/btn_set_language_start"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_set_language_top"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/selector_btn_enable_background"
-            android:enabled="false"
-            android:fontFamily="@font/notosans_cjk_kr_bold"
-            android:paddingTop="17dp"
-            android:gravity="center"
-            android:paddingBottom="16dp"
-            android:text="Start Kravel"
-            android:textAllCaps="false"
-            android:textColor="@color/colorDarkGrey"
-            android:textSize="15sp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_height="0dp"
+            app:layout_constraintVertical_weight="2"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.82" />
+            app:layout_constraintBottom_toTopOf="@+id/rg_set_language">
+
+            <TextView
+                android:id="@+id/txt_set_language"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/notosans_cjk_kr_bold"
+                android:text="@string/setLanguageTitle"
+                android:textColor="@color/colorSignUpEditText"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.82" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <RadioGroup
+            android:id="@+id/rg_set_language"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintVertical_weight="2"
+            android:orientation="vertical"
+            android:gravity="center"
+            app:layout_constraintBottom_toTopOf="@+id/cl_set_language_bottom"
+            app:layout_constraintTop_toBottomOf="@+id/cl_set_language_top">
+
+            <RadioButton
+                android:id="@+id/rb_set_language_korea"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_radio_round_background"
+                android:button="@android:color/transparent"
+                android:fontFamily="@font/notosans_cjk_kr_bold"
+                android:gravity="center"
+                android:text="안녕"
+                android:layout_marginVertical="10dp"
+                android:paddingTop="18dp"
+                android:paddingBottom="19dp"
+                android:textColor="@color/colorDarkGrey"
+                android:textSize="15sp" />
+
+
+            <RadioButton
+                android:id="@+id/rb_set_language_english"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_radio_round_background"
+                android:button="@android:color/transparent"
+                android:fontFamily="@font/notosans_cjk_kr_bold"
+                android:gravity="center"
+                android:text="Hello"
+                android:layout_marginVertical="10dp"
+                android:paddingTop="18dp"
+                android:paddingBottom="17dp"
+                android:textColor="@color/colorDarkGrey"
+                android:textSize="15sp" />
+        </RadioGroup>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_set_language_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintVertical_weight="1.5"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rg_set_language">
+
+            <TextView
+                android:id="@+id/btn_set_language_start"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_btn_enable_background"
+                android:enabled="false"
+                android:fontFamily="@font/notosans_cjk_kr_bold"
+                android:paddingTop="17dp"
+                android:gravity="center"
+                android:paddingBottom="16dp"
+                android:text="Start Kravel"
+                android:textAllCaps="false"
+                android:textColor="@color/colorDarkGrey"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.82" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

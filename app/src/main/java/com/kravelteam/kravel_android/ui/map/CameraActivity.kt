@@ -51,12 +51,13 @@ class CameraActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_camera)
 
-        Timber.e(intent.getStringExtra("placeName"))
         //필터
+        Timber.e(intent.getStringExtra("subImg"))
         intent.getStringExtra("filter")?.let {
-            GlideApp.with(applicationContext).load(it).into(img_camera_concept_ill)
+            GlideApp.with(this).load(intent.getStringExtra("filter")).into(img_camera_concept_ill)
             txt_camera_unselect_concept.setVisible()
-            txt_camera_unselect_concept.text = intent.getStringExtra("placeName")
+            GlideApp.with(this).load(intent.getStringExtra("subImg")).into(img_camera_concept_example)
+            img_camera_concept_example.setRound(10.dpToPx().toFloat())
         }
 
         cameraProviderFuture = ProcessCameraProvider.getInstance(this)
@@ -97,10 +98,6 @@ class CameraActivity : AppCompatActivity(){
     }
 
     private fun showEx(){
-        intent.getStringExtra("subImg")?.let {
-            GlideApp.with(this).load(it).into(img_camera_concept_example)
-            img_camera_concept_example.setRound(10.dpToPx().toFloat())
-        }
         img_camera_concept_example.setOnDebounceClickListener {
             Intent(KravelApplication.GlobalApp,ExampleActivity::class.java).apply {
                 intent.getStringExtra("subImg")?.let {
@@ -252,7 +249,7 @@ class CameraActivity : AppCompatActivity(){
         txt_camera_unselect_concept.setOnDebounceClickListener {
             txt_camera_unselect_concept.setInvisible()
             txt_camera_unselect_basic.setVisible()
-            txt_camera_select.text = intent.getStringExtra("placeName")
+            txt_camera_select.text = resources.getString(R.string.filter)
             img_camera_concept_ill.setVisible()
             cl_camera_concept_example.setVisible()
             txt_camera_concept_example.setVisible()
