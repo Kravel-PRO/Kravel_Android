@@ -30,7 +30,7 @@ fun newToken(authManager: AuthManager,networkManager: NetworkManager): Boolean{
             }
         )
     } else {
-        Timber.e("안념음")
+        Timber.e("${Date(authManager.expire)} 안념음 ${Date(System.currentTimeMillis())}")
         result = true
     }
 

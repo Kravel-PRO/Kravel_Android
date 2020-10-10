@@ -73,7 +73,6 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             Intent(GlobalApp,PostReviewActivity::class.java).apply{
                 putExtra("placeId",placeId)
                 putExtra("part",part)
-                putExtra("subImg",subImg)
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }.run {
                 GlobalApp.startActivity(this)
@@ -97,6 +96,7 @@ class PlaceDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             Intent(GlobalApp,CameraActivity::class.java).apply {
                 putExtra("filter",filterImg)
                 putExtra("placeName",placeName)
+                putExtra("subImg",subImg)
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }.run { GlobalApp.startActivity(this) }
         }

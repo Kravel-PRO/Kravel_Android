@@ -53,16 +53,16 @@ class SplashActivity : AppCompatActivity() {
                 resources.updateConfiguration(config,resources.displayMetrics)
             }
         }
-        Handler().postDelayed({
-            if(authManager.first){
+        if(authManager.first){
+            Handler().postDelayed({
                 if(authManager.autoLogin){
                     startActivity(MainActivity::class,true)
                 } else {
                     startActivity(LoginActivity::class,true)
                 }
-            } else {
-                startActivity(SetLanguageActivity::class,true)
-            }
-        },1200)
+            },1200)
+        } else {
+            startActivity(SetLanguageActivity::class,true)
+        }
     }
 }

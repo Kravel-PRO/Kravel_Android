@@ -147,4 +147,5 @@
     <string name="gpsWarningTitle">GPS 연결이 끊겼습니다.</string>
     <string name="networkWarningCotent">네트워크 상태를 확인해주세요. \n 문제가 계속되면 잠시 후 다시 시도해주세요.</string>
     <string name="gpsWarningContent">해당기기의 GPS가 꺼져있어 \n 위치정보를 가져올 수 없습니다. \n GPS를 사용하시겠습니까?</string>
+    <string name="filter">필터</string>
 </resources>
