@@ -41,22 +41,21 @@ class CelebFragment() : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initRecycler()
-        rv_celeb_list.fadeInWithVisible(600)
     }
 
     private fun initRecycler(){
-
-        celebAdapter = CelebRecyclerview()
-
-        rv_celeb_list.apply {
-            adapter = celebAdapter
-            addItemDecoration(HorizontalItemDecorator(24))
-            addItemDecoration(VerticalItemDecorator(38))
-        }
-
         if (newToken(authManager,networkManager)){
             networkManager.requestCelebList(0,100).safeEnqueue(
                 onSuccess = {
+                    celebAdapter = CelebRecyclerview()
+
+                    val anim = AnimationUtils.loadLayoutAnimation(context,R.anim.layout_anim_fall)
+                    rv_celeb_list.apply {
+                        adapter = celebAdapter
+                        addItemDecoration(HorizontalItemDecorator(24))
+                        addItemDecoration(VerticalItemDecorator(38))
+                        layoutAnimation = anim
+                    }
                     if(!it.data.result.content.isNullOrEmpty()) celebAdapter.initData(it.data.result.content)
                 },
                 onFailure = {
